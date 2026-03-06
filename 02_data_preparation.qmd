@@ -1,0 +1,98 @@
+# Data Preparation {#sec-data_preparation}
+
+This chapter describes how to prepare input data for the FeatureMAP pipeline. Unlike traditional workflows, FeatureMAP starts from **feature-level metabolomics data**.
+
+## Input Data Format Requirements {#sec-input_data_requirement}
+
+### Required `feature_table`
+
+FeatureMAP requires a data frame named `feature_table` with the following columns:
+
+| Column | Type | Description |
+|------------------------|------------------------|------------------------|
+| `variable_id` | character | Unique feature ID (no duplicates) |
+| `mz` | numeric | Feature m/z |
+| `rt` | numeric | Retention time |
+| `polarity` | character | Ion mode, must be `"positive"` or `"negative"` |
+| `mean_intensity` | numeric | Mean intensity of the feature |
+| `condition` | numeric | Numeric value representing the direction and magnitude of association for each feature, such as a log fold change, regression coefficient, or correlation coefficient |
+| `pvalue` | numeric | Statistical p-value corresponding to the association measure in `condition`, used to reflect the strength of evidence |
+
+::: callout-note
+`condition` captures the effect direction and size, while `pvalue` reflects its statistical significance. Together, they are used downstream to prioritize features before PCSF subnetwork extraction.
+:::
+
+### Optional `ms2_table`
+
+You can optionally provide an MS2 annotation table to improve feature-to-metabolite mapping confidence. MS2-based metabolite annotations can be obtained using the [tidymass](https://www.tidymass.org/tidymass-tutorial/) ecosystem.
+
+Expected columns:
+
+-   `variable_id` (character, unique)
+-   `HMDB.ID` or `KEGG.ID` (character, can contain `NA`)
+
+If `ms2_table = NULL`, FeatureMAP will proceed with MS1-based annotation only.
+
+## Load Demo Data
+
+FeatureMAP provides a built-in demo feature table:
+
+```{r}
+#| eval: false
+
+data("demo_feature_table", package = "featuremap")
+
+dim(demo_feature_table)
+# [1] 1189    7
+
+head(demo_feature_table, 3)
+#    variable_id       mz      rt polarity mean_intensity  condition       pvalue
+# 1 M105T384_POS 105.0334 383.851 positive      371369.28 -0.5029755 1.998631e-01
+# 2  M110T34_POS 110.0085  33.907 positive       58184.51 -0.4755627 9.740936e-05
+# 3  M116T49_POS 116.0700  49.496 positive      695843.03 -0.4107283 3.401449e-02
+```
+
+## Prepare Your Own Data
+
+A typical preprocessing pattern is:
+
+```{r}
+#| eval: false
+
+library(readr)
+library(dplyr)
+
+feature_table <- read_csv("your_feature_table.csv") %>%
+  transmute(
+    variable_id = as.character(variable_id),
+    mz = as.numeric(mz),
+    rt = as.numeric(rt),
+    polarity = as.character(polarity),
+    mean_intensity = as.numeric(mean_intensity),
+    condition = as.numeric(condition),
+    pvalue = as.numeric(pvalue)
+  )
+```
+
+## Pre-run Checklist
+
+Run these checks before Step 1:
+
+```{r}
+#| eval: false
+
+required_cols <- c("variable_id", "mz", "rt", "polarity", "mean_intensity", "condition", "pvalue")
+setdiff(required_cols, colnames(feature_table))
+# should return character(0)
+
+anyDuplicated(feature_table$variable_id)
+# should return 0
+
+all(feature_table$polarity %in% c("positive", "negative"))
+# should return TRUE
+
+sum(is.na(feature_table[, required_cols]))
+# ideally 0 for required fields
+```
+
+Once your input tables are ready, continue to next step.

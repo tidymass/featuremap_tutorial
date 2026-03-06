@@ -1,0 +1,63 @@
+# Installation
+
+Follow the steps below to install the latest development version of **FeatureMAP** from GitHub. The script first installs `BiocManager` and `remotes` if you don’t have them.
+
+```{r}
+#| eval=FALSE
+
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
+
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
+```
+
+You also need to install some upstream dependencies from Github:
+
+```{r}
+#| eval=FALSE
+
+if (!requireNamespace("masstools", quietly = TRUE)) {
+  remotes::install_github("tidymass/masstools")
+}
+if (!requireNamespace("massdataset", quietly = TRUE)) {
+  remotes::install_github("tidymass/massdataset")
+}
+if (!requireNamespace("metid", quietly = TRUE)) {
+  remotes::install_github("tidymass/metid")
+}
+if (!requireNamespace("PCSF2", quietly = TRUE)) {
+  remotes::install_github("ytwangZero/PCSF2")
+}
+
+```
+
+Then, install the `featuremap` and load it in your environment:
+
+```{r}
+#| eval=FALSE
+
+remotes::install_github(
+  "tidymass/featuremap",
+  dependencies = TRUE,
+  repos = BiocManager::repositories(),
+  upgrade = "ask"
+)
+
+library(featuremap)
+
+```
+
+After installation, run a quick check:
+
+```{r}
+#| eval=FALSE
+
+packageVersion("featuremap")
+
+```
+
+If all checks pass, continue to the next chapter.

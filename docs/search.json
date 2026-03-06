@@ -1,0 +1,1020 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "FeatureMAP Tutorial",
+    "section": "",
+    "text": "Preface",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#featuremap-a-feature-based-metabolite-functional-module-identification-and-annotation-pipeline",
+    "href": "index.html#featuremap-a-feature-based-metabolite-functional-module-identification-and-annotation-pipeline",
+    "title": "FeatureMAP Tutorial",
+    "section": "FeatureMAP: A Feature-based Metabolite Functional Module Identification and Annotation Pipeline",
+    "text": "FeatureMAP: A Feature-based Metabolite Functional Module Identification and Annotation Pipeline\nFeatureMAP (featuremap) is a feature-centric framework for untargeted metabolomics that identifies biologically meaningful metabolic modules directly from metabolomic data, rather than relying only on predefined pathways or fully confirmed metabolite identities. It is developed by the Shen Lab at Nanyang Technological University, Singapore.\nThe package provides a four-step workflow:\n\nFeature annotation: annotate raw LC-MS features to metabolite candidates using MS1 (and optional MS2) information.\nSubnetwork extraction: construct a robust prize-collecting Steiner forest (PCSF)-based metabolic subnetwork.\nModule identification: detect functional modules by community detection and evaluate module significance.\nModule annotation: interpret significant modules with database knowledge, optional PubMed evidence, and optional LLM summarization.\n\nThis workflow helps convert feature-level metabolomics signals into interpretable biological modules in a reproducible and analysis-ready format.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#aim-of-this-tutorial",
+    "href": "index.html#aim-of-this-tutorial",
+    "title": "FeatureMAP Tutorial",
+    "section": "Aim of This Tutorial",
+    "text": "Aim of This Tutorial\nThis guide walks you through the two faces of FeatureMAP: the R package for command-line (code-based) workflow and the Shiny App/Web version for point-and-click exploration. In the end, you will be able to:\n\nPrepare a valid feature table for FeatureMAP.\nRun the complete four-step FeatureMAP pipeline with R code.\nComplete the same analysis with the FeatureMAP Shiny App/Web interface.\nUnderstand and inspect key result objects and module-level interpretations.\n\nWhether you favour the command line or a browser, this tutorial gives you everything you need to apply FeatureMAP confidently in your metabolomics projects.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#contact-us",
+    "href": "index.html#contact-us",
+    "title": "FeatureMAP Tutorial",
+    "section": "📥 Contact Us",
+    "text": "📥 Contact Us\n\n📩 Email: xiaotao.shen@ntu.edu.sg\n📩 Email: yuting012@e.ntu.edu.sg\n🏠 Shen Lab website: shen-lab.org\n💬 WeChat: jaspershen1990",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#links",
+    "href": "index.html#links",
+    "title": "FeatureMAP Tutorial",
+    "section": "🔗 Links",
+    "text": "🔗 Links\n\n📖 Citation: Shen Lab\n☁️ Online FeatureMAP Shiny: shen-lab.org\n🧬 FeatureMAP GitHub: tidymass/featuremap",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "01_package_installation.html",
+    "href": "01_package_installation.html",
+    "title": "1  Installation",
+    "section": "",
+    "text": "Follow the steps below to install the latest development version of FeatureMAP from GitHub. The script first installs BiocManager and remotes if you don’t have them.\n\nif (!requireNamespace(\"BiocManager\", quietly = TRUE)) {\n  install.packages(\"BiocManager\")\n}\n\nif (!requireNamespace(\"remotes\", quietly = TRUE)) {\n  install.packages(\"remotes\")\n}\n\nYou also need to install some upstream dependencies from Github:\n\nif (!requireNamespace(\"masstools\", quietly = TRUE)) {\n  remotes::install_github(\"tidymass/masstools\")\n}\nif (!requireNamespace(\"massdataset\", quietly = TRUE)) {\n  remotes::install_github(\"tidymass/massdataset\")\n}\nif (!requireNamespace(\"metid\", quietly = TRUE)) {\n  remotes::install_github(\"tidymass/metid\")\n}\nif (!requireNamespace(\"PCSF2\", quietly = TRUE)) {\n  remotes::install_github(\"ytwangZero/PCSF2\")\n}\n\nThen, install the featuremap and load it in your environment:\n\nremotes::install_github(\n  \"tidymass/featuremap\",\n  dependencies = TRUE,\n  repos = BiocManager::repositories(),\n  upgrade = \"ask\"\n)\n\nlibrary(featuremap)\n\nAfter installation, run a quick check:\n\npackageVersion(\"featuremap\")\n\nIf all checks pass, continue to the next chapter.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html",
+    "href": "02_data_preparation.html",
+    "title": "2  Data Preparation",
+    "section": "",
+    "text": "2.1 Input Data Format Requirements\nThis chapter describes how to prepare input data for the FeatureMAP pipeline. Unlike traditional workflows, FeatureMAP starts from feature-level metabolomics data.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html#sec-input_data_requirement",
+    "href": "02_data_preparation.html#sec-input_data_requirement",
+    "title": "2  Data Preparation",
+    "section": "",
+    "text": "2.1.1 Required feature_table\nFeatureMAP requires a data frame named feature_table with the following columns:\n\n\n\n\n\n\n\n\nColumn\nType\nDescription\n\n\n\n\nvariable_id\ncharacter\nUnique feature ID (no duplicates)\n\n\nmz\nnumeric\nFeature m/z\n\n\nrt\nnumeric\nRetention time\n\n\npolarity\ncharacter\nIon mode, must be \"positive\" or \"negative\"\n\n\nmean_intensity\nnumeric\nMean intensity of the feature\n\n\ncondition\nnumeric\nNumeric value representing the direction and magnitude of association for each feature, such as a log fold change, regression coefficient, or correlation coefficient\n\n\npvalue\nnumeric\nStatistical p-value corresponding to the association measure in condition, used to reflect the strength of evidence\n\n\n\n\n\n\n\n\n\nNote\n\n\n\ncondition captures the effect direction and size, while pvalue reflects its statistical significance. Together, they are used downstream to prioritize features before PCSF subnetwork extraction.\n\n\n\n\n2.1.2 Optional ms2_table\nYou can optionally provide an MS2 annotation table to improve feature-to-metabolite mapping confidence. MS2-based metabolite annotations can be obtained using the tidymass ecosystem.\nExpected columns:\n\nvariable_id (character, unique)\nHMDB.ID or KEGG.ID (character, can contain NA)\n\nIf ms2_table = NULL, FeatureMAP will proceed with MS1-based annotation only.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html#input-data-preprocessing",
+    "href": "02_data_preparation.html#input-data-preprocessing",
+    "title": "2  Data Preparation",
+    "section": "2.2 Input Data Preprocessing",
+    "text": "2.2 Input Data Preprocessing\nThis step is required except for non-human metabolite analysis - FeatureMAP provides the convert_id() function to perform ID conversion for downstream analysis. Even if your data already contains one of the required identifier columns, it is highly recommended to run this function to ensure all necessary identifiers are present for pathway analysis.\n\n2.2.1 Gene ID conversion\nThe convert_id() function converts between different ID types and always returns data with all four gene identifier columns (ensembl, entrezid, uniprot, symbol), which are required for FeatureMAP to work properly. Since organism-specific annotation database are required for ID conversion and the following enrichment analysis, choose the ID conversion method based on your organism.\n\nModel OrganismsNon-Model Organisms\n\n\nFor common model organisms, use standard organism database Bioconductor packages.\n\n\n\n\n\n\nNote\n\n\n\nFor most model organisms, Bioconductor already supplies curated organism annotation databases (the OrgDb packages). You can browse the complete list and install the one that matches your species of interest here.\n\n\n\n# Mouse\nvariable_info &lt;- convert_id(\n  data = demo_ora_data,\n  query_type = \"gene\",\n  from_id_type = \"symbol\",  # This tells the function what your input column represents\n  organism = \"org.Mm.eg.db\"  # install and load the package at first\n)\nhead(variable_info)\n# # A tibble: 6 × 6\n#   ensembl           entrezid uniprot symbol `log2FC (6 vs 30mo)` `FDR (6 vs 30mo)`\n#   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;                 &lt;dbl&gt;             &lt;dbl&gt;\n# 1 ENSMUSG000000573… 67671    Q52KP0  Rpl38                -0.590          1.77e- 6\n# 2 ENSMUSG000000184… 11640    B1AR25  Akap1                -0.640          1.81e- 2\n# 3 ENSMUSG000000686… 11464    P68033  Actc1                -2.65           3.24e-10\n# 4 ENSMUSG000000752… 11702    P0DMN7  Amd1                 -1.12           9.45e- 6\n# 5 ENSMUSG000000728… 20704    P81105  Serpi…               -0.650          1.38e- 3\n# 6 ENSMUSG000000386… 56205    P60840  Ensa                 -0.672          1.05e- 5 \n\n\n\nFor organisms without standard packages, use AnnotationHub IDs:\n\nnon_model_org_dt &lt;- readr::read_csv(\"examples/example_non_model_org_data.csv\")\n# Macaca fascicularis (taxid: 9541)\nvariable_info &lt;- convert_id(\n  data = non_model_org_dt,\n  query_type = \"gene\",\n  from_id_type = \"ensembl\",\n  ah_id = \"AH119902\",  # AnnotationHub ID for Macaca fascicularis\n  return_orgdb = TRUE  # The organism database is needed for downstream analysis\n)\n\n# Successfully loaded organism database from AnnotationHub\n# Database information:\n# OrgDb object:\n# | DBSCHEMAVERSION: 2.1\n# | DBSCHEMA: NOSCHEMA_DB\n# | ORGANISM: Simia fascicularis\n# | SPECIES: Simia fascicularis\n# | CENTRALID: GID\n# | Taxonomy ID: 9541\n# | Db type: OrgDb\n# | Supporting package: AnnotationDbi\n# \n# Please see: help('select') for usage information\n# Note: The following ID types are not available in the organism database and will be filled with NA: uniprot\n# Available ID types in database: ACCNUM, ALIAS, ENSEMBL, ENTREZID, EVIDENCE, EVIDENCEALL, GENENAME, GID, GO, GOALL, ONTOLOGY, ONTOLOGYALL, PMID, REFSEQ, SYMBOL, UNIGENE\n# 'select()' returned 1:many mapping between keys and columns\n# Warning in clusterProfiler::bitr(geneID = data[[from_id_type]], fromType = from_clusterprofiler_type,  :\n#   57.38% of input gene IDs are fail to map...\n\nvariable_info\n# $data\n# # A tibble: 183 × 8\n#    ensembl            entrezid  uniprot symbol       Symbol  `Gene type`    Tissue     Cluster  \n#    &lt;chr&gt;              &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;          &lt;chr&gt;      &lt;chr&gt;    \n#  1 ENSMFAG00000000264 NA        NA      NA           APH1B   protein_coding Liver (LL) Cluster U\n#  2 ENSMFAG00000000283 NA        NA      NA           PLCG1   protein_coding Liver (LL) Cluster U\n#  3 ENSMFAG00000000444 102141791 NA      EPS15L1      EPS15L1 protein_coding Liver (LL) Cluster U\n#  4 ENSMFAG00000000464 NA        NA      NA           RCOR3   protein_coding Liver (LL) Cluster U\n#  5 ENSMFAG00000000583 101865185 NA      EXOC7        EXOC7   protein_coding Liver (LL) Cluster U\n#  6 ENSMFAG00000000608 NA        NA      NA           CD99    protein_coding Liver (LL) Cluster U\n#  7 ENSMFAG00000000627 102121020 NA      MTFMT        MTFMT   protein_coding Liver (LL) Cluster U\n#  8 ENSMFAG00000000639 NA        NA      NA           GJC2    protein_coding Liver (LL) Cluster U\n#  9 ENSMFAG00000000737 101866375 NA      MKRN1        MKRN1   protein_coding Liver (LL) Cluster U\n# 10 ENSMFAG00000000852 102131151 NA      LOC102131151 CYB5R1  protein_coding Liver (LL) Cluster U\n# # ℹ 173 more rows\n# # ℹ Use `print(n = ...)` to see more rows\n# \n# $orgdb\n# OrgDb object:\n# | DBSCHEMAVERSION: 2.1\n# | DBSCHEMA: NOSCHEMA_DB\n# | ORGANISM: Simia fascicularis\n# | SPECIES: Simia fascicularis\n# | CENTRALID: GID\n# | Taxonomy ID: 9541\n# | Db type: OrgDb\n# | Supporting package: AnnotationDbi\n# Please see: help('select') for usage information\n\n\n\n\n\n\n\nTip\n\n\n\nHow to find AnnotationHub IDs according to taxid?\n\nif (!require(\"BiocManager\", quietly = TRUE))\n    install.packages(\"BiocManager\")\n\nBiocManager::install(\"AnnotationHub\")\n\nlibrary(AnnotationHub)\nah &lt;- AnnotationHub()\n# Search for your organism database by taxid (here taxid is \"9541\")\nquery_result &lt;- AnnotationHub::query(ah, c(\"OrgDb\", \"9541\"))\n# Use the ah_id from the results\nquery_result$ah_id\n# [1] \"AH119899\" \"AH119900\" \"AH119901\" \"AH119902\"\n\n\n\n\n\n\n\n\n2.2.2 Metabolite ID Conversion\nFor human metabolite data, convert IDs bwteen KEGG and HMDB:\n\n# Convert KEGG IDs to HMDB IDs (human only)\nmet_variable_info &lt;- convert_id(\n  data = demo_data_met,\n  query_type = \"metabolite\", \n  from_id_type = \"keggid\",\n  organism = \"hsa\" # KEGG organism code\n)\n\n# Result will include both hmdbid and keggid columns\nhead(met_variable_info)\n# # A tibble: 6 × 5\n#   variable_id  keggid      fdr score hmdbid     \n#   &lt;chr&gt;        &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;      \n# 1 M448T566_NEG C05466 5.12e- 3  1.13 HMDB0000637\n# 2 M229T462_NEG C02678 7.43e- 4  1.20 HMDB0000623\n# 3 M367T590_NEG C04555 2.28e- 4  1.34 HMDB0001032\n# 4 M221T50_POS  C13008 7.99e- 3  1.36 HMDB0006240\n# 5 M544T604_POS C04230 1.19e-18  1.53 HMDB0002815\n# 6 M544T604_POS C04230 1.19e-18  1.53 HMDB0010380",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html#next-step",
+    "href": "02_data_preparation.html#next-step",
+    "title": "2  Data Preparation",
+    "section": "2.6 Next Step",
+    "text": "2.6 Next Step\nOnce your input tables are ready, continue to Feature Annotation to run annotate_feature().",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html",
+    "href": "03_feature_annotation.html",
+    "title": "3  Feature Annotation",
+    "section": "",
+    "text": "3.1 What annotate_feature() Does\nThis chapter describes Step 1 of the FeatureMAP pipeline: feature-level metabolite annotation using annotate_feature().\nannotate_feature() performs feature-to-metabolite candidate annotation for LC–MS data and resolves the many-to-many relationship between features and metabolites. The procedure consists of below main stages:\nThe function returns a featuremap_result object with stage marker \"feature_annotated\", which is required for all downstream analyses.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#gene-based-enrichment",
+    "href": "03_feature_annotation.html#gene-based-enrichment",
+    "title": "3  Feature Annotation",
+    "section": "",
+    "text": "3.1.1 Supported Databases and Keytypes\nThe mapa package leverages the powerful enrichment functions from the clusterProfiler package for pathway analysis. The following table shows which databases you can use for your organism and the supported key types:\n\n\n\nDatabase\nSupported Organism\nKeytype Options\n\n\n\n\nGene Ontology (GO)\nAny organism with OrgDb object (organism annotation database package from Bioconductor or OrgDb object retrieved from AnnotationHub, see ?sec-gene_id_conversion)\nAny keyType supported by your OrgDb object\n\n\nKEGG\nAll KEGG organisms\n\"kegg\", \"ncbi-geneid\", \"ncbi-proteinid\", \"uniprot\"\n\n\nReactome\nhuman, rat, mouse, celegans, yeast, zebrafish, fly, bovine, canine, chicken\nENTREZID only\n\n\n\n\n\n\n\n\n\nTip\n\n\n\n\nTo check available GO keytype for your organism:\nFor model organisms with Bioconductor annotation packages\n\n## For model organisms with Bioconductor annotation packages\nlibrary(org.Mm.eg.db)\nAnnotationDbi::keytypes(org.Mm.eg.db)\n# [1] \"ACCNUM\" \"ALIAS\" \"ENSEMBL\" \"ENSEMBLPROT\" \"ENSEMBLTRANS\" \"ENTREZID\" \"ENZYME\"  \"EVIDENCE\" \"EVIDENCEALL\" \"GENENAME\"    \n# [11] \"GENETYPE\" \"GO\" \"GOALL\" \"IPI\" \"MAP\" \"OMIM\" \"ONTOLOGY\" \"ONTOLOGYALL\" \"PATH\" \"PFAM\"        \n# [21] \"PMID\" \"PROSITE\" \"REFSEQ\" \"SYMBOL\" \"UCSCKG\" \"UNIPROT\" \n\nFor non-model organisms with annotation OrgDb retrieved from AnnotationHub\n\n# variable_info is the output from the ID conversion step in Chapter 2 - Data Input and Preprocessing\nAnnotationDbi::keytypes(variable_info$orgdb)\n\nFor comprehensive understanding of enrichment analysis concepts, methodologies, we highly recommend reading the Biomedical Knowledge Mining using GOSemSim and clusterProfiler book. This book covers all the underlying methods that MAPA uses and will help you make informed decisions about your analysis parameters.\n\n\n\n\n\n3.1.2 Basic Usage\n\nOver-Representation Analysis (ORA)Gene Set Enrichment Analysis (GSEA)\n\n\nUse enrich_pathway() for Over-Representation Analysis.\n\nlibrary(org.Mm.eg.db)\n    \ngene_enriched_pathways &lt;- \n  enrich_pathway(\n    variable_info = variable_info,\n    query_type = \"gene\",\n    database = c(\"go\", \"kegg\", \"reactome\"),\n    # GO parameters\n    go.orgdb = org.Mm.eg.db, # or \"org.Mm.eg.db\" (in quotes) if you did not load `org.Mm.eg.db`\n    go.keytype = \"ENTREZID\",\n    go.ont = \"ALL\",\n    # KEGG parameters\n    kegg.organism = \"mmu\",\n    kegg.keytype = \"kegg\",\n    # Reactome parameters\n    reactome.organism = \"mouse\",\n    # Statistical parameters\n    pvalueCutoff = 0.05,\n    pAdjustMethod = \"BH\"\n  )\n\n# GO database...\n# KEGG database...\n# Reading KEGG annotation online: \"https://rest.kegg.jp/link/hsa/pathway\"...\n# Reading KEGG annotation online: \"https://rest.kegg.jp/list/pathway/hsa\"...\n# Reactome database...\n# Done.\n\n\n\nThe do_gsea() function performs GSEA using ranked gene lists based on fold changes or other metrics.\n\nlibrary(org.Mm.eg.db)\n    \ngsea_pathways &lt;- \n  do_gsea(\n    variable_info = variable_info,\n    query_type = \"gene\",\n    order_by = \"fc\",              # Column to rank genes by\n    database = c(\"go\", \"kegg\", \"reactome\"),\n    # Database parameters\n    go.orgdb = org.Mm.eg.db, # or \"org.Mm.eg.db\" (in quotes) if you did not load `org.Mm.eg.db`\n    go.ont = \"ALL\",\n    go.keytype = \"ENTREZID\",\n    kegg.organism = \"mmu\",\n    kegg.keytype = \"kegg\",\n    reactome.organism = \"mouse\",\n    # GSEA parameters\n    pvalueCutoff = 0.05,\n    pAdjustMethod = \"BH\"\n  )\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\n\nModel organisms: use variable_info directly and package name for go.orgdb\nNon-model organisms: use variable_info$data for parameter variable_info and variable_info$orgdb for go.orgdb",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#metabolite-based-enrichment",
+    "href": "03_feature_annotation.html#metabolite-based-enrichment",
+    "title": "3  Feature Annotation",
+    "section": "3.2 Metabolite-based Enrichment",
+    "text": "3.2 Metabolite-based Enrichment\n\n3.2.1 Supported Databases and Keytypes\n\n\n\nDatabase\nSupported Organism\nKeytype Options\n\n\n\n\nKEGG\nAll KEGG organisms\nKEGG compound IDs\n\n\nSMPDB\nOnly for human\nHMDB IDs\n\n\n\n\n\n3.2.2 Basic Usage\nFor metabolite data, ensure your variable_info contains HMDB IDs and/or KEGG compound IDs.\n\nmet_enriched_pathways &lt;- \n  enrich_pathway(\n    variable_info = met_variable_info,\n    query_type = \"metabolite\",\n    database = c(\"hmdb\", \"metkegg\"),\n    met_organism = \"hsa\",\n    save_to_local = TRUE,\n    pvalueCutoff = 0.05,\n    pAdjustMethod = \"BH\"\n  )",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#sec-enrichment_res_interpretation",
+    "href": "03_feature_annotation.html#sec-enrichment_res_interpretation",
+    "title": "3  Feature Annotation",
+    "section": "3.5 Result Interpretation",
+    "text": "3.5 Result Interpretation\nAfter running annotate_feature(), the result is stored in a featuremap_result object that contains the feature-to-metabolite annotations. First confirm that the annotation step completed successfully:\n\nres$stage\n# [1] \"feature_annotated\"\n\nres$object_type\n# [1] \"featuremap_result\"\n\nnames(res)\n\n\n3.5.1 Feature-to-metabolite annotation table\nThe main output of this step is the refined annotation table:\n\nhead(res$anno_feature_table1)\n\nThis table represents the mapping between LC–MS features and metabolite candidates after iterative refinement. Each row corresponds to a feature–metabolite relationship supported by the evidence scoring and filtering procedure described above.\n\n\n3.5.2 Annotation redundancy summary\nTo understand how annotation ambiguity was reduced, inspect:\n\nres$anno_redundancy\n\nThis summary reports the level of annotation redundancy before and after refinement, including:\n\nhow many ambiguous feature annotations were removed\nthe final number of retained feature–metabolite mappings\n\nOnce feature annotation is complete, continue to next step.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html",
+    "href": "04_pcsf_subnetwork.html",
+    "title": "4  Extract Subnetwork",
+    "section": "",
+    "text": "4.1 Overview\nThis chapter covers the two methods available in MAPA for calculating pathway similarity, which include traditional similarity (e.g. Jaccard, Wang algorithm) and Pathway biological text embedding similarity (Biotext embedding) we developed.\nMAPA provides two approaches for calculating pathway similarity:\nBoth methods prepare your data for downstream clustering analysis, so you can choose the approach that best fits your research needs and computational resources.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html#overview",
+    "href": "04_pcsf_subnetwork.html#overview",
+    "title": "4  Extract Subnetwork",
+    "section": "",
+    "text": "Traditional Similarity (merge_pathways()): Uses gene/metabolite overlap and semantic similarity\nBiotext Embedding Similarity (get_bioembedsim()): Uses LLM text embeddings to capture semantic relationships",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html#method-comparison",
+    "href": "04_pcsf_subnetwork.html#method-comparison",
+    "title": "4  Extract Subnetwork",
+    "section": "4.2 Method Comparison",
+    "text": "4.2 Method Comparison\n\n\n\n\n\n\n\n\nAspect\nTraditional Similarity\nBiotext Embedding Similarity\n\n\n\n\nBasis\nGene/metabolite overlap + semantic structure\nText semantic meaning\n\n\nSpeed\nFast, deterministic\nSlower, requires API calls\n\n\nCost\nFree\nAPI usage costs\n\n\nReproducibility\nFully reproducible\nHighly reproducible (minor API variations)\n\n\nNovel discoveries\nBased on known annotations\nCan identify functional relationships beyond overlap\n\n\nInternet dependency\nMinimal (for GO/KEGG updates)\nRequired for API access\n\n\nCross-database integration\nLimited by annotation overlap\nExcellent semantic integration\n\n\n\nWhen to use each method:\n\nTraditional Similarity: When working with limited internet access, need fully reproducible results, or working with well-annotated pathways where overlap is meaningful\nBiotext Embedding (recommended): When exploring novel functional relationships, integrating diverse databases, or when semantic understanding is more important than annotation overlap",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html#method-1-traditional-similarity",
+    "href": "04_pcsf_subnetwork.html#method-1-traditional-similarity",
+    "title": "4  Extract Subnetwork",
+    "section": "4.3 Method 1: Traditional Similarity",
+    "text": "4.3 Method 1: Traditional Similarity\nThe merge_pathways() function calculates similarity using established methods:\n\nOnly GO terms: Semantic similarity using the simona package\nGO/KEGG/Reactome/SMPDB pathways: Gene/metabolite overlap similarity (Jaccard, Dice, Overlap, and Kappa)\n\n\nGene-based AnalysisMetabolite-based Analysis\n\n\n\ngene_similarity_result &lt;- \n  merge_pathways(\n    object = gene_enriched_pathways,\n    database = c(\"go\", \"kegg\", \"reactome\"),\n    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)\n    p.adjust.cutoff.go = 0.05,\n    p.adjust.cutoff.kegg = 0.05,\n    p.adjust.cutoff.reactome = 0.05,\n    count.cutoff.go = 5,\n    count.cutoff.kegg = 5,\n    count.cutoff.reactome = 5,\n    # Similarity methods\n    measure.method.go = \"Sim_XGraSM_2013\",  # GO semantic similarity\n    go.orgdb = \"org.Mm.eg.db\",               # Required for GO analysis\n    measure.method.kegg = \"jaccard\",        # Gene overlap similarity\n    measure.method.reactome = \"jaccard\"     # Gene overlap similarity\n  )\n\n# --------------------\n# GO database...\n# Calculating similartiy matrix, it may take a while...\n# relations: is_a, part_of, regulates, negatively_regulates, positively_regulates\n# IC_method: IC_annotation\n# term_sim_method: Sim_XGraSM_2013\n# IC_method: IC_annotation\n# Completed GO term (BP) similarity calculation.\n# relations: is_a, part_of, regulates, negatively_regulates, positively_regulates\n# IC_method: IC_annotation\n# term_sim_method: Sim_XGraSM_2013\n# IC_method: IC_annotation\n# Completed GO term (MF) similarity calculation.\n# relations: is_a, part_of, regulates, negatively_regulates, positively_regulates\n# IC_method: IC_annotation\n# term_sim_method: Sim_XGraSM_2013\n# IC_method: IC_annotation\n# Completed GO term (CC) similarity calculation.\n# Completed GO term similarity calculation successfully!\n# Identifying modules...\n# Done\n# --------------------\n# KEGG database...\n# Calculating similartiy matrix, it may take a while...\n# Reading KEGG annotation online: \"https://rest.kegg.jp/link/mmu/pathway\"...\n# Reading KEGG annotation online: \"https://rest.kegg.jp/list/pathway/mmu\"...\n# Completed KEGG pathway similarity calculation successfully!\n# Identifying modules...\n# Done\n# --------------------\n# Reactome database...\n# Calculating similartiy matrix, it may take a while...\n# Completed Reactome pathway similarity calculation successfully!\n# Identifying modules...\n# Done\n# Done\n\n\n\n\n\n\n\nNote\n\n\n\ngo.orgdb Selection:\n\nFor model organisms with Bioconductor annotation packages: use the package directly (e.g., go.orgdb = \"org.Mm.eg.db\")\nFor non-model organisms: use the OrgDb object from Section 2.2.1 (e.g., go.orgdb = variable_info$orgdb)\n\n\n\n\n\n\n\n\n\n\n\nImportant\n\n\n\nOrganism Limitation: Traditional similarity for metabolites is recommended primarily for human studies where you can use both KEGG and HMDB databases. For non-human organisms, only KEGG is available, making this approach less informative. Consider using biotext embedding similarity instead for non-human metabolite studies.\n\n\n\nmet_similarity_result &lt;- \n  merge_pathways(\n    object = met_enriched_pathways,\n    database = c(\"hmdb\", \"metkegg\"),\n    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)\n    p.adjust.cutoff.hmdb = 0.05,\n    p.adjust.cutoff.metkegg = 0.05,\n    count.cutoff.hmdb = 5,\n    count.cutoff.metkegg = 5,\n    # Similarity methods\n    measure.method.hmdb = \"jaccard\",\n    measure.method.metkegg = \"jaccard\"\n  )\n\n# --------------------\n# HMDB database...\n# Calculating similartiy matrix, it may take a while...\n# Completed SMPDB pathway similarity calculation successfully!\n# Identifying modules...\n# Done\n# --------------------\n# KEGG database...\n# Calculating similartiy matrix, it may take a while...\n# Completed KEGG pathway similarity calculation successfully!\n# Identifying modules...\n# Done\n# Done\n\n\n\n\n\n4.3.1 Similarity Methods Details\nGO Semantic Similarity Methods\nFor GO terms, MAPA uses the simona package:\n\n\n\n\n\n\n\n\nMethod\nType\nDescription\n\n\n\n\nSim_XGraSM_2013\nHybrid\nCombines multiple similarity aspects\n\n\nSim_Wang_2007\nStructure-based\nBased on GO graph structure\n\n\nSim_Lin_1998\nInformation content-based\nUses information content of terms\n\n\nSim_Resnik_1999\nInformation content-based\nInformation content of most informative common ancestor\n\n\n\nGene/Metabolite Overlap Similarity\nFor KEGG, Reactome, and metabolite pathways:\n\n\n\n\n\n\n\n\n\nMethod\nFormula\nDescription\nUse Case\n\n\n\n\njaccard\n|A ∩ B| / |A ∪ B|\nJaccard index\nDefault, most commonly used\n\n\ndice\n2 × |A ∩ B| / (|A| + |B|)\nDice coefficient\nEmphasizes shared elements\n\n\noverlap\n|A ∩ B| / min(|A|, |B|)\nOverlap coefficient\nGood for pathways of different sizes\n\n\nkappa\n(Po - Pe) / (1 - Pe)\nCohen’s kappa\nAccounts for chance agreement\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nFor detailed explanations of the similarity methods, see the simona documentation.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html#method-2-biotext-embedding-similarity",
+    "href": "04_pcsf_subnetwork.html#method-2-biotext-embedding-similarity",
+    "title": "4  Extract Subnetwork",
+    "section": "4.4 Method 2: Biotext Embedding Similarity",
+    "text": "4.4 Method 2: Biotext Embedding Similarity\nThe get_bioembedsim() function leverages large language model text embedding models to capture semantic relationships between pathway descriptions, enabling more nuanced similarity calculation based on biological function.\n\nGene-based AnalysisMetabolite-based Analysis\n\n\n\ngene_biotext_similarity &lt;- \n  get_bioembedsim(\n    object = gene_enriched_pathways,\n    api_provider = \"openai\",\n    text_embedding_model = \"text-embedding-3-small\",\n    api_key = \"your_openai_api_key\",\n    database = c(\"go\", \"kegg\", \"reactome\"),\n    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)\n    p.adjust.cutoff.go = 0.05,\n    p.adjust.cutoff.kegg = 0.05,\n    p.adjust.cutoff.reactome = 0.05,\n    count.cutoff.go = 5,\n    count.cutoff.kegg = 5,\n    count.cutoff.reactome = 5\n  )\n\n# Getting pathway text embeddings ...\n# Calculating cosine similairty ...\n# Biotext embedding and similarity calculation finished\n\n\n\n\nmet_biotext_similarity &lt;- \n  get_bioembedsim(\n    object = met_enriched_pathways,\n    api_provider = \"openai\",\n    text_embedding_model = \"text-embedding-3-small\",\n    api_key = \"your_openai_api_key\",\n    database = c(\"hmdb\", \"metkegg\"),\n    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)\n    p.adjust.cutoff.hmdb = 0.05,\n    p.adjust.cutoff.metkegg = 0.05,\n    count.cutoff.hmdb = 5,\n    count.cutoff.metkegg = 5\n  )\n\n# Getting pathway text embeddings ...\n# Calculating cosine similairty ...\n# Biotext embedding and similarity calculation finished\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nAPI Key Setup:\n\nFor OpenAI: Obtain your API key from OpenAI Platform\nFor Gemini: Get your API key from Google AI Studio\nFor SiliconFlow: Get your API key from SiliconFlow Quick Start\n\nStore your API key securely and never commit it to version control.\n\n\n\n4.4.1 How Biotext Embedding Works\nThe biotext embedding process involves several steps:\n\nText Extraction: For each pathway, the function extracts pathway name and description from respective databases\nText Embedding: The text information is sent to the specified embedding model to generate high-dimensional vector representations\nSimilarity Calculation: Cosine similarity is calculated between all pathway embedding vectors\n\n\n\n\n\n\n\nTip\n\n\n\nUnderstanding Text Embeddings: Text embeddings convert text into numerical vectors that capture semantic meaning. For a comprehensive introduction to embeddings, including how they work, model details and best practices, see the OpenAI Embeddings Guide.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html#results-interpretation",
+    "href": "04_pcsf_subnetwork.html#results-interpretation",
+    "title": "4  Extract Subnetwork",
+    "section": "4.5 Results Interpretation",
+    "text": "4.5 Results Interpretation\nBoth approaches prepare your data for the next steps: optimal cluster parameter determination and functional module identification.\n\n# Traditional similarity results\ngene_similarity_result\n# Return intra-database modules generated based on pathway similarity\nhead(gene_similarity_result@merged_pathway_go$module_result)\n\nKey result columns:\n\nmodule: Module identifier (e.g., “go_Module_2”)\nmodule_annotation: Representative annotation (pathway name with the lowest adjusted p-value for ORA/ pathway name with the highest |NES| for GSEA) for the module\nDescription: Names of all the pathways in the module separated by ;\nmodule_content: All pathways/terms (i.e. nodes) grouped in this module\nCount: Number of genes/metabolites from the input genes/metabolites list in the module\np_adjust: Best (lowest) adjusted p-value among pathways in the module\n\n\n# Biotext embedding results  \ngene_biotext_similarity\n# Returns list with similarity matrix and enriched pathway object\nnames(gene_biotext_similarity)\n# [1] \"sim_matrix\"        \"enriched_pathway\"\n\n# Examine similarity matrix\ngene_biotext_similarity$sim_matrix[1:5, 1:5]\n#            GO:0016049 GO:0031589 GO:1900046 GO:0071375 GO:0061900\n# GO:0016049  1.0000000  0.3779020  0.2286780  0.3376592  0.4369859\n# GO:0031589  0.3779020  1.0000000  0.2702301  0.3123477  0.3938414\n# GO:1900046  0.2286780  0.2702301  1.0000000  0.3277389  0.2867548\n# GO:0071375  0.3376592  0.3123477  0.3277389  1.0000000  0.4493753\n# GO:0061900  0.4369859  0.3938414  0.2867548  0.4493753  1.0000000",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html#trouble-shooting",
+    "href": "04_pcsf_subnetwork.html#trouble-shooting",
+    "title": "4  Extract Subnetwork",
+    "section": "4.6 Trouble Shooting",
+    "text": "4.6 Trouble Shooting\n\nWhen calculating the pathway similarity using Biotext pathway embedding, if you encounter an error like this, it might be due to a network issue. Please try running it multiple times.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "04_pcsf_subnetwork.html#next-steps",
+    "href": "04_pcsf_subnetwork.html#next-steps",
+    "title": "4  Extract Subnetwork",
+    "section": "4.7 Next Steps",
+    "text": "4.7 Next Steps\nContinue to Optimal Clustering Parameters to determine the best clustering parameters for your similarity data, then proceed to Functional Module Identification to group related pathways into modules.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html",
+    "href": "05_module_identification.html",
+    "title": "5  Module Identification",
+    "section": "",
+    "text": "5.1 Overview\nThis chapter describes how to systematically evaluate different clustering parameters to find the optimal settings for grouping your pathway similarity results into functional modules.\nThe determine_optimal_clusters() function tests clustering methods and similarity cutoffs, using modularity and silhouette scores to select optimal parameters. This ensures better clustering choices before functional module identification, which saves you time and enhances biological interpretability.\nOverall, this chapter is not mandatory but highly recommended for anyone aiming to obtain high-quality functional modules.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#supported-input-types",
+    "href": "05_module_identification.html#supported-input-types",
+    "title": "5  Module Identification",
+    "section": "5.2 Supported Input Types",
+    "text": "5.2 Supported Input Types\nThe function accepts two types of input objects:\n\nTraditional similarity objects: Results from merge_pathways() (functional_module class)\nBiotext embedding objects: Results from get_bioembedsim() (list with sim_matrix and enriched_pathway)\n\nFor traditional similarity objects, the function internally calculates Jaccard similarity between modules from different databases. For biotext embedding objects, it uses the pre-computed semantic similarity matrix.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#basic-usage",
+    "href": "05_module_identification.html#basic-usage",
+    "title": "5  Module Identification",
+    "section": "5.3 Basic Usage",
+    "text": "5.3 Basic Usage\n\nTraditional Similarity ResultsBiotext Embedding Results\n\n\n\ncluster_evaluation &lt;- \n  determine_optimal_clusters(\n    object = met_similarity_result,\n    cutoff_increment = 0.05  # Test cutoffs from 0.2 to 0.9 in steps of 0.05\n  )\n\n# Starting optimal cluster determination...\n# Extracting similarity matrix and pathway data...\n# Calculating the similarity matrix...\n# Starting clustering evaluation across methods and cutoffs...\n# Processing method: hierarchical ...\n# Processing method: binary_cut ...\n# Processing method: girvan_newman ...\n# Clustering evaluation completed! Generating plots and finding optimal parameters...\n# Analysis complete!\n\n\n\n\ncluster_evaluation &lt;- \n  determine_optimal_clusters(\n    object = met_biotext_similarity,\n    cutoff_increment = 0.05\n  )\n\n# Starting optimal cluster determination for biotext embedding object...\n# Extracting similarity matrix and pathway data...\n# Starting clustering evaluation across methods and cutoffs...\n# Processing method: hierarchical_ward.D ...\n# Processing method: binary_cut ...\n# Processing method: louvain ...\n# Clustering evaluation completed! Generating plots and finding optimal parameters...\n# Analysis complete!",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#clustering-methods-evaluated",
+    "href": "05_module_identification.html#clustering-methods-evaluated",
+    "title": "5  Module Identification",
+    "section": "5.4 Clustering Methods Evaluated",
+    "text": "5.4 Clustering Methods Evaluated\nThe function tests three clustering algorithms:\n\nHierarchical Clustering: Traditional agglomerative clustering with specified linkage method (default linkage method is “complete”)\nBinary Cut: Uses the simplifyEnrichment algorithm\nGirvan-Newman: Community detection based on edge betweenness\n\nEach method is tested across a range of similarity cutoffs to find the optimal balance between cluster cohesion and separation.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#evaluation-metrics",
+    "href": "05_module_identification.html#evaluation-metrics",
+    "title": "5  Module Identification",
+    "section": "5.5 Evaluation Metrics",
+    "text": "5.5 Evaluation Metrics\nModularity: Measures the strength of division of a network into modules. Higher values indicate better defined community structure.\nSilhouette Score: Measures how similar objects are to their own cluster compared to other clusters. Values range from -1 to 1, with higher values indicating better clustering.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#similarity-cutoff-interpretation",
+    "href": "05_module_identification.html#similarity-cutoff-interpretation",
+    "title": "5  Module Identification",
+    "section": "5.6 Similarity Cutoff Interpretation",
+    "text": "5.6 Similarity Cutoff Interpretation\nThe meaning of sim.cutoff depends on your clustering method:\n\nGirvan-NewmanBinary Cut & Hierarchical\n\n\nEdge Filter: Only pathway pairs with similarity above this threshold are connected.\n\nLower values (0.3-0.4): More permissive, denser networks, larger modules\nHigher values (0.6-0.8): More stringent, sparser networks, smaller modules\n\n\n\nDendrogram Cutting Height: Determines where to cut the clustering tree.\n\nLower values (0.3-0.4): Cut lower in tree, more fine-grained modules\n\nHigher values (0.6-0.8): Cut higher in tree, fewer but larger modules\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nKey Difference in Cutoff Interpretation:\n\nIn Girvan-Newman, higher cutoffs = smaller modules\nIn Binary Cut/Hierarchical, higher cutoffs = larger modules\n\nAlways examine your results and adjust based on the biological interpretability of resulting modules.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#parameter-customization",
+    "href": "05_module_identification.html#parameter-customization",
+    "title": "5  Module Identification",
+    "section": "5.7 Parameter Customization",
+    "text": "5.7 Parameter Customization\n\n# Fine-grained parameter search\ndetailed_evaluation &lt;- \n  determine_optimal_clusters(\n    object = met_similarity_result,\n    cutoff_increment = 0.01,  # Smaller steps for more detailed analysis\n    hclust_method = \"ward.D2\"  # Different hierarchical clustering method\n  )\n\n# Starting optimal cluster determination for functional_module object...\n# Extracting similarity matrix and pathway data...\n# Calculating the similarity matrix...\n# Starting clustering evaluation across methods and cutoffs...\n# Processing method: hierarchical_ward.D ...\n# Available hierarchical clustering methods:\n# \"ward.D\", \"ward.D2\", \"single\", \"complete\", \"average\", \"mcquitty\", \"median\", \"centroid\"",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#results-interpretation",
+    "href": "05_module_identification.html#results-interpretation",
+    "title": "5  Module Identification",
+    "section": "5.8 Results Interpretation",
+    "text": "5.8 Results Interpretation\nThe function returns a comprehensive evaluation with three components:\n\n# View the evaluation plot\ncluster_evaluation$evaluation_plot\n\n# Examine detailed results\nhead(cluster_evaluation$cluster_result)\n# # A tibble: 6 × 4\n#   method       cutoff metric     value\n#   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;\n# 1 hierarchical   0.2  modularity   0  \n# 2 hierarchical   0.2  silhouette   0.4\n# 3 hierarchical   0.25 modularity   0  \n# 4 hierarchical   0.25 silhouette   0.4\n# 5 hierarchical   0.3  modularity   0  \n\n# Find the best parameter combinations\ncluster_evaluation$best_combination\n# # A tibble: 22 × 4\n#    method        cutoff metric     value\n#    &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;\n#  1 binary_cut      0.85 modularity 0.375\n#  2 binary_cut      0.9  modularity 0.375\n#  3 girvan_newman   0.2  modularity 0.375\n# ...\n\nEvaluation Plot: Shows how clustering quality metrics change across similarity cutoffs for each method. Look for:\n\nPeaks in modularity: Indicate good community structure\nHigh silhouette scores: Indicate well-separated clusters\nConsistent performance: Methods that perform well across multiple cutoffs\n\nBest Combination: Identifies the optimal method and cutoff for each metric.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "05_module_identification.html#next-steps",
+    "href": "05_module_identification.html#next-steps",
+    "title": "5  Module Identification",
+    "section": "5.9 Next Steps",
+    "text": "5.9 Next Steps\nUse the optimal parameters identified in this analysis for functional module identification in Chapter 6: Functional Module Identification. The recommended method and cutoff values will help you ensure the pathway modules are high-quality, biologically meaningful.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html",
+    "href": "06_function_annotation.html",
+    "title": "6  Function Annotation",
+    "section": "",
+    "text": "6.1 Overview\nThis chapter describes how to group related pathways into functional modules using the optimal clustering parameters determined in the previous chapter.\nThe get_functional_modules() function is a generic function that identifies functional modules from pathway similarity results. It automatically detects the type of input object and applies the appropriate clustering method:",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#overview",
+    "href": "06_function_annotation.html#overview",
+    "title": "6  Function Annotation",
+    "section": "",
+    "text": "Traditional similarity objects: Uses Jaccard similarity between modules from different databases\nBiotext embedding objects: Uses pre-computed semantic similarity matrices",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#basic-usage",
+    "href": "06_function_annotation.html#basic-usage",
+    "title": "6  Function Annotation",
+    "section": "6.2 Basic Usage",
+    "text": "6.2 Basic Usage\nThe function automatically detects your input type and applies the appropriate clustering strategy, take metabolomic data for example:\n\nTraditional Similarity ResultsBiotext Embedding Results\n\n\n\nfunctional_modules &lt;- \n  get_functional_modules(\n    object = met_similarity_result,\n    sim.cutoff = 0.5,\n    cluster_method = \"louvain\"\n  )\n\n# Get functional modules from traditional pathway similarity calculation results ...\n# Calculating the similarity matrix...\n# Identifying functional modules...\n# Done\n\n\n\n\nfunctional_modules &lt;- \n  get_functional_modules(\n    object = met_biotext_similarity,\n    sim.cutoff = 0.5,\n    cluster_method = \"louvain\"\n  )\n\n# Get functional modules from Biotext embedding results ...\n# Identifying functional modules...\n# Joining with `by = join_by(node)`\n# Done",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#using-optimal-parameters",
+    "href": "06_function_annotation.html#using-optimal-parameters",
+    "title": "6  Function Annotation",
+    "section": "6.3 Using Optimal Parameters",
+    "text": "6.3 Using Optimal Parameters\nApply the parameters identified in your clustering evaluation:\n\n# Extract optimal parameters from your evaluation\nbest_params &lt;- cluster_evaluation$best_combination\n\n# Use modularity-optimized parameters\nmodularity_optimal &lt;- best_params[best_params$metric == \"modularity\", ]\noptimal_method &lt;- modularity_optimal$method[1]\noptimal_cutoff &lt;- modularity_optimal$cutoff[1]\n\n# Apply optimal parameters\nfunctional_modules &lt;- \n    get_functional_modules(\n      object = met_similarity_result,\n      sim.cutoff = optimal_cutoff,\n      cluster_method = optimal_method\n    )\n\n# Alternatively, use silhouette-optimized parameters for better separation\nsilhouette_optimal &lt;- best_params[best_params$metric == \"silhouette\", ]",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#similarity-cutoff-interpretation",
+    "href": "06_function_annotation.html#similarity-cutoff-interpretation",
+    "title": "6  Function Annotation",
+    "section": "6.4 Similarity Cutoff Interpretation",
+    "text": "6.4 Similarity Cutoff Interpretation\nThe meaning of sim.cutoff depends on your clustering method:\n\nGirvan-NewmanBinary Cut & Hierarchical\n\n\nEdge Filter: Only pathway pairs with similarity above this threshold are connected.\n\nLower values (0.3-0.4): More permissive, denser networks, larger modules\nHigher values (0.6-0.8): More stringent, sparser networks, smaller modules\n\n\n\nDendrogram Cutting Height: Determines where to cut the clustering tree.\n\nLower values (0.3-0.4): Cut lower in tree, more fine-grained modules\n\nHigher values (0.6-0.8): Cut higher in tree, fewer but larger modules\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nKey Difference in Cutoff Interpretation:\n\nIn Girvan-Newman, higher cutoffs = smaller modules\nIn Binary Cut/Hierarchical, higher cutoffs = larger modules\n\nAlways examine your results and adjust based on the biological interpretability of resulting modules.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#results-interpretation",
+    "href": "06_function_annotation.html#results-interpretation",
+    "title": "6  Function Annotation",
+    "section": "6.5 Results Interpretation",
+    "text": "6.5 Results Interpretation\nAfter functional module identification, examine your results:\n\n# View analysis summary\nfunctional_modules\n# -------------------- \n# Analysis method: enrich_pathway \n# -------------------- \n# -----------Variable information------------\n# 119  features/markers in total\n# -----------Enrichment results and modules of genes------------\n# -----------GO------------\n# 1025 GO terms with p.adjust &lt; 0.05 \n# 250 GO modules \n# -----------KEGG------------\n# 48 KEGG pathways with p.adjust &lt; 0.05 \n# 29 KEGG modules\n# -----------Reactome------------\n# 48 Reactome pathways with p.adjust &lt; 0.05 \n# 13 Reactome modules\n# -----------Functional modules------------\n# 158 Functional modules\n# -----------LLM module interpretation------------\n# No LLM module interpretation results\n# -------------------- \n# Processing information\n# 4 processings in total\n# enrich_pathway ---------- \n#   Package    Function.used                Time\n# 1    mapa enrich_pathway() 2025-06-09 21:32:51\n# merge_pathways ---------- \n#   Package    Function.used                Time\n# 1    mapa merge_pathways() 2025-06-09 21:34:00\n# merge_modules ---------- \n#   Package   Function.used                Time\n# 1    mapa merge_modules() 2025-06-09 21:34:56\n\n# Access functional modules\nhead(functional_modules@merged_module$functional_module_result)\n\n\n6.5.1 Key Result Columns\n\nmodule: Functional Module identifier (e.g., “Functional_module_127”)\nmodule_annotation: Representative pathway name (lowest p-value for ORA, highest |NES| for GSEA)\nDescription: Names of all pathways in the module (separated by ;)\nmodule_content: All pathway/term IDs grouped in this module\nCount: Number of genes/metabolites from input list in the module\np_adjust: Best (lowest) adjusted p-value among pathways in the module\n\nFor GSEA results, additional columns include: - NES: Normalized Enrichment Score of the representative pathway - core_enrichment: Core enriched genes contributing to the module",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#quality-assessment",
+    "href": "06_function_annotation.html#quality-assessment",
+    "title": "6  Function Annotation",
+    "section": "6.6 Quality Assessment",
+    "text": "6.6 Quality Assessment\nEvaluate the quality of your functional modules:\n\n# Check module size distribution\nmodule_results &lt;- functional_modules@merged_module$functional_module_result\nmodule_sizes &lt;- table(module_results$Count)\n\n# Plot module size distribution\nbarplot(module_sizes, \n        main = \"Distribution of Module Sizes\", \n        xlab = \"Number of Genes/Metabolites per Module\",\n        ylab = \"Number of Modules\")\n\n# Examine top modules by significance\ntop_modules &lt;- \n  module_results %&gt;%\n  arrange(p_adjust) %&gt;%\n  head(10)\n\nprint(top_modules[, c(\"module_annotation\", \"Count\", \"p_adjust\")])\n\n# Check for singleton modules (modules with only one pathway)\nchr &lt;- as.character(module_results$module_content); chr[is.na(chr)] &lt;- \"\"; counts &lt;- lengths(strsplit(chr, \";\", fixed = TRUE))\nsingleton_count &lt;- sum(counts == 1 & nzchar(chr))\ncat(\"Number of singleton modules:\", singleton_count, \"\\n\")\ncat(\"Percentage of singleton modules:\", round(singleton_count/nrow(module_results)*100, 1), \"%\\n\")",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#next-steps",
+    "href": "06_function_annotation.html#next-steps",
+    "title": "6  Function Annotation",
+    "section": "6.7 Next Steps",
+    "text": "6.7 Next Steps\nContinue to LLM Interpretation to add AI-powered functional annotations to your modules, or proceed to Data Visualization to create informative plots of your functional modules.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "10_shinyapp_installation.html",
+    "href": "10_shinyapp_installation.html",
+    "title": "7  Installation",
+    "section": "",
+    "text": "7.1 Web-based Access to MAPA\nFollow the steps below to install the latest development version of MAPA Shiny App from GitHub (the script first installs BiocManager, remotes, and MAPA if you don’t have them):\nA hosted, browser-based instance of MAPA is available for users who prefer not to manage a local R environment. The service provides the same point-and-click interface as the Shiny application and requires no installation.\nAccess URL: https://mapashiny.jaspershenlab.com",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
+    "objectID": "10_shinyapp_installation.html#sec-web",
+    "href": "10_shinyapp_installation.html#sec-web",
+    "title": "7  Installation",
+    "section": "",
+    "text": "Note\n\n\n\nThe workflow described in this section is applicable to both MAPA Shiny App and the web-based MAPA platform.\n\n\n\n7.1.1 Getting Started\n\nOpen the URL above in a modern web browser\nFollow this tutorial to upload input data and configure analysis parameters\nLaunch the workflow and monitor progress in the browser\nDownload figures, tables, and reports upon completion\n\n\n\n\n\n\n\nImportant\n\n\n\nData Privacy Statement\n\nYes, your uploaded data are transmitted to and processed by our server.\nNo, we do not sell your data, use your data to train machine-learning models, or make your files public.\n\nUploaded files are used solely to run the analysis you request and are kept in session-scoped, temporary storage that is routinely purged.\nIf your dataset is confidential, regulated, or requires strict control over storage location and retention, prefer the local Shiny deployment under your organization’s governance.\n\n\n\n\n\n\n\n\nNote\n\n\n\nWe’re excited that the MAPA web and MAPA Shinyapp are already available and working well. However, some webpage features and graphical layouts are still under active development. This means the version you see might look slightly different from the examples present in this tutorial.\nThese updates are part of our ongoing effort to improve your experience and make things better step by step. Thank you sincerely for your patience and understanding.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html",
+    "href": "11_data_preparation_shiny.html",
+    "title": "8  Data Preparation",
+    "section": "",
+    "text": "8.1 Launching the MAPA Shiny App\nThis chapter covers how to input and pre-process your data using the MAPA Shiny App. This stage prepares your data for fitting the input type of downstream analysis.\nBefore you can input and process your data, you need to launch the MAPA Shiny application by running the following code:\nmapashiny::run_mapa_shiny()\nOnce launched, you’ll see the MAPA interface with:\nThe sidebar contains the following sections:",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#launching-the-mapa-shiny-app",
+    "href": "11_data_preparation_shiny.html#launching-the-mapa-shiny-app",
+    "title": "8  Data Preparation",
+    "section": "",
+    "text": "Header: Application title and navigation\nSidebar: Menu with different analysis steps\nMain Panel: Content area for each analysis step\n\n\n\n\n\n\n\n\nIntroduction: Overview of MAPA functionality\nData Upload: File upload and ID conversion (covered in this chapter)\nPathway Enrichment: Pathway enrichment analysis\nPathway Similarity Calculation: Includes methods for grouping related pathways\nModule Identification: Identify inner-connected functional modules among merged pathways\nModule Annotation: AI-powered functional module annotation\nData Visualization: Results plotting and visualization\nResults & Report: Final results and report generation",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#accessing-the-upload-data-interface",
+    "href": "11_data_preparation_shiny.html#accessing-the-upload-data-interface",
+    "title": "8  Data Preparation",
+    "section": "8.2 Accessing the Upload Data Interface",
+    "text": "8.2 Accessing the Upload Data Interface\nAfter launching the MAPA Shiny app, navigate to the Upload Data tab in the sidebar. The interface is divided into two main sections:\n\nLeft Panel: File upload, data type selection, and processing parameters\nRight Panel: Data preview and download options",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#input-data-requirements",
+    "href": "11_data_preparation_shiny.html#input-data-requirements",
+    "title": "8  Data Preparation",
+    "section": "8.3 Input Data Requirements",
+    "text": "8.3 Input Data Requirements\nThe Shiny app accepts CSV files (.csv) and Excel files (.xlsx, .xls). For more details and examples, see Section 2.1.\n\nGene Expression DataMetabolite Data\n\n\nFor Over-Representation Analysis (ORA), your data must contain one of the following identifier columns (column names must be lowercase):\n\nensembl: Ensembl gene IDs (e.g., “ENSG00000141510”)\nentrezid: NCBI Entrez gene IDs (e.g., “7157”)\nuniprot: UniProtKB accession numbers (e.g., “P04637”)\nsymbol: Gene symbols (e.g., “TP53”)\n\nFor Gene Set Enrichment Analysis (GSEA), you need:\n\nOne identifier column (ensembl, entrezid, uniprot, or symbol)\nAn order_by column named “fc” or “p_value_adjust”, containing numeric values to rank genes (This is used to create the ranked gene list required for GSEA. Common choices like Log2 fold change values, pvalue)\n\n\n\nFor metabolite analysis, your data must contain one of the following identifier columns:\n\nhmdbid: Human Metabolome Database IDs (e.g., “HMDB0000001”) - Human only\nkeggid: KEGG Compound IDs (e.g., “C00001”) - All organisms",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#step-by-step-guide",
+    "href": "11_data_preparation_shiny.html#step-by-step-guide",
+    "title": "8  Data Preparation",
+    "section": "8.4 Step-by-Step Guide",
+    "text": "8.4 Step-by-Step Guide\n\n8.4.1 Step 1: Select Query Type\nFirst, choose your data type using the radio buttons:\n\nGene: For gene expression or proteomic data\nMetabolite: For metabolomic data\n\n\n\n\n\n\n\n\n8.4.2 Step 2: Load Your Data\nYou have two options for loading data:\n\nOption A: Upload Your Own DataOption B: Use Example Data\n\n\n\nClick “Browse” to upload your file\nSelect a CSV or Excel file from your computer\nThe data will be automatically loaded and displayed in the preview table\n\n\n\n\n\n\n\n\nFor quick testing, select from the available example datasets:\nGene Examples:\n\nPathway Enrichment Example: Sample data for Over-Representation Analysis (ORA)\nGSEA Example: Sample data with fold change values for Gene Set Enrichment Analysis\n\nMetabolite Examples:\n\nPathway Enrichment Example: Sample metabolite data for pathway analysis\n\n\n\n\n\n\n\n\n\n\n\n8.4.3 Step 3: Configure ID Conversion Parameters\n\n8.4.3.1 For Gene Data\n\nModel OrganismsNon-Model Organisms\n\n\nIf working with common model organisms:\n\nSelect Organism: Choose from the dropdown menu for standard organism database Bioconductor packages.\n\n\n\n\n\n\nNote\n\n\n\nFor most model organisms, Bioconductor already supplies curated organism annotation databases (the OrgDb packages). You can browse the complete list and select the one that matches your species of interest here.\n\n\nInput ID Type: Select the identifier type in your data\n\n\n\n\n\n\n\n\nFor organisms without standard Bioconductor packages:\n\nAnnotationHub ID: Enter the AnnotationHub identifier (e.g., “AH119900”)\nReturn OrgDb: Check this box to return the organism database for downstream analysis\nInput ID Type: Select your input identifier type\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nFinding AnnotationHub IDs:\nTo find the correct AnnotationHub ID for your organism:\n\nlibrary(AnnotationHub)\nah &lt;- AnnotationHub()\n# Search by taxonomy ID (e.g., 9541 for Macaca fascicularis)\nquery_result &lt;- AnnotationHub::query(ah, c(\"OrgDb\", \"9541\"))\nquery_result$ah_id\n\n\n\n\n\n\n\n\n8.4.3.2 For Metabolite Data\n\nOrganism: Select from KEGG organism codes\nInput ID Type: Choose the identifier type in your data: KEGG ID (available for all organisms), HMDB ID (human only)\n\n\n\n\n\n\n\n\n\n8.4.4 Step 4: Process Your Data\n\nClick the “Submit” button to start ID conversion\nThe app will validate your inputs and perform the conversion\nSuccess or error messages will appear as notifications\nProcessed data will be displayed in the preview table\n\n\n\n\n\n\n\n\n8.4.5 Step 5: Review and Download Results\nAfter successful processing:\n\nPreview: Review the converted data in the “Marker information” tab\nDownload: Click the “Download” button to save the processed data as a CSV file\nView Code: Click the “Code” button to see the R code that replicates your conversion",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#understanding-the-results",
+    "href": "11_data_preparation_shiny.html#understanding-the-results",
+    "title": "8  Data Preparation",
+    "section": "8.5 Understanding the Results",
+    "text": "8.5 Understanding the Results\nAfter ID conversion, your data will contain all necessary identifier columns:\nFor Genes:\n\nOriginal columns from your input data\nensembl: Ensembl gene IDs\nentrezid: NCBI Entrez gene IDs\n\nuniprot: UniProtKB accession numbers\nsymbol: Gene symbols\n\n\n\n\n\n\n\nNote\n\n\n\nBlank columns might appear for some identifier types after ID conversion. Because some annotation databases may not provide all four identifier types (ensembl, entrezid, uniprot, symbol). MAPA will generate blank columns for unavailable ID types. Do NOT delete these blank columns as they are required for the downstream workflow to function correctly.\n\n\nFor Metabolites:\n\nOriginal columns from your input data\nhmdbid: HMDB IDs (human only)\nkeggid: KEGG compound IDs",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#troubleshooting-common-issues",
+    "href": "11_data_preparation_shiny.html#troubleshooting-common-issues",
+    "title": "8  Data Preparation",
+    "section": "8.6 Troubleshooting Common Issues",
+    "text": "8.6 Troubleshooting Common Issues\n\nFile Upload Problems\nIssue: “Unsupported file format” error\nSolution: Ensure your file is in CSV (.csv) or Excel (.xlsx, .xls) format\nID Conversion Errors\nIssue: “Invalid OrgDb package name” error\nSolution: Ensure the organism package name follows the format org.XX.eg.db\nIssue: “Package not installed” error\nSolution: Install the required Bioconductor package:\n\nBiocManager::install('org.Hs.eg.db')  # Example for human\n\nIssue: High percentage of failed ID mappings\nSolution:\n\nVerify your input ID type selection matches your data\nCheck for typos or formatting issues in your identifiers\nSome ID loss is normal during conversion\n\nNon-Model Organism Issues\nIssue: AnnotationHub ID not found\nSolution:\n\nVerify the AnnotationHub ID is correct\nCheck internet connection for AnnotationHub access\nUse the search method provided in the tip above",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#next-steps",
+    "href": "11_data_preparation_shiny.html#next-steps",
+    "title": "8  Data Preparation",
+    "section": "8.7 Next Steps",
+    "text": "8.7 Next Steps\nOnce your data is successfully processed:\n\nClick the “Next” button to proceed to Enrich Pathways\nOr navigate manually to the Enrich Pathways tab in the sidebar\n\nThe processed data will automatically be available for pathway enrichment analysis in the next step.\n\n\n\n\n\n\nImportant\n\n\n\nBefore Proceeding: Ensure your data conversion was successful and all necessary identifier columns are present. The enrichment analysis requires properly formatted identifier information to function correctly.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html",
+    "href": "12_feature_annotation_shiny.html",
+    "title": "9  Feature Annotation",
+    "section": "",
+    "text": "9.1 Supported Databases and Analysis Types\nThis chapter covers how to perform pathway enrichment analysis using the MAPA Shiny application. The Shiny app provides an intuitive interface for running both Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA) for genes, and ORA for metabolites across multiple databases.\nThe MAPA Shiny app leverages the powerful enrichment functions from the clusterProfiler package for pathway analysis:",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html#sec-supported_db",
+    "href": "12_feature_annotation_shiny.html#sec-supported_db",
+    "title": "9  Feature Annotation",
+    "section": "",
+    "text": "For Gene DataFor Metabolite Data\n\n\n\n\n\nDatabase\nSupported Organism\nKeytype Options\nAnalysis Types\n\n\n\n\nGene Ontology (GO)\nAny organism with OrgDb object (organism annotation database package from Bioconductor or OrgDb object retrieved from AnnotationHub)\nENTREZID, SYMBOL, ENSEMBL, UNIPROT\nORA, GSEA\n\n\nKEGG\nAll KEGG organisms\nkegg, ncbi-geneid, ncbi-proteinid, uniprot\nORA, GSEA\n\n\nReactome\nhuman, rat, mouse, celegans, yeast, zebrafish, fly, bovine, canine, chicken\nENTREZID only\nORA, GSEA\n\n\n\n\n\n\n\n\nDatabase\nSupported Organism\nKeytype Options\nAnalysis Types\n\n\n\n\nKEGG\nAll KEGG organisms\nKEGG compound IDs\nORA only\n\n\nSMPDB\nHuman only\nHMDB IDs\nORA only\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nFor comprehensive understanding of enrichment analysis concepts, methodologies, we highly recommend reading the Biomedical Knowledge Mining using GOSemSim and clusterProfiler book. This book covers all the underlying methods that MAPA uses and will help you make informed decisions about your analysis parameters.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html#gene-based-enrichment-analysis",
+    "href": "12_feature_annotation_shiny.html#gene-based-enrichment-analysis",
+    "title": "9  Feature Annotation",
+    "section": "9.2 Gene-based Enrichment Analysis",
+    "text": "9.2 Gene-based Enrichment Analysis\n\n9.2.1 Step 1: Select Analysis Type\nThe app automatically detects your data type (whether “gene” or “metabolite”) from the previous step. For gene data, choose between:\n\nPathway enrichment analysis (ORA): Tests for over-representation of your genes in predefined pathways\nGene set enrichment analysis (GSEA): Analyzes the entire ranked gene list to identify enriched pathways\n\n\n\n\n\n\n\nNote\n\n\n\nGSEA Requirements: If you select GSEA, an additional “Order by” field will appear. This should correspond to a numeric column in your data (like fold change or p-values) that will be used to rank genes. Make sure this column named “fc” or “p_value_adjust”.\n\n\n\n\n\n\n\n\n\n9.2.2 Step 2: Configure Database Parameters\nThe app automatically detects available databases based on your organism and displays relevant parameter options:\n\nGO ParametersKEGG ParametersReactome Parameters\n\n\nWhen GO is selected, configure:\n\nGO Keytype: Choose the identifier type for GO analysis\n\nENTREZID: Entrez Gene IDs\nSYMBOL: Gene symbols\nENSEMBL: Ensembl gene IDs\nUNIPROT: UniProt IDs\n\nGO Ontology: Select which Gene Ontology aspects to analyze\n\nALL: All three ontologies (recommended)\nBP: Biological Process only\nCC: Cellular Component only\nMF: Molecular Function only\n\n\n\n\n\n\n\n\n\nWhen KEGG is selected, configure:\n\nKEGG Keytype: Choose the identifier type for KEGG analysis\n\nkegg: KEGG gene IDs (recommended)\nncbi-geneid: NCBI Gene IDs\nncbi-proteinid: NCBI Protein IDs\nuniprot: UniProt IDs\n\n\n\n\n\n\n\n\n\nReactome analysis uses ENTREZID only and requires no additional configuration.\n\n\n\n\n\n9.2.3 Step 3: Set Statistical Parameters\nConfigure the statistical thresholds for your analysis:\n\nP-value cutoff: Significance threshold for raw p-values (default: 0.05)\nP-adjust method: Multiple testing correction method (default: BH - Benjamini-Hochberg)\nQ-value cutoff: False Discovery Rate threshold (default: 0.2)\nGene set size: Minimum and maximum pathway sizes to consider (default: 10-500)",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html#metabolite-based-enrichment-analysis",
+    "href": "12_feature_annotation_shiny.html#metabolite-based-enrichment-analysis",
+    "title": "9  Feature Annotation",
+    "section": "9.3 Metabolite-based Enrichment Analysis",
+    "text": "9.3 Metabolite-based Enrichment Analysis\nFor metabolite data, the interface automatically switches to metabolite-specific options and shows available databases based on your organism:\n\nHuman: Both HMDB and KEGG databases available\nOther organisms: Only KEGG database available\n\n\n\n\n\n\n\n9.3.1 Step 1: Submit Analysis\n\nReview your parameter selections\nClick the “Submit” button to start the enrichment analysis\nA progress indicator will show the analysis is running\nSuccess or error messages will appear as notifications\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nProcessing Time: Metabolite enrichment analysis may take several minutes to complete. Please wait patiently while the analysis runs.\n\n\n\n\n9.3.2 Step 2: Review Results\nAfter successful completion, results will appear in the right panel with separate tabs for each database:\n\nGene ResultsMetabolite Results\n\n\nFor gene enrichment analysis, you’ll see tabs for:\n\nGO: Gene Ontology enrichment results\nKEGG: KEGG pathway enrichment results\n\nReactome: Reactome pathway enrichment results\nR object: Summary of the complete results object\n\n\n\n\n\n\n\n\nFor metabolite enrichment analysis, you’ll see tabs for:\n\nKEGG Metabolite: KEGG metabolic pathway results\nHMDB: Small Molecule Pathway Database pathway results (human only)\nR object: Summary of the complete results object",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html#downloading-results",
+    "href": "12_feature_annotation_shiny.html#downloading-results",
+    "title": "9  Feature Annotation",
+    "section": "9.4 Downloading Results",
+    "text": "9.4 Downloading Results\nEach results tab includes a “Download” button to save results as CSV files:\n\nNavigate to the desired results tab\nClick “Download” to save the table\nThe “R object” tab allows downloading the complete results object for further analysis in R",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html#understanding-the-results",
+    "href": "12_feature_annotation_shiny.html#understanding-the-results",
+    "title": "9  Feature Annotation",
+    "section": "9.5 Understanding the Results",
+    "text": "9.5 Understanding the Results\nKey columns in enrichment results:\n\nGene ORAGSEAMetabolite ORA\n\n\nCore Information:\n\nID: Pathway identifier (e.g., GO:0042060 for GO, hsa04060 for KEGG, R-HSA-5669034 for Reactome)\nDescription: Pathway name\nONTOLOGY: Biological ontology (for GO only: MF=molecular function, CC=cellular component, BP=biological process)\ncategory/subcategory: KEGG pathway categories (for KEGG only)\n\nStatistical Measures:\n\npvalue: Raw p-value from hypergeometric test (equivalent to one-sided Fisher’s exact test)\np_adjust: Adjusted p-value after multiple testing correction (BH method by default)\nqvalue: Q-value for FDR control. For more information, see ?qvalue::qvalue\n\nGene Mapping:\n\nGeneRatio: Ratio of input genes annotated to this pathway (format: “genes_in_pathway/total_input_genes”)\nBgRatio: Ratio of all genes annotated to this pathway in the background universe (format: “pathway_genes/universe_genes”)\nCount: Total number of genes from input list that match this pathway\ngeneID: Gene IDs that overlap between your gene list and the pathway (separated by “/”)\n\nEnrichment Metrics:\n\nRichFactor: Ratio of input genes annotated to a pathway vs. all genes annotated to this pathway\nFoldEnrichment: Enrichment fold change (GeneRatio divided by BgRatio)\nzScore: Standard deviations away from expected overlap (How unusual or extreme the observed enrichment is compared to what you’d expect by chance. Higher absolute z-score means more “surprising” or significant enrichment.)\n\n\n\nFor GSEA results, additional columns specific to ranked list analysis include:\n\nsetSize: Total number of genes in the gene set/pathway\nenrichmentScore: Degree of overrepresentation at top/bottom of ranked list\nNES: Normalized Enrichment Score - main metric for interpretation\n\nPositive NES: pathway enriched in upregulated genes (pathway activation)\nNegative NES: pathway enriched in downregulated genes (pathway suppression)\n\nrank: Position in ranked list where maximum enrichment score occurred\nleading_edge: Statistics for the leading-edge subset of genes\ncore_enrichment: Core enriched genes that contribute most to the enrichment signal\nCount: Number of core enriched genes\n\n\n\nFor metabolite ORA results, the result structure differs from gene-based analysis:\nPathway Information:\n\npathway_id: KEGG pathway ID or Small Molecule Pathway Database pathway ID (e.g., SMP0000028)\npathway_name: Name of the metabolic pathway (e.g., “Caffeine Metabolism”)\ndescribtion: Detailed description of the pathway from the corresponding database\npathway_class: Classification of pathway (e.g., “Metabolic;primary_pathway”, “Disease;primary_pathway”)\n\nStatistical Measures:\n\np_value: Raw p-value from enrichment test\np_adjust: Adjusted p-value for multiple testing correction\n\nMetabolite Mapping:\n\nall_id: All metabolite IDs in this pathway (separated by “;”)\nall_number: Total number of metabolites in the pathway\nmapped_id: Your input metabolite IDs that map to this pathway (separated by “;”)\nmapped_number: Number of your metabolites that map to this pathway\nmapped_percentage: Percentage of pathway metabolites covered by your input data",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html#viewing-the-analysis-code",
+    "href": "12_feature_annotation_shiny.html#viewing-the-analysis-code",
+    "title": "9  Feature Annotation",
+    "section": "9.6 Viewing the Analysis Code",
+    "text": "9.6 Viewing the Analysis Code\nClick the “Code” button to see the exact R code that replicates your analysis: This code can be copied and used in your own R scripts for reproducible analysis.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "12_feature_annotation_shiny.html#next-steps",
+    "href": "12_feature_annotation_shiny.html#next-steps",
+    "title": "9  Feature Annotation",
+    "section": "9.7 Next Steps",
+    "text": "9.7 Next Steps\nOnce your enrichment analysis is complete:\n\nReview Results: Examine the significance and biological relevance of enriched pathways\nDownload Data: Save results (especially R Object from R Object tab) for further analysis\nProceed to Clustering: Click the “Next” button to move to pathway clustering analysis. Based on your data type and analysis goals, you can proceed to:\n\nSimCluster Method: Traditional similarity-based clustering (Step 1: Merge Pathways)\nEmbedCluster Method: Advanced biotext embedding-based clustering\n\nFor metabolite analyses in non-human organisms, the app will automatically direct you to the EmbedCluster method, as it’s more suitable for single-database analyses.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html",
+    "href": "13_pcsf_subnetwork.html",
+    "title": "10  Extract Subnetwork",
+    "section": "",
+    "text": "10.1 Step 1: Load Your Data\nThis chapter covers how to calculate pathway similarity using the MAPA Shiny application. The Shiny app computes pathway similarity using two powerful methods: traditional similarity and biotext embedding similarity. Both methods prepare your data for downstream clustering analysis, allowing you to choose the approach that best fits your research needs and computational resources.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html#step-1-load-your-data",
+    "href": "13_pcsf_subnetwork.html#step-1-load-your-data",
+    "title": "10  Extract Subnetwork",
+    "section": "",
+    "text": "Option 1: Continue from Previous Step\nIf you have completed pathway enrichment analysis in the current session, your data will automatically be available for similarity calculation. The interface will detect your data type (gene or metabolite) and display appropriate parameter options.\nOption 2: Upload Existing Results\nIf you have previously saved enrichment results, you can upload them:\n\nClick “Browse” at the top of the left panel “Upload Enriched Pathways Result (.rda)” to upload your enrichment results file (.rda format)\nSelect your file\nWait for validation - the app will automatically detect: data type (gene or metabolite), available databases from your enrichment analysis, organism information (required for downstream analysis)",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html#step-2-select-method",
+    "href": "13_pcsf_subnetwork.html#step-2-select-method",
+    "title": "10  Extract Subnetwork",
+    "section": "10.2 Step 2: Select Method",
+    "text": "10.2 Step 2: Select Method\nOnce your data is loaded, choose your similarity calculation method using the radio buttons:\n\nTraditional methods: Uses established similarity measures (semantic similarity for GO, overlap-based similarity for all supported databases, see Section 9.1)\nBiotext embedding: Uses large language model (LLM) text embeddings to capture semantic relationships\n\n\n10.2.1 Method 1: Traditional Methods\nWhen you select “Traditional methods”, the interface displays database-specific parameter panels based on your enrichment analysis results. The app automatically detects which databases are available from your enrichment analysis. The traditional similarity method requires four main parameters for each database. While the parameter names vary slightly between data types, they serve the same fundamental purposes:\n\n\n\n\n\n\n\n\n\n\nParameter\nPurpose\nDefault\nGene Databases\nMetabolite Databases\n\n\n\n\nP-adjust cutoff\nSignificance threshold for pathway inclusion\n0.05\nGO, KEGG, Reactome\nSMPDB, KEGG\n\n\nCount cutoff\nMinimum genes/metabolites per pathway\n5\nGO, KEGG, Reactome\nSMPDB, KEGG\n\n\nSimilarity method\nAlgorithm for calculating pathway similarity\nSee below\nGO, KEGG, Reactome\nSMPDB, KEGG\n\n\nSimilarity cutoff\nThreshold for intra-database pathway clustering\n0.5\nGO, KEGG, Reactome\nSMPDB, KEGG\n\n\n\nSimilarity Method Options:\n\nOnly GO terms: Semantic similarity using the simona package\nGO/KEGG/Reactome/SMPDB pathways: Gene/metabolite overlap similarity (Jaccard, Dice, Overlap, and Kappa)\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nParameter Selection Guide:\n\nLower p-adjust cutoff (e.g., 0.01) = More stringent, fewer pathways\nHigher count cutoff (e.g., 10) = Focus on larger, more established pathways\nSimilarity cutoff = Balance between intra-database module granularity (lower values) and specificity (higher values)\n\n\n\n\n\n10.2.2 Method 2: Biotext Embedding\nWhen you select “Biotext embedding”, the interface displays parameters for LLM-based similarity calculation.\n\n10.2.2.1 API Configuration\nSet up your API connection:\n\nAPI provider: Choose between OpenAI or Gemini or SiliconFlow\nEmbedding model: Specify the text embedding model (e.g., “text-embedding-3-small”)\nAPI key: Enter your API key for the selected provider\n\n\n\n\n\n\n\nNote\n\n\n\nNote: Third-party API keys, other than SiliconFLow, are not currently supported.\n\n\n\n\n\n\n\n\nTip\n\n\n\nAPI Key Setup:\n\nFor OpenAI: Obtain your API key from OpenAI Platform\nFor Gemini: Get your API key from Google AI Studio\nFor SilisonFlow: Get your API key from SiliconFlow Website\n\nNote: Store your API key securely and never commit it to version control!\n\n\n\n\n\n\n\n\nImportant\n\n\n\nIf you are a server MAPA user, please note:\nWhen running the biotext embedding step in this chapter or the module annotation step in Chapter 12, only models and API keys provided by SiliconFlow are supported.\nThis restriction exists because the server is set up in China Mainland. To ensure a stable connection to SiliconFlow:\n\nUsers in China Mainland: Use an API key from the Chinese portal — https://siliconflow.cn\n\nInternational users: Use an API key from the global portal — https://www.siliconflow.com\n\n\n\n\n\n10.2.2.2 Database Selection and Filtering\nConfigure which databases to include and set filtering parameters:\n\n\n\n\n\n\n\n\n\n\nParameter\nPurpose\nDefault\nGene Analysis\nMetabolite Analysis\n\n\n\n\nAvailable Database\nSelect databases for embedding analysis\nAuto-detected\nGO, KEGG, Reactome\nSMPDB, KEGG\n\n\nP-adjust cutoff\nSignificance threshold for pathway inclusion\n0.05\nAll selected databases\nAll selected databases\n\n\nCount cutoff\nMinimum genes/metabolites per pathway\n5\nAll selected databases\nAll selected databases\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nDatabase Availability: The databases available for selection depend on your organism and the results from your enrichment analysis. Only databases with significant results will be available for embedding analysis.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html#step-3-run-the-analysis",
+    "href": "13_pcsf_subnetwork.html#step-3-run-the-analysis",
+    "title": "10  Extract Subnetwork",
+    "section": "10.3 Step 3: Run the Analysis",
+    "text": "10.3 Step 3: Run the Analysis\n\nVerify your data is loaded - either from the current session or uploaded file\nSelect your similarity method - Traditional or Biotext embedding\nReview all parameter selections to ensure they match your analysis goals\nClick the “Submit” button to start the similarity calculation\nMonitor progress - a progress indicator will show the analysis is running\nWait for completion - processing time varies by method:\n\nTraditional methods: Usually complete within minutes\nBiotext embedding: May take longer due to API calls and text processing",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html#step-4-review-results",
+    "href": "13_pcsf_subnetwork.html#step-4-review-results",
+    "title": "10  Extract Subnetwork",
+    "section": "10.4 Step 4: Review Results",
+    "text": "10.4 Step 4: Review Results\nAfter successful completion, results will appear in the right panel with different content based on your selected method:\n\nTraditional Methods ResultsBiotext Embedding Results\n\n\nTable Tab: View database-specific module results\n\nBrowse enriched pathway intra-database modules generated based on pathway similarity\nExamine module composition\nDownload individual database results as CSV files\n\nKey result columns in the module tables:\n\nmodule: Intra-database module identifier (e.g., “go_Module_2”, “kegg_Module_15”)\nmodule_annotation: Representative pathway name for the module (pathway with lowest p-adjust for ORA or highest |NES| for GSEA)\nDescription: Names of all pathways in the module (separated by ;)\nmodule_content: All pathway/term IDs grouped in this module\nCount: Number of genes/metabolites from input list in the module\np_adjust: Best (lowest) adjusted p-value among pathways in the module\n\n\n\n\n\n\nData Visualization Tab: Generate similarity network plots\n\nClick “Generate plot” to create network visualizations for modules from each database\nCustomize plot parameters (degree cutoff, text display options)\n\n\n\n\n\n\nR Object Tab: Access the complete results object\n\nView a summary of the analysis results\nDownload the complete functional module object (.rda format) for further analysis in R\n\n\n\n\n\n\n\n\nFor biotext embedding results, you’ll see a simplified results panel to download the results (.rda format) which include a similarity matrix and your enrichment analysis result for use in downstream clustering analysis.\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nEmbedding Results: The similarity matrix from biotext embedding is typically large and computationally intensive to display. Instead of showing the full matrix in the interface, you can download it for use in subsequent analysis steps or external tools.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html#step-5-view-analysis-code",
+    "href": "13_pcsf_subnetwork.html#step-5-view-analysis-code",
+    "title": "10  Extract Subnetwork",
+    "section": "10.5 Step 5: View Analysis Code",
+    "text": "10.5 Step 5: View Analysis Code\nClick the “Code” button to see the exact R code that replicates your analysis. This feature provides:\n\nReproducibility: Copy and paste code into R scripts\nLearning: Understand the underlying MAPA functions and parameters\nCustomization: Modify parameters for batch processing or additional analyses",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html#method-comparison",
+    "href": "13_pcsf_subnetwork.html#method-comparison",
+    "title": "10  Extract Subnetwork",
+    "section": "10.6 Method Comparison",
+    "text": "10.6 Method Comparison\n\n\n\n\n\n\n\n\nAspect\nTraditional Methods\nBiotext Embedding\n\n\n\n\nSpeed\nFast, deterministic\nSlower, requires API calls\n\n\nCost\nFree\nAPI usage costs\n\n\nReproducibility\nFully reproducible\nHighly reproducible (minor API variations)\n\n\nNovel discoveries\nBased on known annotations\nCan identify functional relationships beyond overlap\n\n\nInternet dependency\nMinimal (for database updates)\nRequired for API access\n\n\nCross-database integration\nLimited by annotation overlap\nExcellent semantic integration",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "13_pcsf_subnetwork.html#next-steps",
+    "href": "13_pcsf_subnetwork.html#next-steps",
+    "title": "10  Extract Subnetwork",
+    "section": "10.7 Next Steps",
+    "text": "10.7 Next Steps\nOnce your similarity calculation is complete:\n\nReview and Download Results: Examine the similarity patterns and download results for further analysis and as backup copies so that you can restart from this point if needed.\nProceed to Clustering: Click the “Next” button to move to the Pathway Clustering section\n\nThe similarity results will automatically be available for the next step in your MAPA analysis workflow in this current session, where you’ll group related pathways into functional modules.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Extract Subnetwork</span>"
+    ]
+  },
+  {
+    "objectID": "14_module_identification.html",
+    "href": "14_module_identification.html",
+    "title": "11  Module Identification",
+    "section": "",
+    "text": "11.1 Overview\nThis chapter describes how to identify functional modules using the MAPA Shiny application. The Shiny web app provides an intuitive interface for clustering similar pathways into functional modules and assessing clustering quality.\nThe Module Identification section in the MAPA Shiny web app lets you run clustering directly on the pathway similarity matrix and then assess clustering quality with built-in diagnostics.\nThis two-step flow (cluster → assess quality) helps you produce biologically meaningful pathway modules.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "14_module_identification.html#step-1-load-your-data",
+    "href": "14_module_identification.html#step-1-load-your-data",
+    "title": "11  Module Identification",
+    "section": "11.2 Step 1: Load Your Data",
+    "text": "11.2 Step 1: Load Your Data\n\nOption 1: Continue from Previous Step\nIf you have completed pathway similarity calculation in the current session, your data will automatically be available for module identification.\nOption 2: Upload Existing Results\nIf you have previously saved similarity results, you can upload them:\n\nClick “Browse” at the top of the left panel “Upload Similarity Result (.rda)” to upload your similarity results file (.rda format)\nSelect your file\nWait for validation - the app will automatically detect the input type and prepare for Module Identification.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "14_module_identification.html#step-2-perform-module-identification",
+    "href": "14_module_identification.html#step-2-perform-module-identification",
+    "title": "11  Module Identification",
+    "section": "11.3 Step 2: Perform Module Identification",
+    "text": "11.3 Step 2: Perform Module Identification\n\nSet parameters:\n\nSimilarity cutoff: Controls the sparsity/cut level used by the selected method. Smaller values generally retain more edges and yield larger modules; larger values retain fewer edges and yield smaller modules. (Exact behavior varies by algorithm.)\nClustering method: Choose from the available methods in the dropdown.\nHierarchical linkage (shown only when a hierarchical method is selected): Choose the agglomeration linkage.\n\nClick “Submit” to run Module Identification.\nMonitor progress clustering typically completes within minutes\nReview results under “Module identification result” (Table / Data visualization / R object).",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "14_module_identification.html#step-3-review-module-identification-results",
+    "href": "14_module_identification.html#step-3-review-module-identification-results",
+    "title": "11  Module Identification",
+    "section": "11.4 Step 3: Review Module Identification Results",
+    "text": "11.4 Step 3: Review Module Identification Results\nAfter clustering finishes, examine your results in “Module identification result” with three sub-tabs:\n\nTable TabData Visualization TabR Object Tab\n\n\nBrowse the functional module results and download as CSV:\n\nView: Complete functional module results table with key metrics\nDownload: Click “Download” button to save results as CSV for further analysis\n\nKey result columns:\n\nmodule: Functional Module identifier (e.g., “Functional_module_127”)\nmodule_annotation: Representative pathway name (lowest p-value for ORA, highest |NES| for GSEA)\nDescription: Names of all pathways in the module (separated by ;)\nmodule_content: All pathway/term IDs grouped in this module\nCount: Number of genes/metabolites from input list in the module\np_adjust: Best (lowest) adjusted p-value among pathways in the module\n\n\n\n\n\n\n\n\nGenerate similarity network plots to visualize functional modules:\n\nConfigure plot parameters:\n\nDegree cutoff: Minimum pathways per module to display\nText: Show representative module names\nText all: Show all pathway names\n\nClick “Generate plot” to create the network visualization\nExamine the network to understand module relationships and structure\n\n\n\n\n\n\n\n\nAccess the complete results object for further analysis:\n\nView: Summary of the complete functional module analysis\nDownload: Save the complete object (.rda format) for use in R",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "14_module_identification.html#step-4-assess-clustering-quality",
+    "href": "14_module_identification.html#step-4-assess-clustering-quality",
+    "title": "11  Module Identification",
+    "section": "11.5 Step 4: Assess Clustering Quality",
+    "text": "11.5 Step 4: Assess Clustering Quality\nUse the Quality assessment panel to inspect:\n\nModule size: Distribution of module sizes. Avoid many singletons or one giant module.\nSilhouette scores: Higher values indicate better cluster separation.\nQuality metrics table: Tabular metrics summarizing clustering quality. You can download results; plot Width/Height controls are available where applicable.\n\n\n\n\n\n\n\nNote\n\n\n\nYou can upload a module identification result (.rda) here if you ran clustering elsewhere and only want to assess quality.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "14_module_identification.html#step-5-view-analysis-code",
+    "href": "14_module_identification.html#step-5-view-analysis-code",
+    "title": "11  Module Identification",
+    "section": "11.6 Step 5: View Analysis Code",
+    "text": "11.6 Step 5: View Analysis Code\nClick the “Code” button to see the exact R code that replicates your analysis:\n\nModule Identification Code: Shows the code used for clustering with your chosen algorithm and cutoff\nQuality Assessment Code: Shows code used to generate size distribution, silhouette plots, and the metrics table\n\nThis code can be copied and used in your own R scripts for reproducible analysis.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "14_module_identification.html#next-steps",
+    "href": "14_module_identification.html#next-steps",
+    "title": "11  Module Identification",
+    "section": "11.7 Next Steps",
+    "text": "11.7 Next Steps\nOnce your functional module identification is complete:\n\nDownload Results: Save both the table and R object for backup and further analysis\nProceed to LLM Interpretation: Click the “Next” button to move to LLM Interpretation for AI-powered functional annotations of your modules\n\nThe functional modules will automatically be available for the next step in your MAPA analysis workflow, where you can add biological context and interpretations using large language models.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html",
+    "href": "15_function_annotation.html",
+    "title": "12  Function Annotation",
+    "section": "",
+    "text": "12.1 Overview\nThis chapter describes how to interpret the functional modules by integrating Large Language Models (LLMs) with a Retrieval-Augmented Generation (RAG) strategy. The Shiny app provides an approach to combine pathway information, scientific literature, and advanced text analysis to generate meaningful names and summaries for your functional modules.\nThe LLM interpretation process integrates multiple information sources to provide comprehensive module annotations:\nThis approach leverages both structured biological knowledge and cutting-edge research to provide contextually rich interpretations of your functional modules.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#overview",
+    "href": "15_function_annotation.html#overview",
+    "title": "12  Function Annotation",
+    "section": "",
+    "text": "Information Sources:\n\nPathway descriptions from GO, KEGG, Reactome, and metabolite databases\nGene/metabolite names from your input data\nScientific literature retrieved from PubMed based on pathway and molecule relevance\nLocal documents (optional) - your own research papers or relevant literature\n\nAnalysis Pipeline:\n\nInformation Extraction: Extracts pathway descriptions and molecule information\nLiterature Retrieval: Searches PubMed for relevant scientific papers\nRAG Strategy: Uses embeddings to find and rank the most relevant literature, see Section 12.2\nLLM Generation: Generates biological module names and research summaries",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#sec-rag-shiny",
+    "href": "15_function_annotation.html#sec-rag-shiny",
+    "title": "12  Function Annotation",
+    "section": "12.2 Understanding the RAG Strategy",
+    "text": "12.2 Understanding the RAG Strategy\n\n\n\n\n\nThe Retrieval-Augmented Generation (RAG) strategy works in several stages:\nStage 1: Literature Search\n\nSearches PubMed using pathway names and gene/metabolite information\nRetrieves abstracts and titles for relevant papers\nIncludes reference papers cited in pathway databases\n\nStage 2: Embedding-based Similarity\n\nGenerates text embeddings for module descriptions (pathways + molecules)\nCalculates similarity between module embeddings and paper abstracts\nFilters top papers based on cosine similarity scores\n\nStage 3: GPT-powered Reranking\n\nUses LLM to assess relevance of each paper to the specific module by assigning relevance scores (0-1) where 1 indicates high relevance to module pathways and molecules\nSelect the most informative literature for final interpretation\n\nStage 4: Final Generation\n\nCombines module information with top-ranked papers\nGenerates biologically meaningful module names\nProduces research summaries highlighting current knowledge\nAssigns confidence scores (0-1) reflecting the LLM’s assessment of interpretation quality based on available evidence. High confidence means strong literature support and clear biological coherence\n\nThis multi-stage approach ensures that generated annotations are both scientifically accurate and contextually relevant.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#step-1-load-your-data",
+    "href": "15_function_annotation.html#step-1-load-your-data",
+    "title": "12  Function Annotation",
+    "section": "12.3 Step 1: Load Your Data",
+    "text": "12.3 Step 1: Load Your Data\nUpload previously saved results:\n\nClick “Browse” at the top of the left panel “Upload functional module (.rda)” to upload your analyzed functional module file (.rda format)\nSelect your file\n\nYou can also proceed directly if the functional module result is already present in the current session.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#step-2-configure-llm-and-api-settings",
+    "href": "15_function_annotation.html#step-2-configure-llm-and-api-settings",
+    "title": "12  Function Annotation",
+    "section": "12.4 Step 2: Configure LLM and API Settings",
+    "text": "12.4 Step 2: Configure LLM and API Settings\n\n12.4.1 LLM Model Settings\nConfigure your LLM and text embedding models settings with references to the table below:\n\n\n\n\n\n\n\n\n\nParameter\nDescription\nExample\nNotes\n\n\n\n\nAPI provider\nLLM model for text generation\n\"gpt-4o-mini-2024-07-18\"\nCurrently supports OpenAI models only\n\n\nEmbedding model\nModel for text embeddings\n\"text-embedding-3-small\"\nUsed for document similarity\n\n\nAPI key\nOpenAI/Google/SiliconFlow API key\nRequired\nStore securely, never commit to version control\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nModel Selection: The model dropdown in the web only lists variants we’ve tested to work stably. See provider docs if you need others.\n\n\n\n\n\n\n\n\nImportant\n\n\n\nIf you are a server MAPA user, please note:\nWhen running the biotext embedding step in Chapter 10 or the module annotation step in this chapter, only models and API keys provided by SiliconFlow are supported.\nThis restriction exists because the server is set up in China Mainland. To ensure a stable connection to SiliconFlow:\n\nUsers in China Mainland: Use an API key from the Chinese portal — https://siliconflow.cn\n\nInternational users: Use an API key from the global portal — https://www.siliconflow.com\n\n\n\n\n\n12.4.2 Literature Search Settings\n\n\n\n\n\n\n\n\n\nParameter\nDescription\nDefault\nUse Case\n\n\n\n\nModule size cutoff\nMinimum pathways per module\n1\nFilter small modules to focus on substantial ones\n\n\nYears to search\nYears to search back in PubMed\n5\nBalance between recent findings and comprehensive coverage\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nAPI Usage & Processing Time: Each module requires multiple API calls (embedding + LLM generation), with costs scaling by number of modules and literature volume, so consider tweaking Module size cutoff to focus on important modules. Typical processing takes 2-5 minutes per module, with time increasing for more literature and larger modules.\nIf you are using the server-based web version of MAPA, it is highly suggested that you open the browser window as the this step is running, otherwise the server may terminate the job.\n\n\n\n\n12.4.3 Optional Enhancements\n\n\n\n\n\n\n\n\n\nParameter\nDescription\nDefault\nBenefits\n\n\n\n\nDisease or phenotype\nDisease/condition context\nNULL\nAdds disease-specific interpretation\n\n\nLocal corpus directory\nLocal directory with your own PDF files\nNULL\nIncorporates your own research or relevant literature to enhance the interpretation\n\n\n\n\n\n12.4.4 Required Parameters\nTwo parameters are required before submit to LLM interpretation:\n\nEmbeddings output directory (only in MAPA Shiny): The analyzed results will be displayed here\nOrganism gene annotation database: Select the organism of your omic data. You can refer to Data Input Chapter for detailed instruction.\n\n\n\n\n\n\n\nImportant\n\n\n\nDouble Check: Please DO NOT select a directory that contains any of your files, as this step will erase everything inside the chosen directory. Make sure the output directory you select is completely empty.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#step-3-run-the-analysis",
+    "href": "15_function_annotation.html#step-3-run-the-analysis",
+    "title": "12  Function Annotation",
+    "section": "12.5 Step 3: Run the Analysis",
+    "text": "12.5 Step 3: Run the Analysis\n\nVerify your data is loaded - either from the current session or uploaded file\nReview all parameter selections to ensure they match your analysis goals\nClick the “Submit” button to start the LLM interpretation progress\nMonitor progress - a progress indicator will show the analysis is running\nWait for completion - processing time usually takes more than 10 minutes, wait patiently",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#step-4-review-results",
+    "href": "15_function_annotation.html#step-4-review-results",
+    "title": "12  Function Annotation",
+    "section": "12.6 Step 4: Review Results",
+    "text": "12.6 Step 4: Review Results\nAfter successful completion, results will appear in the right panel with updated functional module. You can also first download the R object and load it into your R session to explore the results using Step2: Check Module Annotation Result in the lower panel.\n\n\n\n\n\nKey result elements:\n\nllm_module_name: AI-generated biological module name\nmodule_annotation: Original representative annotation (fallback if LLM interpretation unavailable)\n\n\nInterpretation resultsFull PromptR object\n\n\nFor each interpreted module, the results include:\n\nModule Name: AI-generated biological module name\nModule Summary: Original representative annotation (fallback if LLM interpretation unavailable)\nAssociation With Phenotype: How this module is associated with given phenotype. Empty if no disease or phenotype is entered\nConfidence Score: Indicate LLM’s assessment of interpretation quality based on available evidence. High confidence means strong literature support and clear biological coherence\n\n\n\n\n\n\n\n\nContains the exact prompt sent to the LLM for transparency. Useful for understanding AI reasoning.\n\n\n\n\n\n\n\nThe functional module results are automatically enhanced with an additional column, llm_module_name, which contains the names generated by the LLM. You can download the complete R object for future reference in the Step 2: Check Module Annotation Result panel.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#step-5-download-the-results",
+    "href": "15_function_annotation.html#step-5-download-the-results",
+    "title": "12  Function Annotation",
+    "section": "12.7 Step 5: Download the Results",
+    "text": "12.7 Step 5: Download the Results\nAfter completing the LLM Interpretation step, you have two options for accessing/downloading the results other than viewing it on Shiny app:\n\nDownload the R object (.rda) containing the LLM interpretation results, which can be used for follow-up visualizations described in Chapter 16: Visualization.\n\nCheck out the embeddings output directory, which already includes the following for each functional module:\n\nchunk.txt: AI-generated summaries of the retrieved PubMed literature\nembedding_vector.csv.gz: Text embeddings of the literature with cosine similarity values\n\npaper_title.txt: A list of PubMed articles identified for this functional module, including their titles and PubMed IDs",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#step-6-view-analysis-code",
+    "href": "15_function_annotation.html#step-6-view-analysis-code",
+    "title": "12  Function Annotation",
+    "section": "12.8 Step 6: View Analysis Code",
+    "text": "12.8 Step 6: View Analysis Code\nClick the “Code” button to see the exact R code that replicates your analysis:\n\nCode 1: Shows function() function usage\nCode 2: Shows function() function usage\n\nThis code can be copied and used in your own R scripts for reproducible analysis.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#best-practices",
+    "href": "15_function_annotation.html#best-practices",
+    "title": "12  Function Annotation",
+    "section": "12.9 Best Practices",
+    "text": "12.9 Best Practices\n\nStart Small: Begin with a subset of modules to estimate costs and processing time\nOptimize Parameters: Adjust filtering parameters based on your module complexity\nUse Phenotype Context: Specify relevant diseases/conditions for more targeted interpretations\nInclude Local Literature: Add your own papers for domain-specific insights\nReview Results: Examine confidence scores and retrieved literature quality\nIterate: Refine parameters based on initial results",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#next-steps",
+    "href": "15_function_annotation.html#next-steps",
+    "title": "12  Function Annotation",
+    "section": "12.10 Next Steps",
+    "text": "12.10 Next Steps\nContinue to Data Visualization to create informative plots showcasing your LLM-interpreted modules.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html#load-demo-data",
+    "href": "02_data_preparation.html#load-demo-data",
+    "title": "2  Data Preparation",
+    "section": "2.2 Load Demo Data",
+    "text": "2.2 Load Demo Data\nFeatureMAP provides a built-in demo feature table:\n\ndata(\"demo_feature_table\", package = \"featuremap\")\n\ndim(demo_feature_table)\n# [1] 1189    7\n\nhead(demo_feature_table, 3)\n#    variable_id       mz      rt polarity mean_intensity  condition       pvalue\n# 1 M105T384_POS 105.0334 383.851 positive      371369.28 -0.5029755 1.998631e-01\n# 2  M110T34_POS 110.0085  33.907 positive       58184.51 -0.4755627 9.740936e-05\n# 3  M116T49_POS 116.0700  49.496 positive      695843.03 -0.4107283 3.401449e-02",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html#prepare-your-own-data",
+    "href": "02_data_preparation.html#prepare-your-own-data",
+    "title": "2  Data Preparation",
+    "section": "2.3 Prepare Your Own Data",
+    "text": "2.3 Prepare Your Own Data\nA typical preprocessing pattern is:\n\nlibrary(readr)\nlibrary(dplyr)\n\nfeature_table &lt;- read_csv(\"your_feature_table.csv\") %&gt;%\n  transmute(\n    variable_id = as.character(variable_id),\n    mz = as.numeric(mz),\n    rt = as.numeric(rt),\n    polarity = as.character(polarity),\n    mean_intensity = as.numeric(mean_intensity),\n    condition = as.numeric(condition),\n    pvalue = as.numeric(pvalue)\n  )",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html#pre-run-checklist",
+    "href": "02_data_preparation.html#pre-run-checklist",
+    "title": "2  Data Preparation",
+    "section": "2.4 Pre-run Checklist",
+    "text": "2.4 Pre-run Checklist\nRun these checks before Step 1:\n\nrequired_cols &lt;- c(\"variable_id\", \"mz\", \"rt\", \"polarity\", \"mean_intensity\", \"condition\", \"pvalue\")\nsetdiff(required_cols, colnames(feature_table))\n# should return character(0)\n\nanyDuplicated(feature_table$variable_id)\n# should return 0\n\nall(feature_table$polarity %in% c(\"positive\", \"negative\"))\n# should return TRUE\n\nsum(is.na(feature_table[, required_cols]))\n# ideally 0 for required fields\n\nOnce your input tables are ready, continue to next step.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "02_data_preparation.html#sec-gene_id_conversion",
+    "href": "02_data_preparation.html#sec-gene_id_conversion",
+    "title": "2  Data Preparation",
+    "section": "2.5 Reference Namespace Selection",
+    "text": "2.5 Reference Namespace Selection\nFeatureMAP supports two reference namespaces for downstream annotation and network mapping:\n\nrefdata = \"kegg\"\nrefdata = \"hmdb\"\n\nChoose one namespace and keep it consistent across your workflow (annotate_feature() -&gt; extract_subnetwork() -&gt; identify_module() -&gt; annotate_module()).",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#what-annotate_feature-does",
+    "href": "03_feature_annotation.html#what-annotate_feature-does",
+    "title": "3  Feature Annotation",
+    "section": "",
+    "text": "MS1 database matching: Each LC–MS feature is matched to metabolite databases (e.g., KEGG or HMDB) using accurate mass and common ion forms.\nMetabolite Feature Cluster (MFC) construction: Features annotated to the same metabolite are grouped into MFCs based on retention-time proximity and ion relationships (e.g., adducts or isotopes).\nEvidence-based scoring of MFCs: Each cluster is scored based on supporting evidence such as MS2 annotations, adduct types, and isotopic patterns.\nIterative refinement of annotations: Conflicting annotations are resolved iteratively by removing low-confidence clusters and ambiguous feature assignments until convergence.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#key-parameters",
+    "href": "03_feature_annotation.html#key-parameters",
+    "title": "3  Feature Annotation",
+    "section": "3.2 Key Parameters",
+    "text": "3.2 Key Parameters\n\n\n\n\n\n\n\n\nParameter\nDefault\nDescription\n\n\n\n\nfeature_table\nrequired\nFeature-level input table (Chapter 2 format)\n\n\nms2_table\nNULL\nOptional MS2 annotation table\n\n\nmetabolite_database\nNULL\nOptional user-supplied metid database\n\n\nrefdata\n\"kegg\"/\"hmdb\"\nReference namespace for downstream mapping\n\n\ncolumn\n\"rp\"\nLC mode (\"rp\" or \"hilic\")\n\n\nms1_match_ppm\n15\nMass tolerance used in MS1 matching\n\n\nmfc_rt_tol\n5\nRetention-time tolerance used when constructing MFCs\n\n\nisotope_number\n3\nMaximum isotope depth\n\n\nworkers\n4\nNumber of parallel workers\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nIf metabolite_database = NULL, FeatureMAP loads reference resources automatically (cache/GitHub) based on refdata.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#basic-usage",
+    "href": "03_feature_annotation.html#basic-usage",
+    "title": "3  Feature Annotation",
+    "section": "3.3 Basic Usage",
+    "text": "3.3 Basic Usage\n\nKEGG namespaceHMDB namespace\n\n\n\ndata(\"demo_feature_table\", package = \"featuremap\")\n\nres &lt;- annotate_feature(\n  feature_table = demo_feature_table,\n  ms2_table = NULL,\n  metabolite_database = NULL,\n  refdata = \"kegg\",\n  column = \"rp\",\n  ms1_match_ppm = 15,\n  mfc_rt_tol = 5,\n  isotope_number = 3,\n  workers = 4\n)\n\n\n\n\ndata(\"demo_feature_table\", package = \"featuremap\")\n\nres &lt;- annotate_feature(\n  feature_table = demo_feature_table,\n  ms2_table = NULL,\n  metabolite_database = NULL,\n  refdata = \"hmdb\",\n  column = \"rp\",\n  ms1_match_ppm = 15,\n  mfc_rt_tol = 5,\n  isotope_number = 3,\n  workers = 4\n)",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#optional-integrate-ms2-annotation",
+    "href": "03_feature_annotation.html#optional-integrate-ms2-annotation",
+    "title": "3  Feature Annotation",
+    "section": "3.4 Optional: Integrate MS2 Annotation",
+    "text": "3.4 Optional: Integrate MS2 Annotation\nIf you already have an MS2 annotation table, pass it to ms2_table:\n\nms2_table &lt;- read.csv(\"your_ms2_annotation.csv\")\n\nres &lt;- annotate_feature(\n  feature_table = feature_table,\n  ms2_table = ms2_table,\n  refdata = \"kegg\"\n)\n\nProviding MS2 annotations is optional but can improve confidence in metabolite candidate assignments.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#common-issues",
+    "href": "03_feature_annotation.html#common-issues",
+    "title": "3  Feature Annotation",
+    "section": "3.6 Common Issues",
+    "text": "3.6 Common Issues\n\nNo useful candidates after filtering This may result from strict mass tolerances, incompatible ion mode settings, limited database coverage, or low-quality input features.\nResource loading failure when metabolite_database = NULL Confirm internet access on first run, or provide a local metid database object.\n\nOnce feature annotation is complete, continue to next step.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "03_feature_annotation.html#next-step",
+    "href": "03_feature_annotation.html#next-step",
+    "title": "3  Feature Annotation",
+    "section": "3.7 Next Step",
+    "text": "3.7 Next Step\nOnce feature annotation is complete, continue to Extract Subnetwork for PCSF-based network construction.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
+    ]
+  }
+]

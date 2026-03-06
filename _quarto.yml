@@ -1,0 +1,51 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "FeatureMAP Tutorial"
+  author: "[Yuting Wang](https://ytwangzero.github.io/), [Xiaotao Shen](https://www.jaspershenlab.com/)"
+  date: "6/6/2026"
+  favicon: "/images/featureMAP_logo.png"
+  url: http://www.shen-lab.org/mapa-tutorial/
+  sidebar:
+    logo: "images/featureMAP_logo.png"
+    search: true
+  repo-url: https://github.com/jaspershen-lab/mapa-tutorial
+  repo-actions: [edit, issue, source]
+  image: "images/featureMAP_logo.png"
+  
+  chapters:
+    - index.qmd
+    
+    - part: "R Package"
+      chapters:
+        - 01_package_installation.qmd
+        - 02_data_preparation.qmd
+        - 03_feature_annotation.qmd
+        - 04_pcsf_subnetwork.qmd
+        - 05_module_identification.qmd
+        - 06_function_annotation.qmd
+    
+    - part: "Shiny App"
+      chapters:
+        - 10_shinyapp_installation.qmd
+        - 11_data_preparation_shiny.qmd
+        - 12_feature_annotation_shiny.qmd
+        - 13_pcsf_subnetwork.qmd
+        - 14_module_identification.qmd
+        - 15_function_annotation.qmd
+
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: superhero
+    css: custom.css
+
+editor: visual
+

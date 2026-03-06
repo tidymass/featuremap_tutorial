@@ -1,0 +1,149 @@
+# Feature Annotation {#sec-enrichment_analysis}
+
+This chapter describes **Step 1** of the FeatureMAP pipeline: feature-level metabolite annotation using `annotate_feature()`.
+
+::: callout-important
+**Prerequisites:** Make sure your input data follows the format in [Data Preparation](02_data_preparation.qmd), especially the required `feature_table` columns in @sec-input_data_requirement.
+:::
+
+## What `annotate_feature()` Does
+
+`annotate_feature()` performs **feature-to-metabolite candidate annotation** for LC–MS data and resolves the many-to-many relationship between features and metabolites. The procedure consists of below main stages:
+
+-   **MS1 database matching:** Each LC–MS feature is matched to metabolite databases (e.g., KEGG or HMDB) using accurate mass and common ion forms.
+
+-   **Metabolite Feature Cluster (MFC) construction:** Features annotated to the same metabolite are grouped into MFCs based on retention-time proximity and ion relationships (e.g., adducts or isotopes).
+
+-   **Evidence-based scoring of MFCs:** Each cluster is scored based on supporting evidence such as MS2 annotations, adduct types, and isotopic patterns.
+
+-   **Iterative refinement of annotations:** Conflicting annotations are resolved iteratively by removing low-confidence clusters and ambiguous feature assignments until convergence.
+
+The function returns a `featuremap_result` object with stage marker `"feature_annotated"`, which is required for all downstream analyses.
+
+## Key Parameters
+
+| Parameter | Default | Description |
+|----------------------|----------------------------:|----------------------|
+| `feature_table` | required | Feature-level input table (Chapter 2 format) |
+| `ms2_table` | `NULL` | Optional MS2 annotation table |
+| `metabolite_database` | `NULL` | Optional user-supplied `metid` database |
+| `refdata` | `"kegg"`/`"hmdb"` | Reference namespace for downstream mapping |
+| `column` | `"rp"` | LC mode (`"rp"` or `"hilic"`) |
+| `ms1_match_ppm` | `15` | Mass tolerance used in MS1 matching |
+| `mfc_rt_tol` | `5` | Retention-time tolerance used when constructing MFCs |
+| `isotope_number` | `3` | Maximum isotope depth |
+| `workers` | `4` | Number of parallel workers |
+
+::: callout-note
+If `metabolite_database = NULL`, FeatureMAP loads reference resources automatically (cache/GitHub) based on `refdata`.
+:::
+
+## Basic Usage
+
+::: panel-tabset
+##### KEGG namespace
+
+```{r}
+#| eval: false
+
+data("demo_feature_table", package = "featuremap")
+
+res <- annotate_feature(
+  feature_table = demo_feature_table,
+  ms2_table = NULL,
+  metabolite_database = NULL,
+  refdata = "kegg",
+  column = "rp",
+  ms1_match_ppm = 15,
+  mfc_rt_tol = 5,
+  isotope_number = 3,
+  workers = 4
+)
+```
+
+##### HMDB namespace
+
+```{r}
+#| eval: false
+
+data("demo_feature_table", package = "featuremap")
+
+res <- annotate_feature(
+  feature_table = demo_feature_table,
+  ms2_table = NULL,
+  metabolite_database = NULL,
+  refdata = "hmdb",
+  column = "rp",
+  ms1_match_ppm = 15,
+  mfc_rt_tol = 5,
+  isotope_number = 3,
+  workers = 4
+)
+```
+:::
+
+## Optional: Integrate MS2 Annotation
+
+If you already have an MS2 annotation table, pass it to `ms2_table`:
+
+```{r}
+#| eval: false
+
+ms2_table <- read.csv("your_ms2_annotation.csv")
+
+res <- annotate_feature(
+  feature_table = feature_table,
+  ms2_table = ms2_table,
+  refdata = "kegg"
+)
+```
+
+Providing MS2 annotations is optional but can improve confidence in metabolite candidate assignments.
+
+## Result Interpretation {#sec-enrichment_res_interpretation}
+
+After running `annotate_feature()`, the result is stored in a `featuremap_result` object that contains the feature-to-metabolite annotations. First confirm that the annotation step completed successfully:
+
+```{r}
+#| eval: false
+
+res$stage
+# [1] "feature_annotated"
+
+res$object_type
+# [1] "featuremap_result"
+
+names(res)
+```
+
+### Feature-to-metabolite annotation table
+
+The main output of this step is the refined annotation table:
+
+```{r}
+#| eval: false
+
+head(res$anno_feature_table1)
+
+```
+
+This table represents the **mapping between LC–MS features and metabolite candidates after iterative refinement**. Each row corresponds to a feature–metabolite relationship supported by the evidence scoring and filtering procedure described above.
+
+### Annotation redundancy summary
+
+To understand how annotation ambiguity was reduced, inspect:
+
+```{r}
+#| eval: false
+
+res$anno_redundancy
+
+```
+
+This summary reports the level of annotation redundancy before and after refinement, including:
+
+-   how many ambiguous feature annotations were removed
+
+-   the final number of retained feature–metabolite mappings
+
+Once feature annotation is complete, continue to next step.

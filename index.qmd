@@ -1,0 +1,38 @@
+# Preface {.unnumbered}
+
+## FeatureMAP: A [Feature]{.underline}-based Metabolite Functional [M]{.underline}odule Identification and [A]{.underline}nnotation [P]{.underline}ipeline
+
+**FeatureMAP** (`featuremap`) is a feature-centric framework for untargeted metabolomics that identifies biologically meaningful metabolic modules directly from metabolomic data, rather than relying only on predefined pathways or fully confirmed metabolite identities. It is developed by the [Shen Lab](https://www.shen-lab.org/) at Nanyang Technological University, Singapore.
+
+The package provides a four-step workflow:
+
+1.  **Feature annotation**: annotate raw LC-MS features to metabolite candidates using MS1 (and optional MS2) information.
+2.  **Subnetwork extraction**: construct a robust prize-collecting Steiner forest (PCSF)-based metabolic subnetwork.
+3.  **Module identification**: detect functional modules by community detection and evaluate module significance.
+4.  **Module annotation**: interpret significant modules with database knowledge, optional PubMed evidence, and optional LLM summarization.
+
+This workflow helps convert feature-level metabolomics signals into interpretable biological modules in a reproducible and analysis-ready format.
+
+## Aim of This Tutorial
+
+This guide walks you through the two faces of FeatureMAP: the R package for **command-line (code-based)** workflow and the **Shiny App/Web version** for point-and-click exploration. In the end, you will be able to:
+
+1.  Prepare a valid feature table for FeatureMAP.
+2.  Run the complete four-step FeatureMAP pipeline with R code.
+3.  Complete the same analysis with the FeatureMAP Shiny App/Web interface.
+4.  Understand and inspect key result objects and module-level interpretations.
+
+Whether you favour the command line or a browser, this tutorial gives you everything you need to apply FeatureMAP confidently in your metabolomics projects.
+
+## 📥 Contact Us
+
+-   📩 Email: [xiaotao.shen\@ntu.edu.sg](mailto:xiaotao.shen@ntu.edu.sg)
+-   📩 Email: [yuting012\@e.ntu.edu.sg](mailto:yuting012@e.ntu.edu.sg)
+-   🏠 Shen Lab website: [shen-lab.org](https://www.shen-lab.org/)
+-   💬 WeChat: [jaspershen1990](https://jaspershen.github.io/image/wechat_QR.jpg)
+
+## 🔗 Links
+
+-   📖 Citation: [Shen Lab](https://www.shen-lab.org/)
+-   ☁️ Online FeatureMAP Shiny: [shen-lab.org](https://www.shen-lab.org/)
+-   🧬 FeatureMAP GitHub: [tidymass/featuremap](https://github.com/tidymass/featuremap)
