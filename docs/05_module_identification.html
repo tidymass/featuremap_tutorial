@@ -355,7 +355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -435,15 +435,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">5.1</span> Overview</a></li>
-  <li><a href="#supported-input-types" id="toc-supported-input-types" class="nav-link" data-scroll-target="#supported-input-types"><span class="header-section-number">5.2</span> Supported Input Types</a></li>
+  <li><a href="#what-identify_module-does" id="toc-what-identify_module-does" class="nav-link active" data-scroll-target="#what-identify_module-does"><span class="header-section-number">5.1</span> What <code>identify_module()</code> Does</a></li>
+  <li><a href="#key-parameters" id="toc-key-parameters" class="nav-link" data-scroll-target="#key-parameters"><span class="header-section-number">5.2</span> Key Parameters</a></li>
   <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage"><span class="header-section-number">5.3</span> Basic Usage</a></li>
-  <li><a href="#clustering-methods-evaluated" id="toc-clustering-methods-evaluated" class="nav-link" data-scroll-target="#clustering-methods-evaluated"><span class="header-section-number">5.4</span> Clustering Methods Evaluated</a></li>
-  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics"><span class="header-section-number">5.5</span> Evaluation Metrics</a></li>
-  <li><a href="#similarity-cutoff-interpretation" id="toc-similarity-cutoff-interpretation" class="nav-link" data-scroll-target="#similarity-cutoff-interpretation"><span class="header-section-number">5.6</span> Similarity Cutoff Interpretation</a></li>
-  <li><a href="#parameter-customization" id="toc-parameter-customization" class="nav-link" data-scroll-target="#parameter-customization"><span class="header-section-number">5.7</span> Parameter Customization</a></li>
-  <li><a href="#results-interpretation" id="toc-results-interpretation" class="nav-link" data-scroll-target="#results-interpretation"><span class="header-section-number">5.8</span> Results Interpretation</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">5.9</span> Next Steps</a></li>
+  <li><a href="#clustering-methods" id="toc-clustering-methods" class="nav-link" data-scroll-target="#clustering-methods"><span class="header-section-number">5.4</span> Clustering Methods</a></li>
+  <li><a href="#result-interpretation" id="toc-result-interpretation" class="nav-link" data-scroll-target="#result-interpretation"><span class="header-section-number">5.5</span> Result Interpretation</a>
+  <ul class="collapse">
+  <li><a href="#module-membership-table" id="toc-module-membership-table" class="nav-link" data-scroll-target="#module-membership-table"><span class="header-section-number">5.5.1</span> Module membership table</a></li>
+  <li><a href="#module-significance-table" id="toc-module-significance-table" class="nav-link" data-scroll-target="#module-significance-table"><span class="header-section-number">5.5.2</span> Module significance table</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/05_module_identification.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/05_module_identification.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -453,7 +453,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_package_installation.html">R Package</a></li><li class="breadcrumb-item"><a href="./05_module_identification.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Module Identification</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-get_functional_modules" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Module Identification</span></span></h1>
+<h1 class="title"><span id="sec-module_identification" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Module Identification</span></span></h1>
 </div>
 
 
@@ -470,10 +470,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter describes how to systematically evaluate different clustering parameters to find the optimal settings for grouping your pathway similarity results into functional modules.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapa)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<p>This chapter describes <strong>Step 3</strong> of the FeatureMAP pipeline: identifying functional modules from the PCSF-derived subnetwork using <code>identify_module()</code>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -484,106 +481,203 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Prerequisites:</strong> Before determining optimal clustering parameters, ensure you have calculated pathway similarity using either <code>merge_pathways()</code> or <code>get_bioembedsim()</code> as described in <a href="04_pcsf_subnetwork.html" class="quarto-xref"><span>Chapter 4</span></a>. The similarity results will be used as input for this analysis.</p>
+<p><strong>Prerequisites:</strong> You need a <code>featuremap_result</code> object from <a href="./04_pcsf_subnetwork.html">Subnetwork Extraction</a>, with stage <code>"subnetwork_extracted"</code>.</p>
 </div>
 </div>
-<section id="overview" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">5.1</span> Overview</h2>
-<p>The <code>determine_optimal_clusters()</code> function tests clustering methods and similarity cutoffs, using modularity and silhouette scores to select optimal parameters. This ensures better clustering choices before functional module identification, which saves you time and enhances biological interpretability.</p>
-<p>Overall, this chapter is not mandatory but highly recommended for anyone aiming to obtain high-quality functional modules.</p>
-</section>
-<section id="supported-input-types" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="supported-input-types"><span class="header-section-number">5.2</span> Supported Input Types</h2>
-<p>The function accepts two types of input objects:</p>
+<section id="what-identify_module-does" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="what-identify_module-does"><span class="header-section-number">5.1</span> What <code>identify_module()</code> Does</h2>
+<p><code>identify_module()</code> performs community detection on the extracted subnetwork and then evaluates module significance using permutation testing.</p>
+<p>At a high level, this step performs the following operations:</p>
 <ol type="1">
-<li><strong>Traditional similarity objects</strong>: Results from <code>merge_pathways()</code> (functional_module class)</li>
-<li><strong>Biotext embedding objects</strong>: Results from <code>get_bioembedsim()</code> (list with sim_matrix and enriched_pathway)</li>
+<li><p><strong>Construct a module detection graph:</strong> A metabolite-only subgraph is derived from the PCSF subnetwork. Steiner nodes with low occurrence frequency can be filtered using <code>node_freq</code>.</p></li>
+<li><p><strong>Detect network communities:</strong> Community detection algorithms are applied to partition the network into candidate modules.</p></li>
+<li><p><strong>Build module membership table:</strong> Node-to-module assignments are recorded in <code>module_table</code>.</p></li>
+<li><p><strong>Compute module activity scores:</strong> Module scores summarize the statistical signal from features mapped to metabolites within the module.</p></li>
+<li><p><strong>Assess statistical significance:</strong> A permutation procedure is used to estimate empirical significance and control false discovery rate.</p></li>
 </ol>
-<p>For <strong>traditional similarity objects</strong>, the function internally calculates Jaccard similarity between modules from different databases. For <strong>biotext embedding objects</strong>, it uses the pre-computed semantic similarity matrix.</p>
+<p>This step converts the extracted metabolic network into <strong>functional modules</strong> supported by both network topology and feature-level statistical evidence.</p>
+<hr>
+</section>
+<section id="key-parameters" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="key-parameters"><span class="header-section-number">5.2</span> Key Parameters</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 39%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th style="text-align: right;">Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>res</code></td>
+<td style="text-align: right;">required</td>
+<td><code>featuremap_result</code> returned by <code>extract_subnetwork()</code></td>
+</tr>
+<tr class="even">
+<td><code>method</code></td>
+<td style="text-align: right;"><code>"louvain"</code></td>
+<td>Community detection algorithm</td>
+</tr>
+<tr class="odd">
+<td><code>min_size</code></td>
+<td style="text-align: right;"><code>3</code></td>
+<td>Minimum module size retained</td>
+</tr>
+<tr class="even">
+<td><code>max_size</code></td>
+<td style="text-align: right;"><code>100000</code></td>
+<td>Maximum module size retained</td>
+</tr>
+<tr class="odd">
+<td><code>n_perm</code></td>
+<td style="text-align: right;"><code>100</code></td>
+<td>Number of permutations for significance testing</td>
+</tr>
+<tr class="even">
+<td><code>seed</code></td>
+<td style="text-align: right;"><code>123</code></td>
+<td>Random seed for reproducibility</td>
+</tr>
+<tr class="odd">
+<td><code>workers</code></td>
+<td style="text-align: right;"><code>4</code></td>
+<td>Parallel workers for permutation testing</td>
+</tr>
+<tr class="even">
+<td><code>node_freq</code></td>
+<td style="text-align: right;"><code>0.05</code></td>
+<td>Frequency threshold for retaining Steiner nodes</td>
+</tr>
+<tr class="odd">
+<td><code>louvain_resolution</code></td>
+<td style="text-align: right;"><code>1</code></td>
+<td>Resolution parameter for Louvain clustering</td>
+</tr>
+<tr class="even">
+<td><code>walktrap_steps</code></td>
+<td style="text-align: right;"><code>4</code></td>
+<td>Number of steps used in walktrap clustering</td>
+</tr>
+</tbody>
+</table>
+<hr>
 </section>
 <section id="basic-usage" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">5.3</span> Basic Usage</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Traditional Similarity Results</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Biotext Embedding Results</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Louvain (default)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Leading Eigen</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Fast Greedy</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Walktrap</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cluster_evaluation <span class="ot">&lt;-</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">determine_optimal_clusters</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> met_similarity_result,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutoff_increment =</span> <span class="fl">0.05</span>  <span class="co"># Test cutoffs from 0.2 to 0.9 in steps of 0.05</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting optimal cluster determination...</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting similarity matrix and pathway data...</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating the similarity matrix...</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting clustering evaluation across methods and cutoffs...</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing method: hierarchical ...</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing method: binary_cut ...</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing method: girvan_newman ...</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Clustering evaluation completed! Generating plots and finding optimal parameters...</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis complete!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">identify_module</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"louvain"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_size =</span> <span class="dv">3</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_size =</span> <span class="dv">100000</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_perm =</span> <span class="dv">100</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">123</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">node_freq =</span> <span class="fl">0.05</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">louvain_resolution =</span> <span class="dv">1</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cluster_evaluation <span class="ot">&lt;-</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">determine_optimal_clusters</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> met_biotext_similarity,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutoff_increment =</span> <span class="fl">0.05</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting optimal cluster determination for biotext embedding object...</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting similarity matrix and pathway data...</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting clustering evaluation across methods and cutoffs...</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing method: hierarchical_ward.D ...</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing method: binary_cut ...</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing method: louvain ...</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Clustering evaluation completed! Generating plots and finding optimal parameters...</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis complete!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">identify_module</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"leading_eigen"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_size =</span> <span class="dv">3</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_size =</span> <span class="dv">100000</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_perm =</span> <span class="dv">100</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">123</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">node_freq =</span> <span class="fl">0.05</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">identify_module</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"fast_greedy"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_size =</span> <span class="dv">3</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_size =</span> <span class="dv">100000</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_perm =</span> <span class="dv">100</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">123</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">node_freq =</span> <span class="fl">0.05</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">identify_module</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"walktrap"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_size =</span> <span class="dv">3</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_size =</span> <span class="dv">100000</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_perm =</span> <span class="dv">100</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">123</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">node_freq =</span> <span class="fl">0.05</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">walktrap_steps =</span> <span class="dv">4</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="clustering-methods-evaluated" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="clustering-methods-evaluated"><span class="header-section-number">5.4</span> Clustering Methods Evaluated</h2>
-<p>The function tests three clustering algorithms:</p>
-<ol type="1">
-<li><strong>Hierarchical Clustering</strong>: Traditional agglomerative clustering with specified linkage method (default linkage method is “complete”)</li>
-<li><strong>Binary Cut</strong>: Uses the <a href="https://doi.org/10.1016/j.gpb.2022.04.008">simplifyEnrichment</a> algorithm</li>
-<li><strong>Girvan-Newman</strong>: Community detection based on edge betweenness</li>
-</ol>
-<p>Each method is tested across a range of similarity cutoffs to find the optimal balance between cluster cohesion and separation.</p>
-</section>
-<section id="evaluation-metrics" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="evaluation-metrics"><span class="header-section-number">5.5</span> Evaluation Metrics</h2>
-<p><strong>Modularity</strong>: Measures the strength of division of a network into modules. Higher values indicate better defined community structure.</p>
-<p><strong>Silhouette Score</strong>: Measures how similar objects are to their own cluster compared to other clusters. Values range from -1 to 1, with higher values indicating better clustering.</p>
-</section>
-<section id="similarity-cutoff-interpretation" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="similarity-cutoff-interpretation"><span class="header-section-number">5.6</span> Similarity Cutoff Interpretation</h2>
-<p>The meaning of <code>sim.cutoff</code> depends on your clustering method:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Girvan-Newman</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Binary Cut &amp; Hierarchical</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<p><strong>Edge Filter</strong>: Only pathway pairs with similarity above this threshold are connected.</p>
+<section id="clustering-methods" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="clustering-methods"><span class="header-section-number">5.4</span> Clustering Methods</h2>
 <ul>
-<li><strong>Lower values (0.3-0.4)</strong>: More permissive, denser networks, larger modules</li>
-<li><strong>Higher values (0.6-0.8)</strong>: More stringent, sparser networks, smaller modules</li>
+<li><p><strong><code>louvain</code></strong><br>
+A fast modularity optimization algorithm that iteratively merges nodes and communities to maximize network modularity. It is widely used for large biological networks.</p></li>
+<li><p><strong><code>leading_eigen</code></strong><br>
+A spectral method that partitions the network based on the leading eigenvectors of the modularity matrix. It identifies communities by separating nodes according to their contribution to modularity.</p></li>
+<li><p><strong><code>fast_greedy</code></strong><br>
+An agglomerative hierarchical clustering method that starts with each node as its own community and progressively merges communities to increase modularity.</p></li>
+<li><p><strong><code>walktrap</code></strong><br>
+A random-walk-based community detection algorithm that simulates short random walks on the network. The intuition is that random walks tend to remain within densely connected regions.</p></li>
 </ul>
+<p>Different algorithms may produce slightly different module boundaries. Comparing multiple methods can help evaluate module robustness.</p>
+</section>
+<section id="result-interpretation" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="result-interpretation"><span class="header-section-number">5.5</span> Result Interpretation</h2>
+<p>After successful module identification:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>stage</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "module_identified"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<p><strong>Dendrogram Cutting Height</strong>: Determines where to cut the clustering tree.</p>
-<ul>
-<li><strong>Lower values (0.3-0.4)</strong>: Cut lower in tree, more fine-grained modules<br>
-</li>
-<li><strong>Higher values (0.6-0.8)</strong>: Cut higher in tree, fewer but larger modules</li>
-</ul>
+<section id="module-membership-table" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="module-membership-table"><span class="header-section-number">5.5.1</span> Module membership table</h3>
+<p><code>module_table</code> records the <strong>assignment of metabolite nodes to modules</strong>, together with node-level metadata:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_table)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                                                                                                        INCHI_ID Module KEGG_ID</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1                                                                      InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2      1  C20679</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 InChI=1S/C10H11NO5/c1-5(9(12)13)16-7-4-2-3-6(8(7)11)10(14)15/h2-4,7-8H,1,11H2,(H,12,13)(H,14,15)/t7-,8-/m0/s1      1  C18054</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 InChI=1S/C10H11NO5/c1-5(9(12)13)16-8-4-6(10(14)15)2-3-7(8)11/h2-4,7-8H,1,11H2,(H,12,13)(H,14,15)/t7-,8-/m1/s1      1  C11355</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 4                        InChI=1S/C10H12N2O3/c11-7-4-2-1-3-6(7)9(13)5-8(12)10(14)15/h1-4,8H,5,11-12H2,(H,14,15)      1  C01718</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 5              InChI=1S/C10H12N2O3/c11-7-4-2-1-3-6(7)9(13)5-8(12)10(14)15/h1-4,8H,5,11-12H2,(H,14,15)/t8-/m0/s1      1  C00328</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 6                  InChI=1S/C10H12N2O4/c11-6(10(15)16)4-8(14)5-2-1-3-7(13)9(5)12/h1-3,6,13H,4,11-12H2,(H,15,16)      1  C02794</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#                  Compound_name Node_freq      Type Importance</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1                Tungstic acid      1.00 annotated  0.9447378</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 2-Amino-2-deoxyisochorismate      0.47 annotated  0.1575416</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3    4-amino-4-deoxychorismate      0.53 annotated  0.1575416</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4                 D-Kynurenine      0.47 annotated  0.2670680</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 5                 L-Kynurenine      1.00 annotated  0.2121862</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 6            Hydroxykynurenine      0.31 annotated  0.3593576</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-</div>
+<p>Each row represents a <strong>metabolite node belonging to a identified module</strong>. Nodes with higher <code>Node_freq</code> and <code>Importance</code> values tend to represent more stable and feature-supported metabolites within the network.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -594,76 +688,51 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Key Difference in Cutoff Interpretation</strong>:</p>
-<ul>
-<li>In <strong>Girvan-Newman</strong>, higher cutoffs = smaller modules</li>
-<li>In <strong>Binary Cut/Hierarchical</strong>, higher cutoffs = larger modules</li>
-</ul>
-<p>Always examine your results and adjust based on the biological interpretability of resulting modules.</p>
+<p>Here, <strong>annotated</strong> metabolites are nodes directly linked to observed LC–MS features through the feature annotation step, whereas <strong>hidden</strong> metabolites are Steiner nodes introduced during PCSF optimization to connect annotated metabolites within the metabolic reaction network. Hidden metabolites are not directly supported by measured features, but may provide important network context.</p>
 </div>
 </div>
 </section>
-<section id="parameter-customization" class="level2" data-number="5.7">
-<h2 data-number="5.7" class="anchored" data-anchor-id="parameter-customization"><span class="header-section-number">5.7</span> Parameter Customization</h2>
+<section id="module-significance-table" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="module-significance-table"><span class="header-section-number">5.5.2</span> Module significance table</h3>
+<p><code>module_score</code> summarizes statistics for each detected module:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fine-grained parameter search</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>detailed_evaluation <span class="ot">&lt;-</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">determine_optimal_clusters</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> met_similarity_result,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutoff_increment =</span> <span class="fl">0.01</span>,  <span class="co"># Smaller steps for more detailed analysis</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">hclust_method =</span> <span class="st">"ward.D2"</span>  <span class="co"># Different hierarchical clustering method</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting optimal cluster determination for functional_module object...</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting similarity matrix and pathway data...</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating the similarity matrix...</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Starting clustering evaluation across methods and cutoffs...</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing method: hierarchical_ward.D ...</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Available hierarchical clustering methods:</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_score)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   Module Module_size Annotated_nodes Module_score           p       fdr</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1      1         148             130    1.3944882 0.004536258 0.2177404</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2     15          80              66    0.8717769 0.058164843 0.9960879</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3     19          37              33    0.7624376 0.095688593 0.9960879</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 4     17          21              20    0.6974986 0.127492917 0.9960879</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 5     14          51              47    0.6885808 0.132541184 0.9960879</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 6      3          50              48    0.5985351 0.194456787 0.9960879</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="results-interpretation" class="level2" data-number="5.8">
-<h2 data-number="5.8" class="anchored" data-anchor-id="results-interpretation"><span class="header-section-number">5.8</span> Results Interpretation</h2>
-<p>The function returns a comprehensive evaluation with three components:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the evaluation plot</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cluster_evaluation<span class="sc">$</span>evaluation_plot</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine detailed results</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cluster_evaluation<span class="sc">$</span>cluster_result)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># # A tibble: 6 × 4</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   method       cutoff metric     value</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 hierarchical   0.2  modularity   0  </span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 hierarchical   0.2  silhouette   0.4</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 hierarchical   0.25 modularity   0  </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 hierarchical   0.25 silhouette   0.4</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 hierarchical   0.3  modularity   0  </span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the best parameter combinations</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>cluster_evaluation<span class="sc">$</span>best_combination</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># # A tibble: 22 × 4</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#    method        cutoff metric     value</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#    &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#  1 binary_cut      0.85 modularity 0.375</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  2 binary_cut      0.9  modularity 0.375</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#  3 girvan_newman   0.2  modularity 0.375</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><strong>Evaluation Plot</strong>: Shows how clustering quality metrics change across similarity cutoffs for each method. Look for:</p>
+<p>Important columns include:</p>
 <ul>
-<li><strong>Peaks in modularity</strong>: Indicate good community structure</li>
-<li><strong>High silhouette scores</strong>: Indicate well-separated clusters</li>
-<li><strong>Consistent performance</strong>: Methods that perform well across multiple cutoffs</li>
+<li><code>Module</code> – module identifier</li>
+<li><code>Module_size</code> – number of metabolite nodes in the module</li>
+<li><code>Annotated_nodes</code> – number of nodes supported by feature annotations</li>
+<li><code>Module_score</code> – aggregated activity score of the module</li>
+<li><code>p</code> – permutation-based p-value</li>
+<li><code>fdr</code> – multiple-testing corrected p-value</li>
 </ul>
-<p><strong>Best Combination</strong>: Identifies the optimal method and cutoff for each metric.</p>
-</section>
-<section id="next-steps" class="level2" data-number="5.9">
-<h2 data-number="5.9" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">5.9</span> Next Steps</h2>
-<p>Use the optimal parameters identified in this analysis for functional module identification in <a href="06_get_functional_modules.qmd">Chapter 6: Functional Module Identification</a>. The recommended method and cutoff values will help you ensure the pathway modules are high-quality, biologically meaningful.</p>
+<p>Modules with lower <code>p</code> or <code>fdr</code> values indicate stronger statistical support and are typically prioritized for downstream biological interpretation.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If too many tiny modules appear, increase <code>min_size</code> or tighten <code>node_freq</code>. If modules are too coarse, try alternative methods or relax these cutoffs.</p>
+</div>
+</div>
+<p>Once modules are identified, continue to next step.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1082,8 +1151,8 @@ Note
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./04_pcsf_subnetwork.html" class="pagination-link" aria-label="Extract Subnetwork">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span>
+      <a href="./04_pcsf_subnetwork.html" class="pagination-link" aria-label="Subnetwork Extraction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

@@ -1,321 +1,164 @@
-# Extract Subnetwork {#sec-pathway_similarity}
+# Subnetwork Extraction {#sec-subnetwork_extraction}
 
-This chapter covers the two methods available in MAPA for calculating pathway similarity, which include **traditional similarity** (e.g. Jaccard, Wang algorithm) and **Pathway biological text embedding similarity** (Biotext embedding) we developed.
-
-```{r}
-#| eval=FALSE
-
-library(mapa)
-```
+This chapter describes **Step 2** of the FeatureMAP pipeline: extracting a robust metabolic subnetwork with `extract_subnetwork()` using the prize-collecting Steiner forest (PCSF) strategy.
 
 ::: callout-important
-**Prerequisites:** Before calculating pathway similarity, ensure you have completed pathway enrichment analysis using either `enrich_pathway()` or `do_gsea()` as described in @sec-enrichment_analysis. The `enriched_pathways` object used in this chapter must be the output from the previous step.
-
-```{r}
-#| eval: false
-# If you haven't performed enrichment analysis yet, run:
-# enriched_pathways <- enrich_pathway(...)
-# or 
-# enriched_pathways <- do_gsea(...)
-
-# Load your enrichment results if saved previously:
-# load("path/to/your/enriched_pathways.rda")
-```
+**Prerequisites:** You need a `featuremap_result` object from [Feature Annotation](03_feature_annotation.qmd), with stage `"feature_annotated"`.
 :::
 
-## Overview
+## What `extract_subnetwork()` Does
 
-MAPA provides two approaches for calculating pathway similarity:
+`extract_subnetwork()` integrates the refined feature annotations from Step 1 with a metabolic reaction network (MRN) and applies repeated PCSF optimization to identify a robust subnetwork.
 
-1.  **Traditional Similarity (`merge_pathways()`)**: Uses gene/metabolite overlap and semantic similarity
-2.  **Biotext Embedding Similarity (`get_bioembedsim()`)**: Uses LLM text embeddings to capture semantic relationships
+At a high level, this step does the following:
 
-Both methods prepare your data for downstream clustering analysis, so you can choose the approach that best fits your research needs and computational resources.
+1.  **Compute feature importance:** Feature-level statistical evidence is summarized from `condition` and `pvalue` and used to prioritize annotated metabolites.
 
-## Method Comparison
+2.  **Build feature–metabolite mappings:** The refined annotation table is converted into feature–metabolite pairs that connect observed LC–MS features to candidate metabolites in the network.
 
-| Aspect                         | Traditional Similarity                       | Biotext Embedding Similarity                         |
-|------------------|-------------------------|-----------------------------|
-| **Basis**                      | Gene/metabolite overlap + semantic structure | Text semantic meaning                                |
-| **Speed**                      | Fast, deterministic                          | Slower, requires API calls                           |
-| **Cost**                       | Free                                         | API usage costs                                      |
-| **Reproducibility**            | Fully reproducible                           | Highly reproducible (minor API variations)           |
-| **Novel discoveries**          | Based on known annotations                   | Can identify functional relationships beyond overlap |
-| **Internet dependency**        | Minimal (for GO/KEGG updates)                | Required for API access                              |
-| **Cross-database integration** | Limited by annotation overlap                | Excellent semantic integration                       |
+3.  **Run repeated PCSF optimization:** PCSF is run multiple times with random edge perturbation to reduce sensitivity to a single optimization result.
 
-**When to use each method:**
+4.  **Aggregate robust network components:** Node and edge frequencies are recorded across repeated runs, and the final subnetwork is constructed as the union of recurrent PCSF solutions.
 
--   **Traditional Similarity**: When working with limited internet access, need fully reproducible results, or working with well-annotated pathways where overlap is meaningful
--   **Biotext Embedding (recommended)**: When exploring novel functional relationships, integrating diverse databases, or when semantic understanding is more important than annotation overlap
+5.  **Refine annotation using network support:** Feature–metabolite mappings are updated based on network evidence, producing `anno_feature_table2`.
 
-## Method 1: Traditional Similarity
+This step moves the analysis from individual annotated features to a **network-supported metabolite subnetwork**, which is then used in downstream module extraction and interpretation.
 
-The `merge_pathways()` function calculates similarity using established methods:
+## Key Parameters
 
--   **Only GO terms**: Semantic similarity using the [simona](https://jokergoo.github.io/simona/) package
--   **GO/KEGG/Reactome/SMPDB pathways**: Gene/metabolite overlap similarity (Jaccard, Dice, Overlap, and Kappa)
+| Parameter | Default | Description |
+|----|---:|----|
+| `res` | required | `featuremap_result` returned by `annotate_feature()` |
+| `feature` | `"all"` | Use all annotated features (`"all"`) or only significant features (`"sig"`) |
+| `pcutoff` | `0.05` | Significance cutoff used when `feature = "sig"` |
+| `mrn` | `NULL` | Optional custom metabolic reaction network (`igraph`); automatically loaded if `NULL` |
+| `times` | `100` | Number of repeated PCSF runs |
+| `workers` | `4` | Number of parallel workers |
+| `b` | `40` | Prize scaling factor in PCSF |
+| `mu` | `1e-4` | Hub penalty coefficient in PCSF |
+| `w` | `30` | Dummy edge cost in PCSF |
+| `r` | `0.30` | Magnitude of random edge perturbation across repeated runs |
+| `grid_tune` | `FALSE` | Whether to tune `b` and `w` over a parameter grid |
+| `b_grid`, `w_grid` | sequences | Candidate values of `b` and `w` when grid tuning is enabled |
+| `times_tune` | `10` | Number of repeated runs for each `(b, w)` combination during tuning |
 
-::: panel-tabset
-##### Gene-based Analysis
+## Basic Usage
 
 ```{r}
 #| eval: false
 
-gene_similarity_result <- 
-  merge_pathways(
-    object = gene_enriched_pathways,
-    database = c("go", "kegg", "reactome"),
-    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)
-    p.adjust.cutoff.go = 0.05,
-    p.adjust.cutoff.kegg = 0.05,
-    p.adjust.cutoff.reactome = 0.05,
-    count.cutoff.go = 5,
-    count.cutoff.kegg = 5,
-    count.cutoff.reactome = 5,
-    # Similarity methods
-    measure.method.go = "Sim_XGraSM_2013",  # GO semantic similarity
-    go.orgdb = "org.Mm.eg.db",               # Required for GO analysis
-    measure.method.kegg = "jaccard",        # Gene overlap similarity
-    measure.method.reactome = "jaccard"     # Gene overlap similarity
-  )
+# res is the output from Step 1 (annotate_feature)
+res <- extract_subnetwork(
+  res = res,
+  feature = "sig",
+  pcutoff = 0.05,
+  mrn = NULL,
+  workers = 4,
+  times = 100,
+  b = 40,
+  mu = 1e-4,
+  w = 30,
+  r = 0.30,
+  grid_tune = FALSE
+)
 
-# --------------------
-# GO database...
-# Calculating similartiy matrix, it may take a while...
-# relations: is_a, part_of, regulates, negatively_regulates, positively_regulates
-# IC_method: IC_annotation
-# term_sim_method: Sim_XGraSM_2013
-# IC_method: IC_annotation
-# Completed GO term (BP) similarity calculation.
-# relations: is_a, part_of, regulates, negatively_regulates, positively_regulates
-# IC_method: IC_annotation
-# term_sim_method: Sim_XGraSM_2013
-# IC_method: IC_annotation
-# Completed GO term (MF) similarity calculation.
-# relations: is_a, part_of, regulates, negatively_regulates, positively_regulates
-# IC_method: IC_annotation
-# term_sim_method: Sim_XGraSM_2013
-# IC_method: IC_annotation
-# Completed GO term (CC) similarity calculation.
-# Completed GO term similarity calculation successfully!
-# Identifying modules...
-# Done
-# --------------------
-# KEGG database...
-# Calculating similartiy matrix, it may take a while...
-# Reading KEGG annotation online: "https://rest.kegg.jp/link/mmu/pathway"...
-# Reading KEGG annotation online: "https://rest.kegg.jp/list/pathway/mmu"...
-# Completed KEGG pathway similarity calculation successfully!
-# Identifying modules...
-# Done
-# --------------------
-# Reactome database...
-# Calculating similartiy matrix, it may take a while...
-# Completed Reactome pathway similarity calculation successfully!
-# Identifying modules...
-# Done
-# Done
 ```
 
-::: callout-note
-**`go.orgdb` Selection:**
+## Optional: Grid Tuning for `b` and `w`
 
--   For model organisms with Bioconductor annotation packages: use the package directly (e.g., `go.orgdb = "org.Mm.eg.db"`)
--   For non-model organisms: use the OrgDb object from @sec-gene_id_conversion (e.g., `go.orgdb = variable_info$orgdb`)
-:::
-
-##### Metabolite-based Analysis
-
-::: callout-important
-**Organism Limitation**: Traditional similarity for metabolites is recommended primarily for **human** studies where you can use both KEGG and HMDB databases. For **non-human** organisms, only KEGG is available, making this approach less informative. Consider using **biotext embedding similarity** instead for non-human metabolite studies.
-:::
+If you want data-driven parameter selection, enable grid tuning:
 
 ```{r}
 #| eval: false
 
-met_similarity_result <- 
-  merge_pathways(
-    object = met_enriched_pathways,
-    database = c("hmdb", "metkegg"),
-    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)
-    p.adjust.cutoff.hmdb = 0.05,
-    p.adjust.cutoff.metkegg = 0.05,
-    count.cutoff.hmdb = 5,
-    count.cutoff.metkegg = 5,
-    # Similarity methods
-    measure.method.hmdb = "jaccard",
-    measure.method.metkegg = "jaccard"
-  )
-
-# --------------------
-# HMDB database...
-# Calculating similartiy matrix, it may take a while...
-# Completed SMPDB pathway similarity calculation successfully!
-# Identifying modules...
-# Done
-# --------------------
-# KEGG database...
-# Calculating similartiy matrix, it may take a while...
-# Completed KEGG pathway similarity calculation successfully!
-# Identifying modules...
-# Done
-# Done
+res <- extract_subnetwork(
+  res = res,
+  feature = "sig",
+  pcutoff = 0.05,
+  workers = 4,
+  times = 100,
+  grid_tune = TRUE,
+  b_grid = seq(20, 40, by = 5),
+  w_grid = seq(25, 40, by = 5),
+  times_tune = 10
+)
 ```
-:::
 
-### Similarity Methods Details
+When `grid_tune = TRUE`, FeatureMAP records:
 
-**GO Semantic Similarity Methods**
+-   `res$tuning_grid`: full tuning results
+-   `res$tuning_best`: selected best `(b, w)` and summary metrics
 
-For GO terms, MAPA uses the [simona](https://jokergoo.github.io/simona/) package:
+## Result Interpretation
 
-| Method            | Type                      | Description                                             |
-|-----------------|------------------|--------------------------------------|
-| `Sim_XGraSM_2013` | Hybrid                    | Combines multiple similarity aspects                    |
-| `Sim_Wang_2007`   | Structure-based           | Based on GO graph structure                             |
-| `Sim_Lin_1998`    | Information content-based | Uses information content of terms                       |
-| `Sim_Resnik_1999` | Information content-based | Information content of most informative common ancestor |
-
-**Gene/Metabolite Overlap Similarity**
-
-For KEGG, Reactome, and metabolite pathways:
-
-| Method    | Formula                         | Description         | Use Case                             |
-|---------------|--------------------|---------------|-----------------------|
-| `jaccard` | \|A ∩ B\| / \|A ∪ B\|           | Jaccard index       | **Default**, most commonly used      |
-| `dice`    | 2 × \|A ∩ B\| / (\|A\| + \|B\|) | Dice coefficient    | Emphasizes shared elements           |
-| `overlap` | \|A ∩ B\| / min(\|A\|, \|B\|)   | Overlap coefficient | Good for pathways of different sizes |
-| `kappa`   | (Po - Pe) / (1 - Pe)            | Cohen's kappa       | Accounts for chance agreement        |
-
-::: callout-tip
-For detailed explanations of the similarity methods, see the [simona documentation](https://jokergoo.github.io/simona/articles/v05_term_similarity.html#ic-based-or-node-based-methods).
-:::
-
-## Method 2: Biotext Embedding Similarity
-
-The `get_bioembedsim()` function leverages large language model text embedding models to capture semantic relationships between pathway descriptions, enabling more nuanced similarity calculation based on biological function.
-
-::: panel-tabset
-##### Gene-based Analysis
+After successful extraction, first confirm that the subnetwork step completed successfully:
 
 ```{r}
 #| eval: false
 
-gene_biotext_similarity <- 
-  get_bioembedsim(
-    object = gene_enriched_pathways,
-    api_provider = "openai",
-    text_embedding_model = "text-embedding-3-small",
-    api_key = "your_openai_api_key",
-    database = c("go", "kegg", "reactome"),
-    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)
-    p.adjust.cutoff.go = 0.05,
-    p.adjust.cutoff.kegg = 0.05,
-    p.adjust.cutoff.reactome = 0.05,
-    count.cutoff.go = 5,
-    count.cutoff.kegg = 5,
-    count.cutoff.reactome = 5
-  )
+res$stage
+# [1] "subnetwork_extracted"
 
-# Getting pathway text embeddings ...
-# Calculating cosine similairty ...
-# Biotext embedding and similarity calculation finished
+names(res)
+
 ```
 
-##### Metabolite-based Analysis
+### Extracted PCSF subnetwork
+
+The extracted metabolic subnetwork is stored as an `igraph` object:
 
 ```{r}
 #| eval: false
 
-met_biotext_similarity <- 
-  get_bioembedsim(
-    object = met_enriched_pathways,
-    api_provider = "openai",
-    text_embedding_model = "text-embedding-3-small",
-    api_key = "your_openai_api_key",
-    database = c("hmdb", "metkegg"),
-    # Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)
-    p.adjust.cutoff.hmdb = 0.05,
-    p.adjust.cutoff.metkegg = 0.05,
-    count.cutoff.hmdb = 5,
-    count.cutoff.metkegg = 5
-  )
+res$pcsf_subnet
 
-# Getting pathway text embeddings ...
-# Calculating cosine similairty ...
-# Biotext embedding and similarity calculation finished
+# IGRAPH c444970 UNWB 1931 3811 -- 
+# + attr: name (v/c), prize (v/n), type (v/c), freq (e/n), weight (e/n)
+# + edges from c444970 (vertex names):
+# [1] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--
+#     InChI=1S/C10H15N5O10P2/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(24-10)1-23-27(21,22)25-26(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1
+#
+# [2] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--
+#     InChI=1S/C10H16N5O13P3/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(26-10)1-25-30(21,22)28-31(23,24)27-29(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H,23,24)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1
+#
+# [3] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--
+#     M523T878_POS
+#
+# + ... omitted several edges
 ```
-:::
 
-::: callout-tip
-**API Key Setup:**
+### Network-refined annotation table
 
--   For OpenAI: Obtain your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
--   For Gemini: Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
--   For SiliconFlow: Get your API key from [SiliconFlow Quick Start](https://docs.siliconflow.com/en/userguide/quickstart)
-
-Store your API key securely and never commit it to version control.
-:::
-
-### How Biotext Embedding Works
-
-The biotext embedding process involves several steps:
-
-1.  **Text Extraction**: For each pathway, the function extracts pathway name and description from respective databases
-2.  **Text Embedding**: The text information is sent to the specified embedding model to generate high-dimensional vector representations
-3.  **Similarity Calculation**: Cosine similarity is calculated between all pathway embedding vectors
-
-::: callout-tip
-**Understanding Text Embeddings**: Text embeddings convert text into numerical vectors that capture semantic meaning. For a comprehensive introduction to embeddings, including how they work, model details and best practices, see the [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings).
-:::
-
-## Results Interpretation
-
-Both approaches prepare your data for the next steps: optimal cluster parameter determination and functional module identification.
+After PCSF extraction, FeatureMAP updates the feature–metabolite annotation table by incorporating network evidence:
 
 ```{r}
 #| eval: false
-# Traditional similarity results
-gene_similarity_result
-# Return intra-database modules generated based on pathway similarity
-head(gene_similarity_result@merged_pathway_go$module_result)
+head(res$anno_feature_table2)
+
+#   variable_id           Compound_name KEGG_ID                                               INCHI_ID
+# 1 M105T384_POS                 Nitrate  C00244                              InChI=1S/NO3/c2-1(3)4/q-1
+# 2 M105T384_POS            Benzoic acid  C00539     InChI=1S/C7H6O2/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H,8,9)
+# 3 M105T384_POS 2,4,6-Trihydroxytoluene  C16401 InChI=1S/C7H8O3/c1-4-6(9)2-5(8)3-7(4)10/h2-3,8-10H,1H3
+# 4 M105T384_POS   2-Hydroxybenzaldehyde  C06202           InChI=1S/C7H6O2/c8-5-6-3-1-2-4-7(6)9/h1-5,9H
+# 5 M105T384_POS 2,4,5-Trihydroxytoluene  C18317 InChI=1S/C7H8O3/c1-4-2-6(9)7(10)3-5(4)8/h2-3,8-10H,1H3
+# 6 M105T384_POS   3-hydroxybenzaldehyde  C03067           InChI=1S/C7H6O2/c8-5-6-2-1-3-7(9)4-6/h1-5,9H
+#
+#   score_norm edge_freq weighted_anno_score confidence_rank
+# 1 0.09090909      0.74           0.2856364               1
+# 2 0.09090909      0.24           0.1356364               2
+# 3 0.09090909      0.24           0.1356364               2
+# 4 0.09090909      0.22           0.1296364               3
+# 5 0.09090909      0.22           0.1296364               3
+# 6 0.09090909      0.20           0.1236364               4
+
 ```
 
-Key result columns:
+Compared with `anno_feature_table1`, this table incorporates network support from the extracted subnetwork. Metabolite candidates that are more consistently supported by the extracted metabolic network receive higher `weighted_anno_score` and better `confidence_rank`.
 
--   **module**: Module identifier (e.g., "go_Module_2")
--   **module_annotation**: Representative annotation (pathway name with the lowest adjusted p-value for ORA/ pathway name with the highest \|NES\| for GSEA) for the module
--   **Description**: Names of all the pathways in the module separated by `;`
--   **module_content**: All pathways/terms (i.e. nodes) grouped in this module
--   **Count**: Number of genes/metabolites from the input genes/metabolites list in the module
--   **p_adjust**: Best (lowest) adjusted p-value among pathways in the module
+### Other Result Components
 
-```{r}
-#| eval: false
-#| 
-# Biotext embedding results  
-gene_biotext_similarity
-# Returns list with similarity matrix and enriched pathway object
-names(gene_biotext_similarity)
-# [1] "sim_matrix"        "enriched_pathway"
+-   `res$node_frequency`: node appearance frequency across repeated runs
+-   `res$edge_frequency`: edge appearance frequency across repeated runs
+-   `res$tuning_grid`, `res$tuning_best`: available when grid tuning is used
 
-# Examine similarity matrix
-gene_biotext_similarity$sim_matrix[1:5, 1:5]
-#            GO:0016049 GO:0031589 GO:1900046 GO:0071375 GO:0061900
-# GO:0016049  1.0000000  0.3779020  0.2286780  0.3376592  0.4369859
-# GO:0031589  0.3779020  1.0000000  0.2702301  0.3123477  0.3938414
-# GO:1900046  0.2286780  0.2702301  1.0000000  0.3277389  0.2867548
-# GO:0071375  0.3376592  0.3123477  0.3277389  1.0000000  0.4493753
-# GO:0061900  0.4369859  0.3938414  0.2867548  0.4493753  1.0000000
-```
-
-## Trouble Shooting
-
-- When calculating the pathway similarity using **Biotext pathway embedding**, if you encounter an error like this, it might be due to a network issue. Please try running it multiple times.
-
-![](images/biotext_embedding_touble_shooting.png){fig-align="center" width="750"}
-
-## Next Steps
-
-Continue to [Optimal Clustering Parameters](05_determine_optimal_clustering_params.qmd) to determine the best clustering parameters for your similarity data, then proceed to [Functional Module Identification](06_get_functional_modules.qmd) to group related pathways into modules.
+Once subnetwork extraction is complete, continue to next step.

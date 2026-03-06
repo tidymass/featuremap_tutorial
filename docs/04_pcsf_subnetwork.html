@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Extract Subnetwork – FeatureMAP Tutorial</title>
+<title>4&nbsp; Subnetwork Extraction – FeatureMAP Tutorial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_package_installation.html">R Package</a></li><li class="breadcrumb-item"><a href="./04_pcsf_subnetwork.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_package_installation.html">R Package</a></li><li class="breadcrumb-item"><a href="./04_pcsf_subnetwork.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -355,7 +355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -435,19 +435,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">4.1</span> Overview</a></li>
-  <li><a href="#method-comparison" id="toc-method-comparison" class="nav-link" data-scroll-target="#method-comparison"><span class="header-section-number">4.2</span> Method Comparison</a></li>
-  <li><a href="#method-1-traditional-similarity" id="toc-method-1-traditional-similarity" class="nav-link" data-scroll-target="#method-1-traditional-similarity"><span class="header-section-number">4.3</span> Method 1: Traditional Similarity</a>
+  <li><a href="#what-extract_subnetwork-does" id="toc-what-extract_subnetwork-does" class="nav-link active" data-scroll-target="#what-extract_subnetwork-does"><span class="header-section-number">4.1</span> What <code>extract_subnetwork()</code> Does</a></li>
+  <li><a href="#key-parameters" id="toc-key-parameters" class="nav-link" data-scroll-target="#key-parameters"><span class="header-section-number">4.2</span> Key Parameters</a></li>
+  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage"><span class="header-section-number">4.3</span> Basic Usage</a></li>
+  <li><a href="#optional-grid-tuning-for-b-and-w" id="toc-optional-grid-tuning-for-b-and-w" class="nav-link" data-scroll-target="#optional-grid-tuning-for-b-and-w"><span class="header-section-number">4.4</span> Optional: Grid Tuning for <code>b</code> and <code>w</code></a></li>
+  <li><a href="#result-interpretation" id="toc-result-interpretation" class="nav-link" data-scroll-target="#result-interpretation"><span class="header-section-number">4.5</span> Result Interpretation</a>
   <ul class="collapse">
-  <li><a href="#similarity-methods-details" id="toc-similarity-methods-details" class="nav-link" data-scroll-target="#similarity-methods-details"><span class="header-section-number">4.3.1</span> Similarity Methods Details</a></li>
+  <li><a href="#extracted-pcsf-subnetwork" id="toc-extracted-pcsf-subnetwork" class="nav-link" data-scroll-target="#extracted-pcsf-subnetwork"><span class="header-section-number">4.5.1</span> Extracted PCSF subnetwork</a></li>
+  <li><a href="#network-refined-annotation-table" id="toc-network-refined-annotation-table" class="nav-link" data-scroll-target="#network-refined-annotation-table"><span class="header-section-number">4.5.2</span> Network-refined annotation table</a></li>
+  <li><a href="#other-result-components" id="toc-other-result-components" class="nav-link" data-scroll-target="#other-result-components"><span class="header-section-number">4.5.3</span> Other Result Components</a></li>
   </ul></li>
-  <li><a href="#method-2-biotext-embedding-similarity" id="toc-method-2-biotext-embedding-similarity" class="nav-link" data-scroll-target="#method-2-biotext-embedding-similarity"><span class="header-section-number">4.4</span> Method 2: Biotext Embedding Similarity</a>
-  <ul class="collapse">
-  <li><a href="#how-biotext-embedding-works" id="toc-how-biotext-embedding-works" class="nav-link" data-scroll-target="#how-biotext-embedding-works"><span class="header-section-number">4.4.1</span> How Biotext Embedding Works</a></li>
-  </ul></li>
-  <li><a href="#results-interpretation" id="toc-results-interpretation" class="nav-link" data-scroll-target="#results-interpretation"><span class="header-section-number">4.5</span> Results Interpretation</a></li>
-  <li><a href="#trouble-shooting" id="toc-trouble-shooting" class="nav-link" data-scroll-target="#trouble-shooting"><span class="header-section-number">4.6</span> Trouble Shooting</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">4.7</span> Next Steps</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -455,9 +452,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_package_installation.html">R Package</a></li><li class="breadcrumb-item"><a href="./04_pcsf_subnetwork.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_package_installation.html">R Package</a></li><li class="breadcrumb-item"><a href="./04_pcsf_subnetwork.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-pathway_similarity" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></h1>
+<h1 class="title"><span id="sec-subnetwork_extraction" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></h1>
 </div>
 
 
@@ -474,10 +471,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter covers the two methods available in MAPA for calculating pathway similarity, which include <strong>traditional similarity</strong> (e.g.&nbsp;Jaccard, Wang algorithm) and <strong>Pathway biological text embedding similarity</strong> (Biotext embedding) we developed.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapa)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<p>This chapter describes <strong>Step 2</strong> of the FeatureMAP pipeline: extracting a robust metabolic subnetwork with <code>extract_subnetwork()</code> using the prize-collecting Steiner forest (PCSF) strategy.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -488,461 +482,212 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Prerequisites:</strong> Before calculating pathway similarity, ensure you have completed pathway enrichment analysis using either <code>enrich_pathway()</code> or <code>do_gsea()</code> as described in <span class="quarto-unresolved-ref">?sec-enrichment_analysis</span>. The <code>enriched_pathways</code> object used in this chapter must be the output from the previous step.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If you haven't performed enrichment analysis yet, run:</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># enriched_pathways &lt;- enrich_pathway(...)</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># enriched_pathways &lt;- do_gsea(...)</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load your enrichment results if saved previously:</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># load("path/to/your/enriched_pathways.rda")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Prerequisites:</strong> You need a <code>featuremap_result</code> object from <a href="./03_feature_annotation.html">Feature Annotation</a>, with stage <code>"feature_annotated"</code>.</p>
 </div>
 </div>
-</div>
-<section id="overview" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">4.1</span> Overview</h2>
-<p>MAPA provides two approaches for calculating pathway similarity:</p>
+<section id="what-extract_subnetwork-does" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="what-extract_subnetwork-does"><span class="header-section-number">4.1</span> What <code>extract_subnetwork()</code> Does</h2>
+<p><code>extract_subnetwork()</code> integrates the refined feature annotations from Step 1 with a metabolic reaction network (MRN) and applies repeated PCSF optimization to identify a robust subnetwork.</p>
+<p>At a high level, this step does the following:</p>
 <ol type="1">
-<li><strong>Traditional Similarity (<code>merge_pathways()</code>)</strong>: Uses gene/metabolite overlap and semantic similarity</li>
-<li><strong>Biotext Embedding Similarity (<code>get_bioembedsim()</code>)</strong>: Uses LLM text embeddings to capture semantic relationships</li>
+<li><p><strong>Compute feature importance:</strong> Feature-level statistical evidence is summarized from <code>condition</code> and <code>pvalue</code> and used to prioritize annotated metabolites.</p></li>
+<li><p><strong>Build feature–metabolite mappings:</strong> The refined annotation table is converted into feature–metabolite pairs that connect observed LC–MS features to candidate metabolites in the network.</p></li>
+<li><p><strong>Run repeated PCSF optimization:</strong> PCSF is run multiple times with random edge perturbation to reduce sensitivity to a single optimization result.</p></li>
+<li><p><strong>Aggregate robust network components:</strong> Node and edge frequencies are recorded across repeated runs, and the final subnetwork is constructed as the union of recurrent PCSF solutions.</p></li>
+<li><p><strong>Refine annotation using network support:</strong> Feature–metabolite mappings are updated based on network evidence, producing <code>anno_feature_table2</code>.</p></li>
 </ol>
-<p>Both methods prepare your data for downstream clustering analysis, so you can choose the approach that best fits your research needs and computational resources.</p>
+<p>This step moves the analysis from individual annotated features to a <strong>network-supported metabolite subnetwork</strong>, which is then used in downstream module extraction and interpretation.</p>
 </section>
-<section id="method-comparison" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="method-comparison"><span class="header-section-number">4.2</span> Method Comparison</h2>
+<section id="key-parameters" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="key-parameters"><span class="header-section-number">4.2</span> Key Parameters</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 40%">
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Aspect</th>
-<th>Traditional Similarity</th>
-<th>Biotext Embedding Similarity</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Basis</strong></td>
-<td>Gene/metabolite overlap + semantic structure</td>
-<td>Text semantic meaning</td>
-</tr>
-<tr class="even">
-<td><strong>Speed</strong></td>
-<td>Fast, deterministic</td>
-<td>Slower, requires API calls</td>
-</tr>
-<tr class="odd">
-<td><strong>Cost</strong></td>
-<td>Free</td>
-<td>API usage costs</td>
-</tr>
-<tr class="even">
-<td><strong>Reproducibility</strong></td>
-<td>Fully reproducible</td>
-<td>Highly reproducible (minor API variations)</td>
-</tr>
-<tr class="odd">
-<td><strong>Novel discoveries</strong></td>
-<td>Based on known annotations</td>
-<td>Can identify functional relationships beyond overlap</td>
-</tr>
-<tr class="even">
-<td><strong>Internet dependency</strong></td>
-<td>Minimal (for GO/KEGG updates)</td>
-<td>Required for API access</td>
-</tr>
-<tr class="odd">
-<td><strong>Cross-database integration</strong></td>
-<td>Limited by annotation overlap</td>
-<td>Excellent semantic integration</td>
-</tr>
-</tbody>
-</table>
-<p><strong>When to use each method:</strong></p>
-<ul>
-<li><strong>Traditional Similarity</strong>: When working with limited internet access, need fully reproducible results, or working with well-annotated pathways where overlap is meaningful</li>
-<li><strong>Biotext Embedding (recommended)</strong>: When exploring novel functional relationships, integrating diverse databases, or when semantic understanding is more important than annotation overlap</li>
-</ul>
-</section>
-<section id="method-1-traditional-similarity" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="method-1-traditional-similarity"><span class="header-section-number">4.3</span> Method 1: Traditional Similarity</h2>
-<p>The <code>merge_pathways()</code> function calculates similarity using established methods:</p>
-<ul>
-<li><strong>Only GO terms</strong>: Semantic similarity using the <a href="https://jokergoo.github.io/simona/">simona</a> package</li>
-<li><strong>GO/KEGG/Reactome/SMPDB pathways</strong>: Gene/metabolite overlap similarity (Jaccard, Dice, Overlap, and Kappa)</li>
-</ul>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Gene-based Analysis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Metabolite-based Analysis</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>gene_similarity_result <span class="ot">&lt;-</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge_pathways</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> gene_enriched_pathways,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">database =</span> <span class="fu">c</span>(<span class="st">"go"</span>, <span class="st">"kegg"</span>, <span class="st">"reactome"</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.go =</span> <span class="fl">0.05</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.kegg =</span> <span class="fl">0.05</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.reactome =</span> <span class="fl">0.05</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.go =</span> <span class="dv">5</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.kegg =</span> <span class="dv">5</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.reactome =</span> <span class="dv">5</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Similarity methods</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">measure.method.go =</span> <span class="st">"Sim_XGraSM_2013"</span>,  <span class="co"># GO semantic similarity</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">go.orgdb =</span> <span class="st">"org.Mm.eg.db"</span>,               <span class="co"># Required for GO analysis</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">measure.method.kegg =</span> <span class="st">"jaccard"</span>,        <span class="co"># Gene overlap similarity</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">measure.method.reactome =</span> <span class="st">"jaccard"</span>     <span class="co"># Gene overlap similarity</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># GO database...</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating similartiy matrix, it may take a while...</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># relations: is_a, part_of, regulates, negatively_regulates, positively_regulates</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># IC_method: IC_annotation</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># term_sim_method: Sim_XGraSM_2013</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># IC_method: IC_annotation</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed GO term (BP) similarity calculation.</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># relations: is_a, part_of, regulates, negatively_regulates, positively_regulates</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># IC_method: IC_annotation</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># term_sim_method: Sim_XGraSM_2013</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># IC_method: IC_annotation</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed GO term (MF) similarity calculation.</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># relations: is_a, part_of, regulates, negatively_regulates, positively_regulates</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># IC_method: IC_annotation</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co"># term_sim_method: Sim_XGraSM_2013</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co"># IC_method: IC_annotation</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed GO term (CC) similarity calculation.</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed GO term similarity calculation successfully!</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying modules...</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co"># KEGG database...</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating similartiy matrix, it may take a while...</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading KEGG annotation online: "https://rest.kegg.jp/link/mmu/pathway"...</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading KEGG annotation online: "https://rest.kegg.jp/list/pathway/mmu"...</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed KEGG pathway similarity calculation successfully!</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying modules...</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Reactome database...</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating similartiy matrix, it may take a while...</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed Reactome pathway similarity calculation successfully!</span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying modules...</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong><code>go.orgdb</code> Selection:</strong></p>
-<ul>
-<li>For model organisms with Bioconductor annotation packages: use the package directly (e.g., <code>go.orgdb = "org.Mm.eg.db"</code>)</li>
-<li>For non-model organisms: use the OrgDb object from <a href="02_data_preparation.html#sec-gene_id_conversion" class="quarto-xref"><span>Section 2.2.1</span></a> (e.g., <code>go.orgdb = variable_info$orgdb</code>)</li>
-</ul>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Organism Limitation</strong>: Traditional similarity for metabolites is recommended primarily for <strong>human</strong> studies where you can use both KEGG and HMDB databases. For <strong>non-human</strong> organisms, only KEGG is available, making this approach less informative. Consider using <strong>biotext embedding similarity</strong> instead for non-human metabolite studies.</p>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>met_similarity_result <span class="ot">&lt;-</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge_pathways</span>(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> met_enriched_pathways,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">database =</span> <span class="fu">c</span>(<span class="st">"hmdb"</span>, <span class="st">"metkegg"</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.hmdb =</span> <span class="fl">0.05</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.metkegg =</span> <span class="fl">0.05</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.hmdb =</span> <span class="dv">5</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.metkegg =</span> <span class="dv">5</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Similarity methods</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">measure.method.hmdb =</span> <span class="st">"jaccard"</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">measure.method.metkegg =</span> <span class="st">"jaccard"</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># HMDB database...</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating similartiy matrix, it may take a while...</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed SMPDB pathway similarity calculation successfully!</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying modules...</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># KEGG database...</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating similartiy matrix, it may take a while...</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Completed KEGG pathway similarity calculation successfully!</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying modules...</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
-<section id="similarity-methods-details" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="similarity-methods-details"><span class="header-section-number">4.3.1</span> Similarity Methods Details</h3>
-<p><strong>GO Semantic Similarity Methods</strong></p>
-<p>For GO terms, MAPA uses the <a href="https://jokergoo.github.io/simona/">simona</a> package:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 23%">
-<col style="width: 24%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Method</th>
-<th>Type</th>
+<th>Parameter</th>
+<th style="text-align: right;">Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>Sim_XGraSM_2013</code></td>
-<td>Hybrid</td>
-<td>Combines multiple similarity aspects</td>
+<td><code>res</code></td>
+<td style="text-align: right;">required</td>
+<td><code>featuremap_result</code> returned by <code>annotate_feature()</code></td>
 </tr>
 <tr class="even">
-<td><code>Sim_Wang_2007</code></td>
-<td>Structure-based</td>
-<td>Based on GO graph structure</td>
+<td><code>feature</code></td>
+<td style="text-align: right;"><code>"all"</code></td>
+<td>Use all annotated features (<code>"all"</code>) or only significant features (<code>"sig"</code>)</td>
 </tr>
 <tr class="odd">
-<td><code>Sim_Lin_1998</code></td>
-<td>Information content-based</td>
-<td>Uses information content of terms</td>
+<td><code>pcutoff</code></td>
+<td style="text-align: right;"><code>0.05</code></td>
+<td>Significance cutoff used when <code>feature = "sig"</code></td>
 </tr>
 <tr class="even">
-<td><code>Sim_Resnik_1999</code></td>
-<td>Information content-based</td>
-<td>Information content of most informative common ancestor</td>
+<td><code>mrn</code></td>
+<td style="text-align: right;"><code>NULL</code></td>
+<td>Optional custom metabolic reaction network (<code>igraph</code>); automatically loaded if <code>NULL</code></td>
+</tr>
+<tr class="odd">
+<td><code>times</code></td>
+<td style="text-align: right;"><code>100</code></td>
+<td>Number of repeated PCSF runs</td>
+</tr>
+<tr class="even">
+<td><code>workers</code></td>
+<td style="text-align: right;"><code>4</code></td>
+<td>Number of parallel workers</td>
+</tr>
+<tr class="odd">
+<td><code>b</code></td>
+<td style="text-align: right;"><code>40</code></td>
+<td>Prize scaling factor in PCSF</td>
+</tr>
+<tr class="even">
+<td><code>mu</code></td>
+<td style="text-align: right;"><code>1e-4</code></td>
+<td>Hub penalty coefficient in PCSF</td>
+</tr>
+<tr class="odd">
+<td><code>w</code></td>
+<td style="text-align: right;"><code>30</code></td>
+<td>Dummy edge cost in PCSF</td>
+</tr>
+<tr class="even">
+<td><code>r</code></td>
+<td style="text-align: right;"><code>0.30</code></td>
+<td>Magnitude of random edge perturbation across repeated runs</td>
+</tr>
+<tr class="odd">
+<td><code>grid_tune</code></td>
+<td style="text-align: right;"><code>FALSE</code></td>
+<td>Whether to tune <code>b</code> and <code>w</code> over a parameter grid</td>
+</tr>
+<tr class="even">
+<td><code>b_grid</code>, <code>w_grid</code></td>
+<td style="text-align: right;">sequences</td>
+<td>Candidate values of <code>b</code> and <code>w</code> when grid tuning is enabled</td>
+</tr>
+<tr class="odd">
+<td><code>times_tune</code></td>
+<td style="text-align: right;"><code>10</code></td>
+<td>Number of repeated runs for each <code>(b, w)</code> combination during tuning</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Gene/Metabolite Overlap Similarity</strong></p>
-<p>For KEGG, Reactome, and metabolite pathways:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 27%">
-<col style="width: 20%">
-<col style="width: 31%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Method</th>
-<th>Formula</th>
-<th>Description</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>jaccard</code></td>
-<td>|A ∩ B| / |A ∪ B|</td>
-<td>Jaccard index</td>
-<td><strong>Default</strong>, most commonly used</td>
-</tr>
-<tr class="even">
-<td><code>dice</code></td>
-<td>2 × |A ∩ B| / (|A| + |B|)</td>
-<td>Dice coefficient</td>
-<td>Emphasizes shared elements</td>
-</tr>
-<tr class="odd">
-<td><code>overlap</code></td>
-<td>|A ∩ B| / min(|A|, |B|)</td>
-<td>Overlap coefficient</td>
-<td>Good for pathways of different sizes</td>
-</tr>
-<tr class="even">
-<td><code>kappa</code></td>
-<td>(Po - Pe) / (1 - Pe)</td>
-<td>Cohen’s kappa</td>
-<td>Accounts for chance agreement</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>For detailed explanations of the similarity methods, see the <a href="https://jokergoo.github.io/simona/articles/v05_term_similarity.html#ic-based-or-node-based-methods">simona documentation</a>.</p>
-</div>
+</section>
+<section id="basic-usage" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">4.3</span> Basic Usage</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># res is the output from Step 1 (annotate_feature)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">extract_subnetwork</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature =</span> <span class="st">"sig"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mrn =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">100</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">b =</span> <span class="dv">40</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fl">1e-4</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="dv">30</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">r =</span> <span class="fl">0.30</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_tune =</span> <span class="cn">FALSE</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-</section>
-<section id="method-2-biotext-embedding-similarity" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="method-2-biotext-embedding-similarity"><span class="header-section-number">4.4</span> Method 2: Biotext Embedding Similarity</h2>
-<p>The <code>get_bioembedsim()</code> function leverages large language model text embedding models to capture semantic relationships between pathway descriptions, enabling more nuanced similarity calculation based on biological function.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Gene-based Analysis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Metabolite-based Analysis</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<section id="optional-grid-tuning-for-b-and-w" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="optional-grid-tuning-for-b-and-w"><span class="header-section-number">4.4</span> Optional: Grid Tuning for <code>b</code> and <code>w</code></h2>
+<p>If you want data-driven parameter selection, enable grid tuning:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gene_biotext_similarity <span class="ot">&lt;-</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_bioembedsim</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> gene_enriched_pathways,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">api_provider =</span> <span class="st">"openai"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">text_embedding_model =</span> <span class="st">"text-embedding-3-small"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">api_key =</span> <span class="st">"your_openai_api_key"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">database =</span> <span class="fu">c</span>(<span class="st">"go"</span>, <span class="st">"kegg"</span>, <span class="st">"reactome"</span>),</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.go =</span> <span class="fl">0.05</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.kegg =</span> <span class="fl">0.05</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.reactome =</span> <span class="fl">0.05</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.go =</span> <span class="dv">5</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.kegg =</span> <span class="dv">5</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.reactome =</span> <span class="dv">5</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting pathway text embeddings ...</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating cosine similairty ...</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Biotext embedding and similarity calculation finished</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">extract_subnetwork</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature =</span> <span class="st">"sig"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">100</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_tune =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">b_grid =</span> <span class="fu">seq</span>(<span class="dv">20</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">w_grid =</span> <span class="fu">seq</span>(<span class="dv">25</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">times_tune =</span> <span class="dv">10</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>met_biotext_similarity <span class="ot">&lt;-</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_bioembedsim</span>(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> met_enriched_pathways,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">api_provider =</span> <span class="st">"openai"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">text_embedding_model =</span> <span class="st">"text-embedding-3-small"</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">api_key =</span> <span class="st">"your_openai_api_key"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">database =</span> <span class="fu">c</span>(<span class="st">"hmdb"</span>, <span class="st">"metkegg"</span>),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Statistical cutoffs (only pathways passing these cutoffs are used for similarity calculation)</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.hmdb =</span> <span class="fl">0.05</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">p.adjust.cutoff.metkegg =</span> <span class="fl">0.05</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.hmdb =</span> <span class="dv">5</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">count.cutoff.metkegg =</span> <span class="dv">5</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting pathway text embeddings ...</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating cosine similairty ...</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Biotext embedding and similarity calculation finished</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>API Key Setup:</strong></p>
+<p>When <code>grid_tune = TRUE</code>, FeatureMAP records:</p>
 <ul>
-<li>For OpenAI: Obtain your API key from <a href="https://platform.openai.com/api-keys">OpenAI Platform</a></li>
-<li>For Gemini: Get your API key from <a href="https://makersuite.google.com/app/apikey">Google AI Studio</a></li>
-<li>For SiliconFlow: Get your API key from <a href="https://docs.siliconflow.com/en/userguide/quickstart">SiliconFlow Quick Start</a></li>
+<li><code>res$tuning_grid</code>: full tuning results</li>
+<li><code>res$tuning_best</code>: selected best <code>(b, w)</code> and summary metrics</li>
 </ul>
-<p>Store your API key securely and never commit it to version control.</p>
-</div>
-</div>
-<section id="how-biotext-embedding-works" class="level3" data-number="4.4.1">
-<h3 data-number="4.4.1" class="anchored" data-anchor-id="how-biotext-embedding-works"><span class="header-section-number">4.4.1</span> How Biotext Embedding Works</h3>
-<p>The biotext embedding process involves several steps:</p>
-<ol type="1">
-<li><strong>Text Extraction</strong>: For each pathway, the function extracts pathway name and description from respective databases</li>
-<li><strong>Text Embedding</strong>: The text information is sent to the specified embedding model to generate high-dimensional vector representations</li>
-<li><strong>Similarity Calculation</strong>: Cosine similarity is calculated between all pathway embedding vectors</li>
-</ol>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Understanding Text Embeddings</strong>: Text embeddings convert text into numerical vectors that capture semantic meaning. For a comprehensive introduction to embeddings, including how they work, model details and best practices, see the <a href="https://platform.openai.com/docs/guides/embeddings">OpenAI Embeddings Guide</a>.</p>
-</div>
-</div>
 </section>
-</section>
-<section id="results-interpretation" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="results-interpretation"><span class="header-section-number">4.5</span> Results Interpretation</h2>
-<p>Both approaches prepare your data for the next steps: optimal cluster parameter determination and functional module identification.</p>
+<section id="result-interpretation" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="result-interpretation"><span class="header-section-number">4.5</span> Result Interpretation</h2>
+<p>After successful extraction, first confirm that the subnetwork step completed successfully:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Traditional similarity results</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>gene_similarity_result</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Return intra-database modules generated based on pathway similarity</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gene_similarity_result<span class="sc">@</span>merged_pathway_go<span class="sc">$</span>module_result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>stage</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "subnetwork_extracted"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Key result columns:</p>
-<ul>
-<li><strong>module</strong>: Module identifier (e.g., “go_Module_2”)</li>
-<li><strong>module_annotation</strong>: Representative annotation (pathway name with the lowest adjusted p-value for ORA/ pathway name with the highest |NES| for GSEA) for the module</li>
-<li><strong>Description</strong>: Names of all the pathways in the module separated by <code>;</code></li>
-<li><strong>module_content</strong>: All pathways/terms (i.e.&nbsp;nodes) grouped in this module</li>
-<li><strong>Count</strong>: Number of genes/metabolites from the input genes/metabolites list in the module</li>
-<li><strong>p_adjust</strong>: Best (lowest) adjusted p-value among pathways in the module</li>
-</ul>
+<section id="extracted-pcsf-subnetwork" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="extracted-pcsf-subnetwork"><span class="header-section-number">4.5.1</span> Extracted PCSF subnetwork</h3>
+<p>The extracted metabolic subnetwork is stored as an <code>igraph</code> object:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Biotext embedding results  </span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gene_biotext_similarity</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns list with similarity matrix and enriched pathway object</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(gene_biotext_similarity)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "sim_matrix"        "enriched_pathway"</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine similarity matrix</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>gene_biotext_similarity<span class="sc">$</span>sim_matrix[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#            GO:0016049 GO:0031589 GO:1900046 GO:0071375 GO:0061900</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># GO:0016049  1.0000000  0.3779020  0.2286780  0.3376592  0.4369859</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># GO:0031589  0.3779020  1.0000000  0.2702301  0.3123477  0.3938414</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># GO:1900046  0.2286780  0.2702301  1.0000000  0.3277389  0.2867548</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># GO:0071375  0.3376592  0.3123477  0.3277389  1.0000000  0.4493753</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># GO:0061900  0.4369859  0.3938414  0.2867548  0.4493753  1.0000000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>pcsf_subnet</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># IGRAPH c444970 UNWB 1931 3811 -- </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># + attr: name (v/c), prize (v/n), type (v/c), freq (e/n), weight (e/n)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># + edges from c444970 (vertex names):</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     InChI=1S/C10H15N5O10P2/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(24-10)1-23-27(21,22)25-26(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># [2] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     InChI=1S/C10H16N5O13P3/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(26-10)1-25-30(21,22)28-31(23,24)27-29(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H,23,24)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># [3] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     M523T878_POS</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># + ... omitted several edges</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="trouble-shooting" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="trouble-shooting"><span class="header-section-number">4.6</span> Trouble Shooting</h2>
+<section id="network-refined-annotation-table" class="level3" data-number="4.5.2">
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="network-refined-annotation-table"><span class="header-section-number">4.5.2</span> Network-refined annotation table</h3>
+<p>After PCSF extraction, FeatureMAP updates the feature–metabolite annotation table by incorporating network evidence:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>anno_feature_table2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   variable_id           Compound_name KEGG_ID                                               INCHI_ID</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M105T384_POS                 Nitrate  C00244                              InChI=1S/NO3/c2-1(3)4/q-1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 M105T384_POS            Benzoic acid  C00539     InChI=1S/C7H6O2/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H,8,9)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 M105T384_POS 2,4,6-Trihydroxytoluene  C16401 InChI=1S/C7H8O3/c1-4-6(9)2-5(8)3-7(4)10/h2-3,8-10H,1H3</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 M105T384_POS   2-Hydroxybenzaldehyde  C06202           InChI=1S/C7H6O2/c8-5-6-3-1-2-4-7(6)9/h1-5,9H</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 M105T384_POS 2,4,5-Trihydroxytoluene  C18317 InChI=1S/C7H8O3/c1-4-2-6(9)7(10)3-5(4)8/h2-3,8-10H,1H3</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 M105T384_POS   3-hydroxybenzaldehyde  C03067           InChI=1S/C7H6O2/c8-5-6-2-1-3-7(9)4-6/h1-5,9H</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   score_norm edge_freq weighted_anno_score confidence_rank</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 0.09090909      0.74           0.2856364               1</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 0.09090909      0.24           0.1356364               2</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 0.09090909      0.24           0.1356364               2</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 0.09090909      0.22           0.1296364               3</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 0.09090909      0.22           0.1296364               3</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 0.09090909      0.20           0.1236364               4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Compared with <code>anno_feature_table1</code>, this table incorporates network support from the extracted subnetwork. Metabolite candidates that are more consistently supported by the extracted metabolic network receive higher <code>weighted_anno_score</code> and better <code>confidence_rank</code>.</p>
+</section>
+<section id="other-result-components" class="level3" data-number="4.5.3">
+<h3 data-number="4.5.3" class="anchored" data-anchor-id="other-result-components"><span class="header-section-number">4.5.3</span> Other Result Components</h3>
 <ul>
-<li>When calculating the pathway similarity using <strong>Biotext pathway embedding</strong>, if you encounter an error like this, it might be due to a network issue. Please try running it multiple times.</li>
+<li><code>res$node_frequency</code>: node appearance frequency across repeated runs</li>
+<li><code>res$edge_frequency</code>: edge appearance frequency across repeated runs</li>
+<li><code>res$tuning_grid</code>, <code>res$tuning_best</code>: available when grid tuning is used</li>
 </ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/biotext_embedding_touble_shooting.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-</section>
-<section id="next-steps" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">4.7</span> Next Steps</h2>
-<p>Continue to <a href="05_determine_optimal_clustering_params.qmd">Optimal Clustering Parameters</a> to determine the best clustering parameters for your similarity data, then proceed to <a href="06_get_functional_modules.qmd">Functional Module Identification</a> to group related pathways into modules.</p>
+<p>Once subnetwork extraction is complete, continue to next step.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

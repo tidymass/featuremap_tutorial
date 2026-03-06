@@ -1,186 +1,215 @@
-# Module Identification {#sec-get_functional_modules}
+# Module Identification {#sec-module_identification}
 
-This chapter describes how to systematically evaluate different clustering parameters to find the optimal settings for grouping your pathway similarity results into functional modules.
-
-```{r}
-#| eval=FALSE
-
-library(mapa)
-```
+This chapter describes **Step 3** of the FeatureMAP pipeline: identifying functional modules from the PCSF-derived subnetwork using `identify_module()`.
 
 ::: callout-important
-**Prerequisites:** Before determining optimal clustering parameters, ensure you have calculated pathway similarity using either `merge_pathways()` or `get_bioembedsim()` as described in @sec-pathway_similarity. The similarity results will be used as input for this analysis.
+**Prerequisites:** You need a `featuremap_result` object from [Subnetwork Extraction](04_pcsf_subnetwork.qmd), with stage `"subnetwork_extracted"`.
 :::
 
-## Overview
+## What `identify_module()` Does
 
-The `determine_optimal_clusters()` function tests clustering methods and similarity cutoffs, using modularity and silhouette scores to select optimal parameters. This ensures better clustering choices before functional module identification, which saves you time and enhances biological interpretability.
+`identify_module()` performs community detection on the extracted subnetwork and then evaluates module significance using permutation testing.
 
-Overall, this chapter is not mandatory but highly recommended for anyone aiming to obtain high-quality functional modules.
+At a high level, this step performs the following operations:
 
-## Supported Input Types
+1.  **Construct a module detection graph:** A metabolite-only subgraph is derived from the PCSF subnetwork. Steiner nodes with low occurrence frequency can be filtered using `node_freq`.
 
-The function accepts two types of input objects:
+2.  **Detect network communities:** Community detection algorithms are applied to partition the network into candidate modules.
 
-1.  **Traditional similarity objects**: Results from `merge_pathways()` (functional_module class)
-2.  **Biotext embedding objects**: Results from `get_bioembedsim()` (list with sim_matrix and enriched_pathway)
+3.  **Build module membership table:** Node-to-module assignments are recorded in `module_table`.
 
-For **traditional similarity objects**, the function internally calculates Jaccard similarity between modules from different databases. For **biotext embedding objects**, it uses the pre-computed semantic similarity matrix.
+4.  **Compute module activity scores:** Module scores summarize the statistical signal from features mapped to metabolites within the module.
+
+5.  **Assess statistical significance:** A permutation procedure is used to estimate empirical significance and control false discovery rate.
+
+This step converts the extracted metabolic network into **functional modules** supported by both network topology and feature-level statistical evidence.
+
+------------------------------------------------------------------------
+
+## Key Parameters
+
+| Parameter | Default | Description |
+|----|---:|----|
+| `res` | required | `featuremap_result` returned by `extract_subnetwork()` |
+| `method` | `"louvain"` | Community detection algorithm |
+| `min_size` | `3` | Minimum module size retained |
+| `max_size` | `100000` | Maximum module size retained |
+| `n_perm` | `100` | Number of permutations for significance testing |
+| `seed` | `123` | Random seed for reproducibility |
+| `workers` | `4` | Parallel workers for permutation testing |
+| `node_freq` | `0.05` | Frequency threshold for retaining Steiner nodes |
+| `louvain_resolution` | `1` | Resolution parameter for Louvain clustering |
+| `walktrap_steps` | `4` | Number of steps used in walktrap clustering |
+
+------------------------------------------------------------------------
 
 ## Basic Usage
 
 ::: panel-tabset
-##### Traditional Similarity Results
+##### Louvain (default)
 
 ```{r}
 #| eval: false
 
-cluster_evaluation <- 
-  determine_optimal_clusters(
-    object = met_similarity_result,
-    cutoff_increment = 0.05  # Test cutoffs from 0.2 to 0.9 in steps of 0.05
-  )
-
-# Starting optimal cluster determination...
-# Extracting similarity matrix and pathway data...
-# Calculating the similarity matrix...
-# Starting clustering evaluation across methods and cutoffs...
-# Processing method: hierarchical ...
-# Processing method: binary_cut ...
-# Processing method: girvan_newman ...
-# Clustering evaluation completed! Generating plots and finding optimal parameters...
-# Analysis complete!
+res <- identify_module(
+  res = res,
+  method = "louvain",
+  min_size = 3,
+  max_size = 100000,
+  n_perm = 100,
+  seed = 123,
+  workers = 4,
+  node_freq = 0.05,
+  louvain_resolution = 1
+)
 ```
 
-##### Biotext Embedding Results
+##### Leading Eigen
 
 ```{r}
 #| eval: false
 
-cluster_evaluation <- 
-  determine_optimal_clusters(
-    object = met_biotext_similarity,
-    cutoff_increment = 0.05
-  )
+res <- identify_module(
+  res = res,
+  method = "leading_eigen",
+  min_size = 3,
+  max_size = 100000,
+  n_perm = 100,
+  seed = 123,
+  workers = 4,
+  node_freq = 0.05
+)
+```
 
-# Starting optimal cluster determination for biotext embedding object...
-# Extracting similarity matrix and pathway data...
-# Starting clustering evaluation across methods and cutoffs...
-# Processing method: hierarchical_ward.D ...
-# Processing method: binary_cut ...
-# Processing method: louvain ...
-# Clustering evaluation completed! Generating plots and finding optimal parameters...
-# Analysis complete!
+##### Fast Greedy
+
+```{r}
+#| eval: false
+
+res <- identify_module(
+  res = res,
+  method = "fast_greedy",
+  min_size = 3,
+  max_size = 100000,
+  n_perm = 100,
+  seed = 123,
+  workers = 4,
+  node_freq = 0.05
+)
+```
+
+##### Walktrap
+
+```{r}
+#| eval: false
+
+res <- identify_module(
+  res = res,
+  method = "walktrap",
+  min_size = 3,
+  max_size = 100000,
+  n_perm = 100,
+  seed = 123,
+  workers = 4,
+  node_freq = 0.05,
+  walktrap_steps = 4
+)
 ```
 :::
 
-## Clustering Methods Evaluated
+## Clustering Methods
 
-The function tests three clustering algorithms:
+-   **`louvain`**\
+    A fast modularity optimization algorithm that iteratively merges nodes and communities to maximize network modularity. It is widely used for large biological networks.
 
-1.  **Hierarchical Clustering**: Traditional agglomerative clustering with specified linkage method (default linkage method is "complete")
-2.  **Binary Cut**: Uses the [simplifyEnrichment](https://doi.org/10.1016/j.gpb.2022.04.008) algorithm
-3.  **Girvan-Newman**: Community detection based on edge betweenness
+-   **`leading_eigen`**\
+    A spectral method that partitions the network based on the leading eigenvectors of the modularity matrix. It identifies communities by separating nodes according to their contribution to modularity.
 
-Each method is tested across a range of similarity cutoffs to find the optimal balance between cluster cohesion and separation.
+-   **`fast_greedy`**\
+    An agglomerative hierarchical clustering method that starts with each node as its own community and progressively merges communities to increase modularity.
 
-## Evaluation Metrics
+-   **`walktrap`**\
+    A random-walk-based community detection algorithm that simulates short random walks on the network. The intuition is that random walks tend to remain within densely connected regions.
 
-**Modularity**: Measures the strength of division of a network into modules. Higher values indicate better defined community structure.
+Different algorithms may produce slightly different module boundaries. Comparing multiple methods can help evaluate module robustness.
 
-**Silhouette Score**: Measures how similar objects are to their own cluster compared to other clusters. Values range from -1 to 1, with higher values indicating better clustering.
+## Result Interpretation
 
-## Similarity Cutoff Interpretation
+After successful module identification:
 
-The meaning of `sim.cutoff` depends on your clustering method:
+```{r}
+#| eval: false
 
-::: panel-tabset
-##### Girvan-Newman
+res$stage
+# [1] "module_identified"
 
-**Edge Filter**: Only pathway pairs with similarity above this threshold are connected.
+```
 
--   **Lower values (0.3-0.4)**: More permissive, denser networks, larger modules
--   **Higher values (0.6-0.8)**: More stringent, sparser networks, smaller modules
+### Module membership table
 
-##### Binary Cut & Hierarchical
+`module_table` records the **assignment of metabolite nodes to modules**, together with node-level metadata:
 
-**Dendrogram Cutting Height**: Determines where to cut the clustering tree.
+```{r}
+#| eval: false
 
--   **Lower values (0.3-0.4)**: Cut lower in tree, more fine-grained modules\
--   **Higher values (0.6-0.8)**: Cut higher in tree, fewer but larger modules
-:::
+head(res$module_table)
+
+#                                                                                                        INCHI_ID Module KEGG_ID
+# 1                                                                      InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2      1  C20679
+# 2 InChI=1S/C10H11NO5/c1-5(9(12)13)16-7-4-2-3-6(8(7)11)10(14)15/h2-4,7-8H,1,11H2,(H,12,13)(H,14,15)/t7-,8-/m0/s1      1  C18054
+# 3 InChI=1S/C10H11NO5/c1-5(9(12)13)16-8-4-6(10(14)15)2-3-7(8)11/h2-4,7-8H,1,11H2,(H,12,13)(H,14,15)/t7-,8-/m1/s1      1  C11355
+# 4                        InChI=1S/C10H12N2O3/c11-7-4-2-1-3-6(7)9(13)5-8(12)10(14)15/h1-4,8H,5,11-12H2,(H,14,15)      1  C01718
+# 5              InChI=1S/C10H12N2O3/c11-7-4-2-1-3-6(7)9(13)5-8(12)10(14)15/h1-4,8H,5,11-12H2,(H,14,15)/t8-/m0/s1      1  C00328
+# 6                  InChI=1S/C10H12N2O4/c11-6(10(15)16)4-8(14)5-2-1-3-7(13)9(5)12/h1-3,6,13H,4,11-12H2,(H,15,16)      1  C02794
+#
+#                  Compound_name Node_freq      Type Importance
+# 1                Tungstic acid      1.00 annotated  0.9447378
+# 2 2-Amino-2-deoxyisochorismate      0.47 annotated  0.1575416
+# 3    4-amino-4-deoxychorismate      0.53 annotated  0.1575416
+# 4                 D-Kynurenine      0.47 annotated  0.2670680
+# 5                 L-Kynurenine      1.00 annotated  0.2121862
+# 6            Hydroxykynurenine      0.31 annotated  0.3593576
+
+```
+
+Each row represents a **metabolite node belonging to a identified module**. Nodes with higher `Node_freq` and `Importance` values tend to represent more stable and feature-supported metabolites within the network.
 
 ::: callout-note
-**Key Difference in Cutoff Interpretation**:
-
--   In **Girvan-Newman**, higher cutoffs = smaller modules
--   In **Binary Cut/Hierarchical**, higher cutoffs = larger modules
-
-Always examine your results and adjust based on the biological interpretability of resulting modules.
+Here, **annotated** metabolites are nodes directly linked to observed LC–MS features through the feature annotation step, whereas **hidden** metabolites are Steiner nodes introduced during PCSF optimization to connect annotated metabolites within the metabolic reaction network. Hidden metabolites are not directly supported by measured features, but may provide important network context.
 :::
 
-## Parameter Customization
+### Module significance table
+
+`module_score` summarizes statistics for each detected module:
 
 ```{r}
 #| eval: false
 
-# Fine-grained parameter search
-detailed_evaluation <- 
-  determine_optimal_clusters(
-    object = met_similarity_result,
-    cutoff_increment = 0.01,  # Smaller steps for more detailed analysis
-    hclust_method = "ward.D2"  # Different hierarchical clustering method
-  )
+head(res$module_score)
 
-# Starting optimal cluster determination for functional_module object...
-# Extracting similarity matrix and pathway data...
-# Calculating the similarity matrix...
-# Starting clustering evaluation across methods and cutoffs...
-# Processing method: hierarchical_ward.D ...
-# Available hierarchical clustering methods:
-# "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid"
+#   Module Module_size Annotated_nodes Module_score           p       fdr
+# 1      1         148             130    1.3944882 0.004536258 0.2177404
+# 2     15          80              66    0.8717769 0.058164843 0.9960879
+# 3     19          37              33    0.7624376 0.095688593 0.9960879
+# 4     17          21              20    0.6974986 0.127492917 0.9960879
+# 5     14          51              47    0.6885808 0.132541184 0.9960879
+# 6      3          50              48    0.5985351 0.194456787 0.9960879
+
 ```
 
-## Results Interpretation
+Important columns include:
 
-The function returns a comprehensive evaluation with three components:
+-   `Module` – module identifier
+-   `Module_size` – number of metabolite nodes in the module
+-   `Annotated_nodes` – number of nodes supported by feature annotations
+-   `Module_score` – aggregated activity score of the module
+-   `p` – permutation-based p-value
+-   `fdr` – multiple-testing corrected p-value
 
-```{r}
-#| eval: false
+Modules with lower `p` or `fdr` values indicate stronger statistical support and are typically prioritized for downstream biological interpretation.
 
-# View the evaluation plot
-cluster_evaluation$evaluation_plot
+::: callout-tip
+If too many tiny modules appear, increase `min_size` or tighten `node_freq`. If modules are too coarse, try alternative methods or relax these cutoffs.
+:::
 
-# Examine detailed results
-head(cluster_evaluation$cluster_result)
-# # A tibble: 6 × 4
-#   method       cutoff metric     value
-#   <chr>         <dbl> <chr>      <dbl>
-# 1 hierarchical   0.2  modularity   0  
-# 2 hierarchical   0.2  silhouette   0.4
-# 3 hierarchical   0.25 modularity   0  
-# 4 hierarchical   0.25 silhouette   0.4
-# 5 hierarchical   0.3  modularity   0  
-
-# Find the best parameter combinations
-cluster_evaluation$best_combination
-# # A tibble: 22 × 4
-#    method        cutoff metric     value
-#    <chr>          <dbl> <chr>      <dbl>
-#  1 binary_cut      0.85 modularity 0.375
-#  2 binary_cut      0.9  modularity 0.375
-#  3 girvan_newman   0.2  modularity 0.375
-# ...
-```
-
-**Evaluation Plot**: Shows how clustering quality metrics change across similarity cutoffs for each method. Look for:
-
--   **Peaks in modularity**: Indicate good community structure
--   **High silhouette scores**: Indicate well-separated clusters
--   **Consistent performance**: Methods that perform well across multiple cutoffs
-
-**Best Combination**: Identifies the optimal method and cutoff for each metric.
-
-## Next Steps
-
-Use the optimal parameters identified in this analysis for functional module identification in [Chapter 6: Functional Module Identification](06_get_functional_modules.qmd). The recommended method and cutoff values will help you ensure the pathway modules are high-quality, biologically meaningful.
+Once modules are identified, continue to next step.
