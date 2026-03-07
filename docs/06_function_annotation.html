@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div class="sidebar-title mb-0 py-0">
       <a href="./">FeatureMAP Tutorial</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/jaspershen-lab/mapa-tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/tidymass/featuremap_tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -402,7 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./13_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -415,6 +415,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
   </div>
 </li>
       </ul>
@@ -447,7 +453,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#practical-checks-before-running" id="toc-practical-checks-before-running" class="nav-link" data-scroll-target="#practical-checks-before-running"><span class="header-section-number">6.6</span> Practical Checks Before Running</a></li>
   <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">6.7</span> Next Step</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/06_function_annotation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/06_function_annotation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/06_function_annotation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/06_function_annotation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -472,7 +478,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter describes <strong>Step 4</strong> of the FeatureMAP pipeline: annotating statistically supported modules with <code>annotate_module()</code>.</p>
+<p>This chapter describes <strong>Step 5</strong> of the FeatureMAP pipeline: annotating statistically supported modules with <code>annotate_module()</code>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -488,7 +494,7 @@ Important
 </div>
 <section id="what-annotate_module-does" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="what-annotate_module-does"><span class="header-section-number">6.1</span> What <code>annotate_module()</code> Does</h2>
-<p><code>annotate_module()</code> performs <strong>module-level biological interpretation</strong> for statistically supported modules in Step 3.</p>
+<p><code>annotate_module()</code> performs <strong>module-level biological interpretation</strong> for statistically supported modules in Step 4.</p>
 <p>This step integrates three sources of information:</p>
 <ol type="1">
 <li><p><strong>Metabolite annotation summary:</strong> Metabolites contained in each significant module are summarized using the selected reference namespace (<code>kegg</code> or <code>hmdb</code>).</p></li>
@@ -809,7 +815,7 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_score)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(res<span class="sc">$</span>module_score<span class="sc">$</span>fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>If this count is zero, it is better to revisit Step 3 before trying module annotation.</p>
+<p>If this count is zero, it is better to revisit Step 4 before trying module annotation.</p>
 </section>
 <section id="next-step" class="level2" data-number="6.7">
 <h2 data-number="6.7" class="anchored" data-anchor-id="next-step"><span class="header-section-number">6.7</span> Next Step</h2>
@@ -1249,4 +1255,4 @@ Note
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/06_function_annotation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/06_function_annotation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/06_function_annotation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/06_function_annotation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

@@ -1,6 +1,6 @@
 # Feature Annotation {#sec-enrichment_analysis}
 
-This chapter describes **Step 1** of the FeatureMAP pipeline: feature-level metabolite annotation using `annotate_feature()`.
+This chapter describes **Step 2** of the FeatureMAP pipeline: feature-level metabolite annotation using `annotate_feature()`.
 
 ::: callout-important
 **Prerequisites:** Make sure your input data follows the format in [Data Preparation](02_data_preparation.qmd), especially the required `feature_table` columns in @sec-input_data_requirement.

@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div class="sidebar-title mb-0 py-0">
       <a href="./">FeatureMAP Tutorial</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/jaspershen-lab/mapa-tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/tidymass/featuremap_tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -402,7 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./13_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -415,6 +415,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
   </div>
 </li>
       </ul>
@@ -446,7 +452,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#other-result-components" id="toc-other-result-components" class="nav-link" data-scroll-target="#other-result-components"><span class="header-section-number">4.5.3</span> Other Result Components</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -471,7 +477,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter describes <strong>Step 2</strong> of the FeatureMAP pipeline: extracting a robust metabolic subnetwork with <code>extract_subnetwork()</code> using the prize-collecting Steiner forest (PCSF) strategy.</p>
+<p>This chapter describes <strong>Step 3</strong> of the FeatureMAP pipeline: extracting a robust metabolic subnetwork with <code>extract_subnetwork()</code> using the prize-collecting Steiner forest (PCSF) strategy.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -487,7 +493,7 @@ Important
 </div>
 <section id="what-extract_subnetwork-does" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="what-extract_subnetwork-does"><span class="header-section-number">4.1</span> What <code>extract_subnetwork()</code> Does</h2>
-<p><code>extract_subnetwork()</code> integrates the refined feature annotations from Step 1 with a metabolic reaction network (MRN) and applies repeated PCSF optimization to identify a robust subnetwork.</p>
+<p><code>extract_subnetwork()</code> integrates the refined feature annotations from Step 2 with a metabolic reaction network (MRN) and applies repeated PCSF optimization to identify a robust subnetwork.</p>
 <p>At a high level, this step does the following:</p>
 <ol type="1">
 <li><p><strong>Compute feature importance:</strong> Feature-level statistical evidence is summarized from <code>condition</code> and <code>pvalue</code> and used to prioritize annotated metabolites.</p></li>
@@ -585,7 +591,7 @@ Important
 <section id="basic-usage" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">4.3</span> Basic Usage</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># res is the output from Step 1 (annotate_feature)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># res is the output from Step 2 (annotate_feature)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">extract_subnetwork</span>(</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature =</span> <span class="st">"sig"</span>,</span>
@@ -1121,4 +1127,4 @@ Important
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/04_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

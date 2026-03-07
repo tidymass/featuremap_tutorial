@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Extract Subnetwork – FeatureMAP Tutorial</title>
+<title>10&nbsp; Subnetwork Extraction – FeatureMAP Tutorial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -251,7 +251,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./13_pcsf_subnetwork.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./13_pcsf_subnetwork.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -272,7 +272,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">FeatureMAP Tutorial</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/jaspershen-lab/mapa-tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/tidymass/featuremap_tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -320,7 +320,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -367,7 +367,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./13_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -380,6 +380,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
   </div>
 </li>
       </ul>
@@ -400,27 +406,26 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#step-1-load-your-data" id="toc-step-1-load-your-data" class="nav-link active" data-scroll-target="#step-1-load-your-data"><span class="header-section-number">10.1</span> Step 1: Load Your Data</a></li>
-  <li><a href="#step-2-select-method" id="toc-step-2-select-method" class="nav-link" data-scroll-target="#step-2-select-method"><span class="header-section-number">10.2</span> Step 2: Select Method</a>
+  <li><a href="#enter-the-pcsf-subnetwork-page" id="toc-enter-the-pcsf-subnetwork-page" class="nav-link active" data-scroll-target="#enter-the-pcsf-subnetwork-page"><span class="header-section-number">10.1</span> Enter the PCSF Subnetwork Page</a></li>
+  <li><a href="#parameter-area" id="toc-parameter-area" class="nav-link" data-scroll-target="#parameter-area"><span class="header-section-number">10.2</span> Parameter Area</a></li>
+  <li><a href="#run-pcsf-subnetwork-extraction" id="toc-run-pcsf-subnetwork-extraction" class="nav-link" data-scroll-target="#run-pcsf-subnetwork-extraction"><span class="header-section-number">10.3</span> Run PCSF Subnetwork Extraction</a></li>
+  <li><a href="#result-area" id="toc-result-area" class="nav-link" data-scroll-target="#result-area"><span class="header-section-number">10.4</span> Result Area</a>
   <ul class="collapse">
-  <li><a href="#method-1-traditional-methods" id="toc-method-1-traditional-methods" class="nav-link" data-scroll-target="#method-1-traditional-methods"><span class="header-section-number">10.2.1</span> Method 1: Traditional Methods</a></li>
-  <li><a href="#method-2-biotext-embedding" id="toc-method-2-biotext-embedding" class="nav-link" data-scroll-target="#method-2-biotext-embedding"><span class="header-section-number">10.2.2</span> Method 2: Biotext Embedding</a></li>
+  <li><a href="#subnetwork" id="toc-subnetwork" class="nav-link" data-scroll-target="#subnetwork"><span class="header-section-number">10.4.1</span> Subnetwork</a></li>
+  <li><a href="#annotation-table-2" id="toc-annotation-table-2" class="nav-link" data-scroll-target="#annotation-table-2"><span class="header-section-number">10.4.2</span> Annotation Table 2</a></li>
   </ul></li>
-  <li><a href="#step-3-run-the-analysis" id="toc-step-3-run-the-analysis" class="nav-link" data-scroll-target="#step-3-run-the-analysis"><span class="header-section-number">10.3</span> Step 3: Run the Analysis</a></li>
-  <li><a href="#step-4-review-results" id="toc-step-4-review-results" class="nav-link" data-scroll-target="#step-4-review-results"><span class="header-section-number">10.4</span> Step 4: Review Results</a></li>
-  <li><a href="#step-5-view-analysis-code" id="toc-step-5-view-analysis-code" class="nav-link" data-scroll-target="#step-5-view-analysis-code"><span class="header-section-number">10.5</span> Step 5: View Analysis Code</a></li>
-  <li><a href="#method-comparison" id="toc-method-comparison" class="nav-link" data-scroll-target="#method-comparison"><span class="header-section-number">10.6</span> Method Comparison</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">10.7</span> Next Steps</a></li>
+  <li><a href="#recommended-run-the-demo-data-first" id="toc-recommended-run-the-demo-data-first" class="nav-link" data-scroll-target="#recommended-run-the-demo-data-first"><span class="header-section-number">10.5</span> Recommended: Run the Demo Data First</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">10.6</span> Next Step</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./13_pcsf_subnetwork.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./13_pcsf_subnetwork.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-shiny_pathway_similarity" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></h1>
 </div>
 
 
@@ -437,7 +442,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This chapter covers how to calculate pathway similarity using the MAPA Shiny application. The Shiny app computes pathway similarity using two powerful methods: traditional similarity and biotext embedding similarity. Both methods prepare your data for downstream clustering analysis, allowing you to choose the approach that best fits your research needs and computational resources.</p>
+<p>This chapter focuses on how to use <strong>Step 3: Subnetwork Extraction</strong> in <strong>FeatureMAP Shiny</strong>. The detailed method, parameter definitions, and result structure have already been introduced in <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>, so here we focus on the Shiny workflow itself.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -448,94 +453,54 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Prerequisites: Before calculating pathway similarity, ensure you have either:</p>
-<ol type="1">
-<li><strong>Completed pathway enrichment analysis</strong> in the current session using the <strong>Pathway Enrichment</strong> section as described in the previous chapter, OR</li>
-<li><strong>Upload existing enrichment results</strong> using the file upload option at the top of the interface</li>
-</ol>
-<p>The processed enrichment data is required for similarity calculation to proceed.</p>
+<p><strong>Prerequisites:</strong> Make sure <strong>Feature Annotation</strong> has finished successfully before starting this step.</p>
 </div>
 </div>
-<section id="step-1-load-your-data" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="step-1-load-your-data"><span class="header-section-number">10.1</span> Step 1: Load Your Data</h2>
+<section id="enter-the-pcsf-subnetwork-page" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="enter-the-pcsf-subnetwork-page"><span class="header-section-number">10.1</span> Enter the PCSF Subnetwork Page</h2>
+<p>After finishing <strong>Feature Annotation</strong>, click <strong>Next Step</strong> or select <strong>PCSF Subnetwork</strong> from the navigation bar. This page is also divided into two areas:</p>
 <ul>
-<li><p><strong>Option 1: Continue from Previous Step</strong></p>
-<p>If you have completed pathway enrichment analysis in the current session, your data will automatically be available for similarity calculation. The interface will detect your data type (gene or metabolite) and display appropriate parameter options.</p></li>
-<li><p><strong>Option 2: Upload Existing Results</strong></p>
-<p>If you have previously saved enrichment results, you can upload them:</p>
-<ol type="1">
-<li><strong>Click “Browse”</strong> at the top of the left panel <strong>“Upload Enriched Pathways Result (.rda)”</strong> to upload your enrichment results file (.rda format)</li>
-<li><strong>Select your file</strong></li>
-<li><strong>Wait for validation</strong> - the app will automatically detect: data type (gene or metabolite), available databases from your enrichment analysis, organism information (required for downstream analysis)</li>
-</ol></li>
-</ul>
-</section>
-<section id="step-2-select-method" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="step-2-select-method"><span class="header-section-number">10.2</span> Step 2: Select Method</h2>
-<p>Once your data is loaded, choose your similarity calculation method using the radio buttons:</p>
-<ul>
-<li><strong>Traditional methods</strong>: Uses established similarity measures (semantic similarity for GO, overlap-based similarity for all supported databases, see <a href="12_feature_annotation_shiny.html#sec-supported_db" class="quarto-xref"><span>Section 9.1</span></a>)</li>
-<li><strong>Biotext embedding</strong>: Uses large language model (LLM) text embeddings to capture semantic relationships</li>
-</ul>
-<section id="method-1-traditional-methods" class="level3" data-number="10.2.1">
-<h3 data-number="10.2.1" class="anchored" data-anchor-id="method-1-traditional-methods"><span class="header-section-number">10.2.1</span> Method 1: Traditional Methods</h3>
-<p>When you select “Traditional methods”, the interface displays database-specific parameter panels based on your enrichment analysis results. The app automatically detects which databases are available from your enrichment analysis. The traditional similarity method requires four main parameters for each database. While the parameter names vary slightly between data types, they serve the same fundamental purposes:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 17%">
-<col style="width: 29%">
-<col style="width: 17%">
-<col style="width: 17%">
-<col style="width: 17%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Parameter</th>
-<th>Purpose</th>
-<th>Default</th>
-<th>Gene Databases</th>
-<th>Metabolite Databases</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>P-adjust cutoff</strong></td>
-<td>Significance threshold for pathway inclusion</td>
-<td>0.05</td>
-<td>GO, KEGG, Reactome</td>
-<td>SMPDB, KEGG</td>
-</tr>
-<tr class="even">
-<td><strong>Count cutoff</strong></td>
-<td>Minimum genes/metabolites per pathway</td>
-<td>5</td>
-<td>GO, KEGG, Reactome</td>
-<td>SMPDB, KEGG</td>
-</tr>
-<tr class="odd">
-<td><strong>Similarity method</strong></td>
-<td>Algorithm for calculating pathway similarity</td>
-<td>See below</td>
-<td>GO, KEGG, Reactome</td>
-<td>SMPDB, KEGG</td>
-</tr>
-<tr class="even">
-<td><strong>Similarity cutoff</strong></td>
-<td>Threshold for intra-database pathway clustering</td>
-<td>0.5</td>
-<td>GO, KEGG, Reactome</td>
-<td>SMPDB, KEGG</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Similarity Method Options:</strong></p>
-<ul>
-<li><strong>Only GO terms</strong>: Semantic similarity using the <a href="https://jokergoo.github.io/simona/">simona</a> package</li>
-<li><strong>GO/KEGG/Reactome/SMPDB pathways</strong>: Gene/metabolite overlap similarity (Jaccard, Dice, Overlap, and Kappa)</li>
+<li><strong>Parameter area</strong> on the left: set the subnetwork extraction options and click <strong>Run PCSF</strong></li>
+<li><strong>Result area</strong> on the right: inspect the extracted subnetwork and the refined annotation results</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_13_simcluster_params_gene.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_step2_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>The purpose of this step is to use the PCSF strategy to extract a network-supported metabolite subnetwork for downstream module identification.</p>
+</section>
+<section id="parameter-area" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="parameter-area"><span class="header-section-number">10.2</span> Parameter Area</h2>
+<p>The left panel is where you set the PCSF-related parameters before clicking <strong>Run PCSF</strong>. Since the detailed meanings of these parameters have already been introduced in <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>, we do not repeat them here.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you are running the demo data for the first time, it is usually best to keep the default settings, leave grid tuning off, and run the step once before changing anything.</p>
+</div>
+</div>
+</section>
+<section id="run-pcsf-subnetwork-extraction" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="run-pcsf-subnetwork-extraction"><span class="header-section-number">10.3</span> Run PCSF Subnetwork Extraction</h2>
+<p>Once the parameters are ready, click <strong>Run PCSF</strong>.</p>
+<p>The app will start the PCSF subnetwork extraction procedure and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the <strong>Next Step</strong> button will become available.</p>
+<p>If you enable <strong>grid tuning</strong>, the app will additionally report the selected best parameter combination after the run finishes.</p>
+</section>
+<section id="result-area" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="result-area"><span class="header-section-number">10.4</span> Result Area</h2>
+<section id="subnetwork" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="subnetwork"><span class="header-section-number">10.4.1</span> Subnetwork</h3>
+<p>The <strong>Subnetwork</strong> tab is used to inspect the extracted PCSF network. If <strong>Visualize PCSF subnetwork</strong> is enabled in the parameter area, this tab will show the network plot directly in the app. If visualization is disabled, the run can still finish normally, but the plot area will remain empty.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_step2_subnetwork.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -548,39 +513,40 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Parameter Selection Guide</strong>:</p>
-<ul>
-<li><strong>Lower p-adjust cutoff</strong> (e.g., 0.01) = More stringent, fewer pathways</li>
-<li><strong>Higher count cutoff</strong> (e.g., 10) = Focus on larger, more established pathways</li>
-<li><strong>Similarity cutoff</strong> = Balance between intra-database module granularity (lower values) and specificity (higher values)</li>
-</ul>
+<p>This network plot is interactive in the Shiny app. You can zoom, drag, and click nodes to explore the subnetwork in more detail.</p>
 </div>
 </div>
+<p>When grid tuning is enabled, the best selected parameter combination is also shown in this tab after the analysis is complete.</p>
 </section>
-<section id="method-2-biotext-embedding" class="level3" data-number="10.2.2">
-<h3 data-number="10.2.2" class="anchored" data-anchor-id="method-2-biotext-embedding"><span class="header-section-number">10.2.2</span> Method 2: Biotext Embedding</h3>
-<p>When you select “Biotext embedding”, the interface displays parameters for LLM-based similarity calculation.</p>
-<section id="api-configuration" class="level4" data-number="10.2.2.1">
-<h4 data-number="10.2.2.1" class="anchored" data-anchor-id="api-configuration"><span class="header-section-number">10.2.2.1</span> API Configuration</h4>
-<p>Set up your API connection:</p>
+<section id="annotation-table-2" class="level3" data-number="10.4.2">
+<h3 data-number="10.4.2" class="anchored" data-anchor-id="annotation-table-2"><span class="header-section-number">10.4.2</span> Annotation Table 2</h3>
+<p>The <strong>Annotation Table 2</strong> tab contains the network-refined annotation results generated after PCSF extraction. Compared with the previous annotation table, this table reflects the additional support from the extracted subnetwork and is the main output that will be carried into the next step.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_step2_annotation.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>For a full explanation of the result columns, see <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>.</p>
+<p>Below the table, the app also shows an <strong>Annotation Status</strong> summary, including:</p>
 <ul>
-<li><strong>API provider</strong>: Choose between OpenAI or Gemini or SiliconFlow</li>
-<li><strong>Embedding model</strong>: Specify the text embedding model (e.g., “text-embedding-3-small”)</li>
-<li><strong>API key</strong>: Enter your API key for the selected provider</li>
+<li>how many features were matched in the refined table</li>
+<li>how many feature-metabolite entries were retained</li>
+<li>the average number of entries per matched feature</li>
 </ul>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Note: Third-party API keys, other than SiliconFLow, are not currently supported.</p>
-</div>
-</div>
+</section>
+</section>
+<section id="recommended-run-the-demo-data-first" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="recommended-run-the-demo-data-first"><span class="header-section-number">10.5</span> Recommended: Run the Demo Data First</h2>
+<p>If you followed the previous chapters and loaded the built-in demo data, the recommended workflow here is:</p>
+<ol type="1">
+<li>keep the default parameter settings</li>
+<li>leave <strong>Enable grid tuning</strong> unchecked for the first run</li>
+<li>optionally enable <strong>Visualize PCSF subnetwork</strong> if you want to see the network directly</li>
+<li>click <strong>Run PCSF</strong></li>
+<li>check the <strong>Subnetwork</strong> tab first</li>
+<li>then open <strong>Annotation Table 2</strong> to inspect the refined results</li>
+</ol>
+<p>This is the easiest way to understand what the PCSF step produces before tuning parameters on your own dataset.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -591,264 +557,13 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>API Key Setup:</strong></p>
-<ul>
-<li>For OpenAI: Obtain your API key from <a href="https://platform.openai.com/api-keys">OpenAI Platform</a></li>
-<li>For Gemini: Get your API key from <a href="https://makersuite.google.com/app/apikey">Google AI Studio</a></li>
-<li>For SilisonFlow: Get your API key from <a href="https://docs.siliconflow.com/en/userguide/quickstart">SiliconFlow Website</a></li>
-</ul>
-<p><strong>Note: Store your API key securely and never commit it to version control!</strong></p>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you are a <strong>server</strong> MAPA user, please note:</p>
-<p>When running the <em>biotext embedding</em> step in this chapter or the <em>module annotation</em> step in <a href="15_function_annotation.html" class="quarto-xref"><span>Chapter 12</span></a>, <strong>only models and API keys provided by <a href="https://www.siliconflow.com/">SiliconFlow</a></strong> are supported.<br>
-This restriction exists because the server is set up in China Mainland. To ensure a stable connection to <em>SiliconFlow</em>:</p>
-<ul>
-<li><strong>Users in China Mainland</strong>: Use an API key from the Chinese portal — <a href="https://siliconflow.cn/">https://siliconflow.cn</a><br>
-</li>
-<li><strong>International users</strong>: Use an API key from the global portal — <a href="https://www.siliconflow.com/">https://www.siliconflow.com</a></li>
-</ul>
+<p>If the result tab stays empty, first check whether <strong>Feature Annotation</strong> finished successfully in the previous step.</p>
 </div>
 </div>
 </section>
-<section id="database-selection-and-filtering" class="level4" data-number="10.2.2.2">
-<h4 data-number="10.2.2.2" class="anchored" data-anchor-id="database-selection-and-filtering"><span class="header-section-number">10.2.2.2</span> Database Selection and Filtering</h4>
-<p>Configure which databases to include and set filtering parameters:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 18%">
-<col style="width: 27%">
-<col style="width: 18%">
-<col style="width: 18%">
-<col style="width: 18%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Parameter</th>
-<th>Purpose</th>
-<th>Default</th>
-<th>Gene Analysis</th>
-<th>Metabolite Analysis</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Available Database</strong></td>
-<td>Select databases for embedding analysis</td>
-<td>Auto-detected</td>
-<td>GO, KEGG, Reactome</td>
-<td>SMPDB, KEGG</td>
-</tr>
-<tr class="even">
-<td><strong>P-adjust cutoff</strong></td>
-<td>Significance threshold for pathway inclusion</td>
-<td>0.05</td>
-<td>All selected databases</td>
-<td>All selected databases</td>
-</tr>
-<tr class="odd">
-<td><strong>Count cutoff</strong></td>
-<td>Minimum genes/metabolites per pathway</td>
-<td>5</td>
-<td>All selected databases</td>
-<td>All selected databases</td>
-</tr>
-</tbody>
-</table>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_13_embed_params_gene.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Database Availability</strong>: The databases available for selection depend on your organism and the results from your enrichment analysis. Only databases with significant results will be available for embedding analysis.</p>
-</div>
-</div>
-</section>
-</section>
-</section>
-<section id="step-3-run-the-analysis" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="step-3-run-the-analysis"><span class="header-section-number">10.3</span> Step 3: Run the Analysis</h2>
-<ol type="1">
-<li><strong>Verify your data is loaded</strong> - either from the current session or uploaded file</li>
-<li><strong>Select your similarity method</strong> - Traditional or Biotext embedding</li>
-<li><strong>Review all parameter selections</strong> to ensure they match your analysis goals</li>
-<li><strong>Click the “Submit” button</strong> to start the similarity calculation</li>
-<li><strong>Monitor progress</strong> - a progress indicator will show the analysis is running</li>
-<li><strong>Wait for completion</strong> - processing time varies by method:
-<ul>
-<li>Traditional methods: Usually complete within minutes</li>
-<li>Biotext embedding: May take longer due to API calls and text processing</li>
-</ul></li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_13_submit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-</section>
-<section id="step-4-review-results" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="step-4-review-results"><span class="header-section-number">10.4</span> Step 4: Review Results</h2>
-<p>After successful completion, results will appear in the right panel with different content based on your selected method:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Traditional Methods Results</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Biotext Embedding Results</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p><strong>Table Tab</strong>: View database-specific module results</p>
-<ul>
-<li>Browse enriched pathway intra-database modules generated based on pathway similarity</li>
-<li>Examine module composition</li>
-<li>Download individual database results as CSV files</li>
-</ul>
-<p>Key result columns in the module tables:</p>
-<ul>
-<li><strong>module</strong>: Intra-database module identifier (e.g., “go_Module_2”, “kegg_Module_15”)</li>
-<li><strong>module_annotation</strong>: Representative pathway name for the module (pathway with lowest p-adjust for ORA or highest |NES| for GSEA)</li>
-<li><strong>Description</strong>: Names of all pathways in the module (separated by <code>;</code>)</li>
-<li><strong>module_content</strong>: All pathway/term IDs grouped in this module</li>
-<li><strong>Count</strong>: Number of genes/metabolites from input list in the module</li>
-<li><strong>p_adjust</strong>: Best (lowest) adjusted p-value among pathways in the module</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_13_simcluster_table_gene.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-<p><strong>Data Visualization Tab</strong>: Generate similarity network plots</p>
-<ul>
-<li>Click “Generate plot” to create network visualizations for modules from each database</li>
-<li>Customize plot parameters (degree cutoff, text display options)</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_13_simcluster_plots.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-<p><strong>R Object Tab</strong>: Access the complete results object</p>
-<ul>
-<li>View a summary of the analysis results</li>
-<li>Download the complete functional module object (.rda format) for further analysis in R</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_13_simcluster_object.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>For biotext embedding results, you’ll see a simplified results panel to download the results (.rda format) which include a similarity matrix and your enrichment analysis result for use in downstream clustering analysis.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_13_embedcluster_results.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>Embedding Results</strong>: The similarity matrix from biotext embedding is typically large and computationally intensive to display. Instead of showing the full matrix in the interface, you can download it for use in subsequent analysis steps or external tools.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="step-5-view-analysis-code" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="step-5-view-analysis-code"><span class="header-section-number">10.5</span> Step 5: View Analysis Code</h2>
-<p>Click the <strong>“Code”</strong> button to see the exact R code that replicates your analysis. This feature provides:</p>
-<ul>
-<li><strong>Reproducibility</strong>: Copy and paste code into R scripts</li>
-<li><strong>Learning</strong>: Understand the underlying MAPA functions and parameters</li>
-<li><strong>Customization</strong>: Modify parameters for batch processing or additional analyses</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_13_code.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="500"></p>
-</figure>
-</div>
-</section>
-<section id="method-comparison" class="level2" data-number="10.6">
-<h2 data-number="10.6" class="anchored" data-anchor-id="method-comparison"><span class="header-section-number">10.6</span> Method Comparison</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 27%">
-<col style="width: 27%">
-<col style="width: 45%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Aspect</th>
-<th>Traditional Methods</th>
-<th>Biotext Embedding</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Speed</strong></td>
-<td>Fast, deterministic</td>
-<td>Slower, requires API calls</td>
-</tr>
-<tr class="even">
-<td><strong>Cost</strong></td>
-<td>Free</td>
-<td>API usage costs</td>
-</tr>
-<tr class="odd">
-<td><strong>Reproducibility</strong></td>
-<td>Fully reproducible</td>
-<td>Highly reproducible (minor API variations)</td>
-</tr>
-<tr class="even">
-<td><strong>Novel discoveries</strong></td>
-<td>Based on known annotations</td>
-<td>Can identify functional relationships beyond overlap</td>
-</tr>
-<tr class="odd">
-<td><strong>Internet dependency</strong></td>
-<td>Minimal (for database updates)</td>
-<td>Required for API access</td>
-</tr>
-<tr class="even">
-<td><strong>Cross-database integration</strong></td>
-<td>Limited by annotation overlap</td>
-<td>Excellent semantic integration</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="next-steps" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">10.7</span> Next Steps</h2>
-<p>Once your similarity calculation is complete:</p>
-<ol type="1">
-<li><p><strong>Review and Download Results</strong>: Examine the similarity patterns and download results for further analysis and as backup copies so that you can restart from this point if needed.</p></li>
-<li><p><strong>Proceed to Clustering</strong>: Click the <strong>“Next”</strong> button to move to the <strong>Pathway Clustering</strong> section</p></li>
-</ol>
-<p>The similarity results will automatically be available for the next step in your MAPA analysis workflow in this current session, where you’ll group related pathways into functional modules.</p>
+<section id="next-step" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="next-step"><span class="header-section-number">10.6</span> Next Step</h2>
+<p>Once subnetwork extraction is complete, click <strong>Next Step</strong> to continue to <strong>Module Identification</strong>.</p>
 
 
 </section>
@@ -1284,4 +999,4 @@ Note
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/13_pcsf_subnetwork.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

@@ -1,126 +1,79 @@
-# Module Identification {#sec-shiny_pathway_clustering_shiny}
+# Module Identification
 
-This chapter describes how to identify functional modules using the MAPA Shiny application. The Shiny web app provides an intuitive interface for clustering similar pathways into functional modules and assessing clustering quality.
+This chapter focuses on how to use **Step 4: Module Identification** in **FeatureMAP Shiny**. The detailed method, parameter definitions, and result structure have already been introduced in [R package-Module Identification](05_module_identification.qmd), so here we focus on the Shiny workflow itself.
 
 ::: callout-important
-Prerequisites: Before identifying functional modules, ensure you have either:
-
-1.  **Completed pathway similarity calculation** in the current session using the **Pathway Similarity** section as described in the previous chapter, OR
-2.  **Upload existing similarity results** using the file upload option at the top of the interface.
-
-The similarity calculation results are required for functional module identification to proceed.
+**Prerequisites:** Make sure **Subnetwork Extraction** has finished successfully before starting this step.
 :::
 
-## Overview
+## Enter the Module Identification Page
 
-The **Module Identification** section in the MAPA Shiny web app lets you run clustering directly on the pathway similarity matrix and then assess clustering quality with built-in diagnostics.
+After finishing **Subnetwork Extraction**, click **Next Step** or select **Module Identification** from the top navigation bar. This page is also divided into two areas:
 
-This two-step flow (cluster → assess quality) helps you produce biologically meaningful pathway modules.
+-   **Parameter area** on the left: set the module identification options and click **Run**
+-   **Result area** on the right: inspect the detected modules from different views
 
-## Step 1: Load Your Data
+![](images/shinyapp_step3_page.png){fig-align="center" width="750"}
 
--   **Option 1: Continue from Previous Step**
+The purpose of this step is to identify functional modules from the extracted PCSF subnetwork.
 
-    If you have completed pathway similarity calculation in the **current** session, your data will automatically be available for module identification.
+## Parameter Area
 
--   **Option 2: Upload Existing Results**
-
-    If you have previously saved similarity results, you can upload them:
-
-    1.  **Click "Browse"** at the top of the left panel **"Upload Similarity Result (.rda)"** to upload your similarity results file (.rda format)
-    2.  **Select your file**
-    3.  **Wait for validation** - the app will automatically detect the input type and prepare for Module Identification.
-
-## Step 2: Perform Module Identification
-
-1.  **Set parameters:**
-
-    -   **Similarity cutoff:** Controls the sparsity/cut level used by the selected method. Smaller values generally retain more edges and yield larger modules; larger values retain fewer edges and yield smaller modules. (Exact behavior varies by algorithm.)
-
-    -   **Clustering method:** Choose from the available methods in the dropdown.
-
-    -   **Hierarchical linkage** (shown only when a hierarchical method is selected): Choose the agglomeration linkage.
-
-2.  **Click "Submit"** to run Module Identification.
-
-3.  **Monitor progress** clustering typically completes within minutes
-
-4.  **Review results** under **"Module identification result"** (Table / Data visualization / R object).
-
-## Step 3: Review Module Identification Results
-
-After clustering finishes, examine your results in **"Module identification result"** with three sub-tabs:
-
-::: panel-tabset
-##### Table Tab
-
-Browse the functional module results and download as CSV:
-
--   **View**: Complete functional module results table with key metrics
--   **Download**: Click "Download" button to save results as CSV for further analysis
-
-Key result columns:
-
--   **module**: Functional Module identifier (e.g., "Functional_module_127")
--   **module_annotation**: Representative pathway name (lowest p-value for ORA, highest \|NES\| for GSEA)
--   **Description**: Names of all pathways in the module (separated by `;`)
--   **module_content**: All pathway/term IDs grouped in this module
--   **Count**: Number of genes/metabolites from input list in the module
--   **p_adjust**: Best (lowest) adjusted p-value among pathways in the module
-
-![](images/shinyapp_14_table_results.png){fig-align="center" width="750"}
-
-##### Data Visualization Tab
-
-Generate similarity network plots to visualize functional modules:
-
-1.  **Configure plot parameters**:
-    -   **Degree cutoff**: Minimum pathways per module to display
-    -   **Text**: Show representative module names
-    -   **Text all**: Show all pathway names
-2.  **Click "Generate plot"** to create the network visualization
-3.  **Examine the network** to understand module relationships and structure
-
-![](images/shinyapp_14_visualization.png){fig-align="center" width="750"}
-
-##### R Object Tab
-
-Access the complete results object for further analysis:
-
--   **View**: Summary of the complete functional module analysis
--   **Download**: Save the complete object (.rda format) for use in R
-
-![](images/shinyapp_14_r_object.png){fig-align="center" width="500"}
-:::
-
-## Step 4: Assess Clustering Quality
-
-Use the **Quality assessment** panel to inspect:
-
--   **Module size:** Distribution of module sizes. Avoid many singletons or one giant module.
-
--   **Silhouette scores:** Higher values indicate better cluster separation.
-
--   **Quality metrics table:** Tabular metrics summarizing clustering quality. You can download results; plot **Width/Height** controls are available where applicable.
+The left panel is where you set the module identification parameters before clicking **Run**. Since the detailed meanings of these parameters have already been introduced in [R package-Module Identification](05_module_identification.qmd), we do not repeat them here.
 
 ::: callout-note
-You can upload a module identification result (.rda) here if you ran clustering elsewhere and only want to assess quality.
+If you are running the demo data for the first time, it is usually best to keep the default settings and run the step once before tuning the algorithm or filtering thresholds.
 :::
 
-## Step 5: View Analysis Code
+## Run Module Identification
 
-Click the **"Code"** button to see the exact R code that replicates your analysis:
+Once the parameters are ready, click **Run**.
 
--   **Module Identification Code**: Shows the code used for clustering with your chosen algorithm and cutoff
--   **Quality Assessment Code**: Shows code used to generate size distribution, silhouette plots, and the metrics table
+The app will start module identification and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the **Next Step** button will become available.
 
-This code can be copied and used in your own R scripts for reproducible analysis.
+## Result Area
 
-## Next Steps
+### Visualization
 
-Once your functional module identification is complete:
+The **Visualization** tab is used to inspect the detected modules as subnetworks.
 
-1.  **Download Results**: Save both the table and R object for backup and further analysis
-2.  **Proceed to LLM Interpretation**: Click the **"Next"** button to move to **LLM Interpretation** for AI-powered functional annotations of your modules
+![](images/shinyapp_step3_moduleplot.png){fig-align="center" width="750"}
 
-The functional modules will automatically be available for the next step in your MAPA analysis workflow, where you can add biological context and interpretations using large language models.
+After the run finishes, you can choose a module and view its network directly in the app. This is usually the most intuitive place to start, because it lets you quickly see how the selected module is organized.
+
+### Module Score
+
+The **Module Score** tab shows the quantitative summary for identified modules. This table is useful for checking which modules are stronger or more statistically convincing before moving on to interpretation.
+
+![](images/shinyapp_step3_modulescore.png){fig-align="center" width="750"}
+
+For a full explanation of the score-related columns, see [R package-Module Identification](05_module_identification.qmd).
+
+### Module Table
+
+The **Module Table** tab shows the detailed module membership results. This table is the main reference when you want to inspect which metabolites were assigned to each module and what information will be passed to the next step.
+
+![](images/shinyapp_step3_moduletable.png){fig-align="center" width="750"}
+
+For a full explanation of the result columns, see [R package-Module Identification](05_module_identification.qmd).
+
+## Recommended: Run the Demo Data First
+
+If you followed the previous chapters and loaded the built-in demo data, the recommended workflow here is:
+
+1.  keep the default parameter settings
+2.  click **Run**
+3.  wait for module identification to finish
+4.  open **Visualization** first to inspect the detected modules
+5.  then review **Module Score**
+6.  finally check **Module Table** for the detailed module membership results
+
+This is the easiest way to understand what this step produces before tuning parameters on your own dataset.
+
+::: callout-tip
+If no module appears, first check whether **Subnetwork Extraction** finished successfully in the previous step and whether the extracted subnetwork contains enough structure for module detection.
+:::
+
+## Next Step
+
+Once module identification is complete, click **Next Step** to continue to **AI-Powered Function Annotation**.

@@ -76,7 +76,7 @@ feature_table <- read_csv("your_feature_table.csv") %>%
 
 ## Pre-run Checklist
 
-Run these checks before Step 1:
+Run these checks before Step 2:
 
 ```{r}
 #| eval: false

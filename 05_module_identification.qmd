@@ -1,6 +1,6 @@
 # Module Identification {#sec-module_identification}
 
-This chapter describes **Step 3** of the FeatureMAP pipeline: identifying functional modules from the PCSF-derived subnetwork using `identify_module()`.
+This chapter describes **Step 4** of the FeatureMAP pipeline: identifying functional modules from the PCSF-derived subnetwork using `identify_module()`.
 
 ::: callout-important
 **Prerequisites:** You need a `featuremap_result` object from [Subnetwork Extraction](04_pcsf_subnetwork.qmd), with stage `"subnetwork_extracted"`.

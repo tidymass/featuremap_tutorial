@@ -7,11 +7,11 @@ book:
   author: "[Yuting Wang](https://ytwangzero.github.io/), [Xiaotao Shen](https://www.jaspershenlab.com/)"
   date: "6/6/2026"
   favicon: "/images/featureMAP_logo.png"
-  url: http://www.shen-lab.org/mapa-tutorial/
+  url: https://tidymass.github.io/featuremap_tutorial/
   sidebar:
     logo: "images/featureMAP_logo.png"
     search: true
-  repo-url: https://github.com/jaspershen-lab/mapa-tutorial
+  repo-url: https://github.com/tidymass/featuremap_tutorial
   repo-actions: [edit, issue, source]
   image: "images/featureMAP_logo.png"
   
@@ -35,6 +35,7 @@ book:
         - 13_pcsf_subnetwork.qmd
         - 14_module_identification.qmd
         - 15_function_annotation.qmd
+        - 16_results_export_shiny.qmd
 
     - references.qmd
 
@@ -48,4 +49,3 @@ format:
     css: custom.css
 
 editor: visual
-

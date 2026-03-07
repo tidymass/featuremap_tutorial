@@ -1,6 +1,6 @@
 # Subnetwork Extraction {#sec-subnetwork_extraction}
 
-This chapter describes **Step 2** of the FeatureMAP pipeline: extracting a robust metabolic subnetwork with `extract_subnetwork()` using the prize-collecting Steiner forest (PCSF) strategy.
+This chapter describes **Step 3** of the FeatureMAP pipeline: extracting a robust metabolic subnetwork with `extract_subnetwork()` using the prize-collecting Steiner forest (PCSF) strategy.
 
 ::: callout-important
 **Prerequisites:** You need a `featuremap_result` object from [Feature Annotation](03_feature_annotation.qmd), with stage `"feature_annotated"`.
@@ -8,7 +8,7 @@ This chapter describes **Step 2** of the FeatureMAP pipeline: extracting a robus
 
 ## What `extract_subnetwork()` Does
 
-`extract_subnetwork()` integrates the refined feature annotations from Step 1 with a metabolic reaction network (MRN) and applies repeated PCSF optimization to identify a robust subnetwork.
+`extract_subnetwork()` integrates the refined feature annotations from Step 2 with a metabolic reaction network (MRN) and applies repeated PCSF optimization to identify a robust subnetwork.
 
 At a high level, this step does the following:
 
@@ -47,7 +47,7 @@ This step moves the analysis from individual annotated features to a **network-s
 ```{r}
 #| eval: false
 
-# res is the output from Step 1 (annotate_feature)
+# res is the output from Step 2 (annotate_feature)
 res <- extract_subnetwork(
   res = res,
   feature = "sig",

@@ -1,6 +1,6 @@
 # Function Annotation {#sec-get_functional_modules}
 
-This chapter describes **Step 4** of the FeatureMAP pipeline: annotating statistically supported modules with `annotate_module()`.
+This chapter describes **Step 5** of the FeatureMAP pipeline: annotating statistically supported modules with `annotate_module()`.
 
 ::: callout-important
 **Prerequisites:** Complete module identification with `identify_module()`and Make sure your `res` object is already at stage `"module_identified"`.
@@ -8,7 +8,7 @@ This chapter describes **Step 4** of the FeatureMAP pipeline: annotating statist
 
 ## What `annotate_module()` Does
 
-`annotate_module()` performs **module-level biological interpretation** for statistically supported modules in Step 3.
+`annotate_module()` performs **module-level biological interpretation** for statistically supported modules in Step 4.
 
 This step integrates three sources of information:
 
@@ -228,7 +228,7 @@ head(res$module_score)
 sum(res$module_score$fdr < 0.05, na.rm = TRUE)
 ```
 
-If this count is zero, it is better to revisit Step 3 before trying module annotation.
+If this count is zero, it is better to revisit Step 4 before trying module annotation.
 
 ## Next Step
 

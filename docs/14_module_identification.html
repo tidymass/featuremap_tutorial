@@ -272,7 +272,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">FeatureMAP Tutorial</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/jaspershen-lab/mapa-tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/tidymass/featuremap_tutorial" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -320,7 +320,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -367,7 +367,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./13_pcsf_subnetwork.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -380,6 +380,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
   </div>
 </li>
       </ul>
@@ -400,15 +406,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">11.1</span> Overview</a></li>
-  <li><a href="#step-1-load-your-data" id="toc-step-1-load-your-data" class="nav-link" data-scroll-target="#step-1-load-your-data"><span class="header-section-number">11.2</span> Step 1: Load Your Data</a></li>
-  <li><a href="#step-2-perform-module-identification" id="toc-step-2-perform-module-identification" class="nav-link" data-scroll-target="#step-2-perform-module-identification"><span class="header-section-number">11.3</span> Step 2: Perform Module Identification</a></li>
-  <li><a href="#step-3-review-module-identification-results" id="toc-step-3-review-module-identification-results" class="nav-link" data-scroll-target="#step-3-review-module-identification-results"><span class="header-section-number">11.4</span> Step 3: Review Module Identification Results</a></li>
-  <li><a href="#step-4-assess-clustering-quality" id="toc-step-4-assess-clustering-quality" class="nav-link" data-scroll-target="#step-4-assess-clustering-quality"><span class="header-section-number">11.5</span> Step 4: Assess Clustering Quality</a></li>
-  <li><a href="#step-5-view-analysis-code" id="toc-step-5-view-analysis-code" class="nav-link" data-scroll-target="#step-5-view-analysis-code"><span class="header-section-number">11.6</span> Step 5: View Analysis Code</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">11.7</span> Next Steps</a></li>
+  <li><a href="#enter-the-module-identification-page" id="toc-enter-the-module-identification-page" class="nav-link active" data-scroll-target="#enter-the-module-identification-page"><span class="header-section-number">11.1</span> Enter the Module Identification Page</a></li>
+  <li><a href="#parameter-area" id="toc-parameter-area" class="nav-link" data-scroll-target="#parameter-area"><span class="header-section-number">11.2</span> Parameter Area</a></li>
+  <li><a href="#run-module-identification" id="toc-run-module-identification" class="nav-link" data-scroll-target="#run-module-identification"><span class="header-section-number">11.3</span> Run Module Identification</a></li>
+  <li><a href="#result-area" id="toc-result-area" class="nav-link" data-scroll-target="#result-area"><span class="header-section-number">11.4</span> Result Area</a>
+  <ul class="collapse">
+  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization"><span class="header-section-number">11.4.1</span> Visualization</a></li>
+  <li><a href="#module-score" id="toc-module-score" class="nav-link" data-scroll-target="#module-score"><span class="header-section-number">11.4.2</span> Module Score</a></li>
+  <li><a href="#module-table" id="toc-module-table" class="nav-link" data-scroll-target="#module-table"><span class="header-section-number">11.4.3</span> Module Table</a></li>
+  </ul></li>
+  <li><a href="#recommended-run-the-demo-data-first" id="toc-recommended-run-the-demo-data-first" class="nav-link" data-scroll-target="#recommended-run-the-demo-data-first"><span class="header-section-number">11.5</span> Recommended: Run the Demo Data First</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">11.6</span> Next Step</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/14_module_identification.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/14_module_identification.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/14_module_identification.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/14_module_identification.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -416,7 +426,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./14_module_identification.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Module Identification</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-shiny_pathway_clustering_shiny" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Module Identification</span></span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Module Identification</span></h1>
 </div>
 
 
@@ -433,7 +443,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This chapter describes how to identify functional modules using the MAPA Shiny application. The Shiny web app provides an intuitive interface for clustering similar pathways into functional modules and assessing clustering quality.</p>
+<p>This chapter focuses on how to use <strong>Step 4: Module Identification</strong> in <strong>FeatureMAP Shiny</strong>. The detailed method, parameter definitions, and result structure have already been introduced in <a href="./05_module_identification.html">R package-Module Identification</a>, so here we focus on the Shiny workflow itself.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -444,115 +454,26 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Prerequisites: Before identifying functional modules, ensure you have either:</p>
-<ol type="1">
-<li><strong>Completed pathway similarity calculation</strong> in the current session using the <strong>Pathway Similarity</strong> section as described in the previous chapter, OR</li>
-<li><strong>Upload existing similarity results</strong> using the file upload option at the top of the interface.</li>
-</ol>
-<p>The similarity calculation results are required for functional module identification to proceed.</p>
+<p><strong>Prerequisites:</strong> Make sure <strong>Subnetwork Extraction</strong> has finished successfully before starting this step.</p>
 </div>
 </div>
-<section id="overview" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">11.1</span> Overview</h2>
-<p>The <strong>Module Identification</strong> section in the MAPA Shiny web app lets you run clustering directly on the pathway similarity matrix and then assess clustering quality with built-in diagnostics.</p>
-<p>This two-step flow (cluster → assess quality) helps you produce biologically meaningful pathway modules.</p>
-</section>
-<section id="step-1-load-your-data" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="step-1-load-your-data"><span class="header-section-number">11.2</span> Step 1: Load Your Data</h2>
+<section id="enter-the-module-identification-page" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="enter-the-module-identification-page"><span class="header-section-number">11.1</span> Enter the Module Identification Page</h2>
+<p>After finishing <strong>Subnetwork Extraction</strong>, click <strong>Next Step</strong> or select <strong>Module Identification</strong> from the top navigation bar. This page is also divided into two areas:</p>
 <ul>
-<li><p><strong>Option 1: Continue from Previous Step</strong></p>
-<p>If you have completed pathway similarity calculation in the <strong>current</strong> session, your data will automatically be available for module identification.</p></li>
-<li><p><strong>Option 2: Upload Existing Results</strong></p>
-<p>If you have previously saved similarity results, you can upload them:</p>
-<ol type="1">
-<li><strong>Click “Browse”</strong> at the top of the left panel <strong>“Upload Similarity Result (.rda)”</strong> to upload your similarity results file (.rda format)</li>
-<li><strong>Select your file</strong></li>
-<li><strong>Wait for validation</strong> - the app will automatically detect the input type and prepare for Module Identification.</li>
-</ol></li>
-</ul>
-</section>
-<section id="step-2-perform-module-identification" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="step-2-perform-module-identification"><span class="header-section-number">11.3</span> Step 2: Perform Module Identification</h2>
-<ol type="1">
-<li><p><strong>Set parameters:</strong></p>
-<ul>
-<li><p><strong>Similarity cutoff:</strong> Controls the sparsity/cut level used by the selected method. Smaller values generally retain more edges and yield larger modules; larger values retain fewer edges and yield smaller modules. (Exact behavior varies by algorithm.)</p></li>
-<li><p><strong>Clustering method:</strong> Choose from the available methods in the dropdown.</p></li>
-<li><p><strong>Hierarchical linkage</strong> (shown only when a hierarchical method is selected): Choose the agglomeration linkage.</p></li>
-</ul></li>
-<li><p><strong>Click “Submit”</strong> to run Module Identification.</p></li>
-<li><p><strong>Monitor progress</strong> clustering typically completes within minutes</p></li>
-<li><p><strong>Review results</strong> under <strong>“Module identification result”</strong> (Table / Data visualization / R object).</p></li>
-</ol>
-</section>
-<section id="step-3-review-module-identification-results" class="level2" data-number="11.4">
-<h2 data-number="11.4" class="anchored" data-anchor-id="step-3-review-module-identification-results"><span class="header-section-number">11.4</span> Step 3: Review Module Identification Results</h2>
-<p>After clustering finishes, examine your results in <strong>“Module identification result”</strong> with three sub-tabs:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Table Tab</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Data Visualization Tab</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">R Object Tab</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p>Browse the functional module results and download as CSV:</p>
-<ul>
-<li><strong>View</strong>: Complete functional module results table with key metrics</li>
-<li><strong>Download</strong>: Click “Download” button to save results as CSV for further analysis</li>
-</ul>
-<p>Key result columns:</p>
-<ul>
-<li><strong>module</strong>: Functional Module identifier (e.g., “Functional_module_127”)</li>
-<li><strong>module_annotation</strong>: Representative pathway name (lowest p-value for ORA, highest |NES| for GSEA)</li>
-<li><strong>Description</strong>: Names of all pathways in the module (separated by <code>;</code>)</li>
-<li><strong>module_content</strong>: All pathway/term IDs grouped in this module</li>
-<li><strong>Count</strong>: Number of genes/metabolites from input list in the module</li>
-<li><strong>p_adjust</strong>: Best (lowest) adjusted p-value among pathways in the module</li>
+<li><strong>Parameter area</strong> on the left: set the module identification options and click <strong>Run</strong></li>
+<li><strong>Result area</strong> on the right: inspect the detected modules from different views</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_14_table_results.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_step3_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>Generate similarity network plots to visualize functional modules:</p>
-<ol type="1">
-<li><strong>Configure plot parameters</strong>:
-<ul>
-<li><strong>Degree cutoff</strong>: Minimum pathways per module to display</li>
-<li><strong>Text</strong>: Show representative module names</li>
-<li><strong>Text all</strong>: Show all pathway names</li>
-</ul></li>
-<li><strong>Click “Generate plot”</strong> to create the network visualization</li>
-<li><strong>Examine the network</strong> to understand module relationships and structure</li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_14_visualization.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-</div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<p>Access the complete results object for further analysis:</p>
-<ul>
-<li><strong>View</strong>: Summary of the complete functional module analysis</li>
-<li><strong>Download</strong>: Save the complete object (.rda format) for use in R</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_14_r_object.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="500"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
+<p>The purpose of this step is to identify functional modules from the extracted PCSF subnetwork.</p>
 </section>
-<section id="step-4-assess-clustering-quality" class="level2" data-number="11.5">
-<h2 data-number="11.5" class="anchored" data-anchor-id="step-4-assess-clustering-quality"><span class="header-section-number">11.5</span> Step 4: Assess Clustering Quality</h2>
-<p>Use the <strong>Quality assessment</strong> panel to inspect:</p>
-<ul>
-<li><p><strong>Module size:</strong> Distribution of module sizes. Avoid many singletons or one giant module.</p></li>
-<li><p><strong>Silhouette scores:</strong> Higher values indicate better cluster separation.</p></li>
-<li><p><strong>Quality metrics table:</strong> Tabular metrics summarizing clustering quality. You can download results; plot <strong>Width/Height</strong> controls are available where applicable.</p></li>
-</ul>
+<section id="parameter-area" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="parameter-area"><span class="header-section-number">11.2</span> Parameter Area</h2>
+<p>The left panel is where you set the module identification parameters before clicking <strong>Run</strong>. Since the detailed meanings of these parameters have already been introduced in <a href="./05_module_identification.html">R package-Module Identification</a>, we do not repeat them here.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -563,27 +484,77 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>You can upload a module identification result (.rda) here if you ran clustering elsewhere and only want to assess quality.</p>
+<p>If you are running the demo data for the first time, it is usually best to keep the default settings and run the step once before tuning the algorithm or filtering thresholds.</p>
 </div>
 </div>
 </section>
-<section id="step-5-view-analysis-code" class="level2" data-number="11.6">
-<h2 data-number="11.6" class="anchored" data-anchor-id="step-5-view-analysis-code"><span class="header-section-number">11.6</span> Step 5: View Analysis Code</h2>
-<p>Click the <strong>“Code”</strong> button to see the exact R code that replicates your analysis:</p>
-<ul>
-<li><strong>Module Identification Code</strong>: Shows the code used for clustering with your chosen algorithm and cutoff</li>
-<li><strong>Quality Assessment Code</strong>: Shows code used to generate size distribution, silhouette plots, and the metrics table</li>
-</ul>
-<p>This code can be copied and used in your own R scripts for reproducible analysis.</p>
+<section id="run-module-identification" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="run-module-identification"><span class="header-section-number">11.3</span> Run Module Identification</h2>
+<p>Once the parameters are ready, click <strong>Run</strong>.</p>
+<p>The app will start module identification and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the <strong>Next Step</strong> button will become available.</p>
 </section>
-<section id="next-steps" class="level2" data-number="11.7">
-<h2 data-number="11.7" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">11.7</span> Next Steps</h2>
-<p>Once your functional module identification is complete:</p>
+<section id="result-area" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="result-area"><span class="header-section-number">11.4</span> Result Area</h2>
+<section id="visualization" class="level3" data-number="11.4.1">
+<h3 data-number="11.4.1" class="anchored" data-anchor-id="visualization"><span class="header-section-number">11.4.1</span> Visualization</h3>
+<p>The <strong>Visualization</strong> tab is used to inspect the detected modules as subnetworks.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_step3_moduleplot.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>After the run finishes, you can choose a module and view its network directly in the app. This is usually the most intuitive place to start, because it lets you quickly see how the selected module is organized.</p>
+</section>
+<section id="module-score" class="level3" data-number="11.4.2">
+<h3 data-number="11.4.2" class="anchored" data-anchor-id="module-score"><span class="header-section-number">11.4.2</span> Module Score</h3>
+<p>The <strong>Module Score</strong> tab shows the quantitative summary for identified modules. This table is useful for checking which modules are stronger or more statistically convincing before moving on to interpretation.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_step3_modulescore.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>For a full explanation of the score-related columns, see <a href="./05_module_identification.html">R package-Module Identification</a>.</p>
+</section>
+<section id="module-table" class="level3" data-number="11.4.3">
+<h3 data-number="11.4.3" class="anchored" data-anchor-id="module-table"><span class="header-section-number">11.4.3</span> Module Table</h3>
+<p>The <strong>Module Table</strong> tab shows the detailed module membership results. This table is the main reference when you want to inspect which metabolites were assigned to each module and what information will be passed to the next step.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_step3_moduletable.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>For a full explanation of the result columns, see <a href="./05_module_identification.html">R package-Module Identification</a>.</p>
+</section>
+</section>
+<section id="recommended-run-the-demo-data-first" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="recommended-run-the-demo-data-first"><span class="header-section-number">11.5</span> Recommended: Run the Demo Data First</h2>
+<p>If you followed the previous chapters and loaded the built-in demo data, the recommended workflow here is:</p>
 <ol type="1">
-<li><strong>Download Results</strong>: Save both the table and R object for backup and further analysis</li>
-<li><strong>Proceed to LLM Interpretation</strong>: Click the <strong>“Next”</strong> button to move to <strong>LLM Interpretation</strong> for AI-powered functional annotations of your modules</li>
+<li>keep the default parameter settings</li>
+<li>click <strong>Run</strong></li>
+<li>wait for module identification to finish</li>
+<li>open <strong>Visualization</strong> first to inspect the detected modules</li>
+<li>then review <strong>Module Score</strong></li>
+<li>finally check <strong>Module Table</strong> for the detailed module membership results</li>
 </ol>
-<p>The functional modules will automatically be available for the next step in your MAPA analysis workflow, where you can add biological context and interpretations using large language models.</p>
+<p>This is the easiest way to understand what this step produces before tuning parameters on your own dataset.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If no module appears, first check whether <strong>Subnetwork Extraction</strong> finished successfully in the previous step and whether the extracted subnetwork contains enough structure for module detection.</p>
+</div>
+</div>
+</section>
+<section id="next-step" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="next-step"><span class="header-section-number">11.6</span> Next Step</h2>
+<p>Once module identification is complete, click <strong>Next Step</strong> to continue to <strong>AI-Powered Function Annotation</strong>.</p>
 
 
 </section>
@@ -1004,8 +975,8 @@ Note
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./13_pcsf_subnetwork.html" class="pagination-link" aria-label="Extract Subnetwork">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Subnetwork</span></span>
+      <a href="./13_pcsf_subnetwork.html" class="pagination-link" aria-label="Subnetwork Extraction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Subnetwork Extraction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -1019,4 +990,4 @@ Note
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/14_module_identification.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/14_module_identification.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/14_module_identification.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/14_module_identification.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

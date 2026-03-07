@@ -4,12 +4,13 @@
 
 **FeatureMAP** (`featuremap`) is a feature-centric framework for untargeted metabolomics that identifies biologically meaningful metabolic modules directly from metabolomic data, rather than relying only on predefined pathways or fully confirmed metabolite identities. It is developed by the [Shen Lab](https://www.shen-lab.org/) at Nanyang Technological University, Singapore.
 
-The package provides a four-step workflow:
+The package provides a five-step workflow:
 
-1.  **Feature annotation**: annotate raw LC-MS features to metabolite candidates using MS1 (and optional MS2) information.
-2.  **Subnetwork extraction**: construct a robust prize-collecting Steiner forest (PCSF)-based metabolic subnetwork.
-3.  **Module identification**: detect functional modules by community detection and evaluate module significance.
-4.  **Module annotation**: interpret significant modules with database knowledge, optional PubMed evidence, and optional LLM summarization.
+1.  **Data preparation**: prepare a valid feature table and optional MS2 annotation table for FeatureMAP.
+2.  **Feature annotation**: annotate raw LC-MS features to metabolite candidates using MS1 (and optional MS2) information.
+3.  **Subnetwork extraction**: construct a robust prize-collecting Steiner forest (PCSF)-based metabolic subnetwork.
+4.  **Module identification**: detect functional modules by community detection and evaluate module significance.
+5.  **Module annotation**: interpret significant modules with database knowledge, optional PubMed evidence, and optional LLM summarization.
 
 This workflow helps convert feature-level metabolomics signals into interpretable biological modules in a reproducible and analysis-ready format.
 
@@ -18,7 +19,7 @@ This workflow helps convert feature-level metabolomics signals into interpretabl
 This guide walks you through the two faces of FeatureMAP: the R package for **command-line (code-based)** workflow and the **Shiny App/Web version** for point-and-click exploration. In the end, you will be able to:
 
 1.  Prepare a valid feature table for FeatureMAP.
-2.  Run the complete four-step FeatureMAP pipeline with R code.
+2.  Run the complete five-step FeatureMAP workflow with R code.
 3.  Complete the same analysis with the FeatureMAP Shiny App/Web interface.
 4.  Understand and inspect key result objects and module-level interpretations.
 
