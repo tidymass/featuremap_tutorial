@@ -340,7 +340,7 @@
     "href": "06_function_annotation.html",
     "title": "6  Function Annotation",
     "section": "",
-    "text": "6.1 Overview\nThis chapter describes how to group related pathways into functional modules using the optimal clustering parameters determined in the previous chapter.\nThe get_functional_modules() function is a generic function that identifies functional modules from pathway similarity results. It automatically detects the type of input object and applies the appropriate clustering method:",
+    "text": "6.1 What annotate_module() Does\nThis chapter describes Step 4 of the FeatureMAP pipeline: annotating statistically supported modules with annotate_module().\nannotate_module() performs module-level biological interpretation for statistically supported modules in Step 3.\nThis step integrates three sources of information:\nOnly modules passing the significance cutoff (p or fdr) are annotated. This step converts statistically identified network modules into interpretable biological hypotheses.",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
@@ -361,8 +361,8 @@
     "objectID": "06_function_annotation.html#basic-usage",
     "href": "06_function_annotation.html#basic-usage",
     "title": "6  Function Annotation",
-    "section": "6.2 Basic Usage",
-    "text": "6.2 Basic Usage\nThe function automatically detects your input type and applies the appropriate clustering strategy, take metabolomic data for example:\n\nTraditional Similarity ResultsBiotext Embedding Results\n\n\n\nfunctional_modules &lt;- \n  get_functional_modules(\n    object = met_similarity_result,\n    sim.cutoff = 0.5,\n    cluster_method = \"louvain\"\n  )\n\n# Get functional modules from traditional pathway similarity calculation results ...\n# Calculating the similarity matrix...\n# Identifying functional modules...\n# Done\n\n\n\n\nfunctional_modules &lt;- \n  get_functional_modules(\n    object = met_biotext_similarity,\n    sim.cutoff = 0.5,\n    cluster_method = \"louvain\"\n  )\n\n# Get functional modules from Biotext embedding results ...\n# Identifying functional modules...\n# Joining with `by = join_by(node)`\n# Done",
+    "section": "6.3 Basic Usage",
+    "text": "6.3 Basic Usage\n\nDatabase + LLM onlyDatabase + PubMed + LLM\n\n\n\nres &lt;- annotate_module(\n  res = res,\n  p = \"fdr\",\n  pcutoff = 0.05,\n  ref_data = NULL,\n  species = \"human\",\n  biospecimen = \"plasma\",\n  phenotype = \"disease phenotype\",\n  pubmed = FALSE,\n  provider = \"openai\",\n  llm_model = \"gpt-4.1-mini\",\n  llm_api_key = \"your llm api key\"\n)\n\n\n\n\nres &lt;- annotate_module(\n  res = res,\n  p = \"fdr\",\n  pcutoff = 0.05,\n  ref_data = NULL,\n  species = \"human\",\n  biospecimen = \"plasma\",\n  phenotype = \"disease phenotype\",\n  pubmed = TRUE,\n  years = 5,\n  top_paper = 3,\n  min_similarity = 0.6,\n  provider = \"openai\",\n  embed_model = \"text-embedding-3-small\",\n  llm_model = \"gpt-4.1-mini\",\n  NCBI_api_key = \"your ncbi api key\",\n  llm_api_key = \"your llm api key\"\n)\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\n\nProvide species, biospecimen, and phenotype whenever possible\nUse API keys from environment variables rather than hard-coding them",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
@@ -1180,6 +1180,83 @@
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#what-annotate_module-does",
+    "href": "06_function_annotation.html#what-annotate_module-does",
+    "title": "6  Function Annotation",
+    "section": "",
+    "text": "Metabolite annotation summary: Metabolites contained in each significant module are summarized using the selected reference namespace (kegg or hmdb).\nOptional literature retrieval: Relevant PubMed articles are retrieved and ranked for the top metabolites in each module.\nLLM-based interpretation: A language model synthesizes module-level interpretations including title, summary, confidence label, and reasoning.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#key-parameters",
+    "href": "06_function_annotation.html#key-parameters",
+    "title": "6  Function Annotation",
+    "section": "6.2 Key Parameters",
+    "text": "6.2 Key Parameters\n\n\n\n\n\n\n\n\nParameter\nDefault\nDescription\n\n\n\n\nres\nrequired\nfeaturemap_result returned by identify_module()\n\n\np\n\"fdr\"\nColumn in res$module_score used for filtering\n\n\npcutoff\n0.05\nThreshold applied to the selected significance column\n\n\nref_data\nNULL\nOptional functional reference annotation table\n\n\nspecies\n\"human\"\nSpecies context used in module interpretation\n\n\nbiospecimen\nNULL\nBiospecimen context (e.g. plasma, serum, tissue)\n\n\nphenotype\nNULL\nDisease or phenotype context\n\n\npubmed\nTRUE\nWhether to retrieve PubMed evidence\n\n\nyears\n5\nTime window for literature search\n\n\ntop_paper\n3\nNumber of retained papers per metabolite\n\n\nmin_similarity\n0.6\nEmbedding similarity cutoff used to filter literature\n\n\nprovider\n\"openai\"\nLLM and embedding provider. Currently supported options include \"openai\", \"gemini\", and \"siliconflow\"\n\n\nembed_model\n\"text-embedding-3-small\"\nEmbedding model used for literature ranking (model availability depends on the selected provider)\n\n\nllm_model\n\"gpt-4.1-mini\"\nLanguage model used for module interpretation (model availability depends on the selected provider)\n\n\nNCBI_api_key\n\"\"\nNCBI Entrez API key for PubMed\n\n\nllm_api_key\n\"\"\nAPI key for the selected LLM provider\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nIf ref_data = NULL, FeatureMAP automatically loads the functional reference resource corresponding to the metabolite namespace used in earlier steps.\n\n\n\n\n\n\n\n\nTip\n\n\n\nHow to obtain an LLM API key\nFeatureMAP currently supports \"openai\", \"gemini\", and \"siliconflow\" as LLM providers.\nYou can apply for an API key from the corresponding official platform:\n\nOpenAI: https://platform.openai.com/\nGemini (Google AI Studio): https://ai.google.dev/aistudio\nSiliconFlow: https://siliconflow.cn/\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nHow to obtain a PubMed / NCBI API key\nIf you enable PubMed retrieval, you need to apply for an NCBI API key for higher request limits: https://account.ncbi.nlm.nih.gov/settings/",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#recommended-workflow",
+    "href": "06_function_annotation.html#recommended-workflow",
+    "title": "6  Function Annotation",
+    "section": "6.4 Recommended Workflow",
+    "text": "6.4 Recommended Workflow\nFor exploratory analysis:\n\nUse p = \"fdr\" and pcutoff = 0.05\nStart with pubmed = FALSE to validate the core annotation flow\nAdd PubMed and LLM retrieval after confirming that significant modules exist\n\nFor final analysis:\n\nKeep the significance metric consistent with Chapter 5\nProvide species, biospecimen, and phenotype whenever possible\nUse API keys from environment variables rather than hard-coding them",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#result-interpretation",
+    "href": "06_function_annotation.html#result-interpretation",
+    "title": "6  Function Annotation",
+    "section": "6.4 Result Interpretation",
+    "text": "6.4 Result Interpretation\nAfter successful annotation:\n\nres$stage\n# [1] \"module_annotated\"\n\nres$module_function$title\n# [1] \"Nucleotide Metabolism and Cofactor-Linked Energy Transfer\"\n\nres$module_function$summary\n# [1] \"This module primarily represents biochemical processes centered on \n# nucleotide metabolism, including purine nucleotide synthesis and turnover, \n# as indicated by the high importance and robustness of purine nucleotides such \n# as phosphoribosyl-ATP, ADP, and ATP. The presence of ribose phosphate derivatives \n# and organooxygen compounds supports active ribose phosphate metabolism, which \n# is essential for nucleotide biosynthesis. Additionally, the module includes \n# pyridines and derivatives like pyridoxamine 5'-phosphate, highlighting involvement \n# in coenzyme-dependent amino acid metabolism and transamination reactions. The \n# medium structural stability and low signal concentration suggest a coordinated \n# pathway-level shift rather than a hub-driven signal. Fatty acyls with high \n# importance also suggest ancillary roles in acyl-CoA metabolism linked to energy \n# homeostasis. The presence of tetrapyrroles and molybdenum cofactors further \n# indicates involvement in redox and enzymatic cofactor functions. Overall, this \n# module reflects integrated nucleotide biosynthesis and cofactor-mediated metabolic \n# energy processes.\"\n\nres$module_function$confidence_label\n# [1] \"high\"\n\nres$module_function$rationale\n# [1] \"The inferred function is biologically plausible in humans and detectable \n# in plasma, where nucleotide metabolites and cofactors circulate. These pathways \n# are relevant to systemic metabolic regulation and could be linked to age-related \n# metabolic changes, supporting high confidence.\"\n\nhead(res$module_top_metabolite_pmids %&gt;% \n       arrange(PMID_rank))\n#   Module Module_label Compound_ID                                    Compound_name PMID_rank     PMID\n# 1      1      module1      C20978                                    Glucoselysine         1 38879006\n# 2      1      module1      C00647                           Pyridoxamine phosphate         1 38846080\n# 3      1      module1      C02739                      1-(5-Phospho-D-ribosyl)-ATP        NA     &lt;NA&gt;\n# 4      1      module1      C11039 2'-Deoxy-5-hydroxymethylcytidine-5'-triphosphate        NA     &lt;NA&gt;\n# 5      1      module1      C01244               3,5-Diiodo-4-hydroxyphenylpyruvate        NA     &lt;NA&gt;\n# 6      1      module1      C15761                                   Concanamycin A        NA     &lt;NA&gt;\n#                                                                                                                                             title\n# 1 Glucoselysine, a unique advanced glycation end-product of the polyol pathway and its association with vascular complications in type 2 diabetes.\n# 2                 Why pyridoxal phosphate could be a functional predecessor of thiamine pyrophosphate and speculations on a primordial metabolism.\n# 3                                                                                                                                             &lt;NA&gt;\n# 4                                                                                                                                             &lt;NA&gt;\n# 5                                                                                                                                             &lt;NA&gt;\n# 6                                                                                                                                             &lt;NA&gt;\n#   score_embed\n# 1   0.6432722\n# 2   0.6080499\n# 3          NA\n# 4          NA\n# 5          NA\n# 6          NA\n\n\n6.4.1 Module interpretation table\nmodule_function contains the final module-level interpretation generated by the LLM. Important fields include:\n\nmodule_id – the module ID identified by previous step\ntitle – a concise functional label summarizing the dominant biological theme of the module\nsummary – a paragraph-level interpretation of the module based on metabolite composition, network context, and optional literature evidence\nconfidence_label – a qualitative confidence level for the interpretation\nrationale – a short explanation of why the inferred function is biologically plausible in the specified study context\nraw_response – the original LLM response retained for transparency\n\nThis table provides a concise interpretation of each statistically supported module.\n\n\n6.4.2 Literature evidence table\nWhen pubmed = TRUE, FeatureMAP also returns ranked PubMed evidence (module_top_metabolite_pmids) for top metabolites in each module.\n\nModule and Module_label – the module being annotated\nCompound_ID and Compound_name – the metabolite used for literature retrieval\nPMID_rank – the rank of the selected paper for that metabolite\nPMID – PubMed identifier\ntitle – article title\nscore_embed – semantic relevance score used for literature ranking\n\nHigher score_embed values indicate stronger semantic relevance between the literature and the module context.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#common-issues",
+    "href": "06_function_annotation.html#common-issues",
+    "title": "6  Function Annotation",
+    "section": "6.5 Common Issues",
+    "text": "6.5 Common Issues\n\nPubMed retrieval is slow Start with fewer modules, a shorter years window, or pubmed = FALSE for validation.\nNo useful literature retained Relax min_similarity, increase years, or provide a more specific phenotype.\nProvider/model mismatch Make sure the selected provider, embed_model, and llm_model are compatible.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#practical-checks-before-running",
+    "href": "06_function_annotation.html#practical-checks-before-running",
+    "title": "6  Function Annotation",
+    "section": "6.6 Practical Checks Before Running",
+    "text": "6.6 Practical Checks Before Running\n\nhead(res$module_score)\nsum(res$module_score$fdr &lt; 0.05, na.rm = TRUE)\n\nIf this count is zero, it is better to revisit Step 3 before trying module annotation.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#next-step",
+    "href": "06_function_annotation.html#next-step",
+    "title": "6  Function Annotation",
+    "section": "6.7 Next Step",
+    "text": "6.7 Next Step\nModule annotation is the last step of the current R-package tutorial workflow. If needed, you can next inspect res$module_function and the PubMed evidence tables for downstream reporting or visualization.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
     ]
   }
 ]

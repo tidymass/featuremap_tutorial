@@ -435,16 +435,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">6.1</span> Overview</a></li>
-  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage"><span class="header-section-number">6.2</span> Basic Usage</a></li>
-  <li><a href="#using-optimal-parameters" id="toc-using-optimal-parameters" class="nav-link" data-scroll-target="#using-optimal-parameters"><span class="header-section-number">6.3</span> Using Optimal Parameters</a></li>
-  <li><a href="#similarity-cutoff-interpretation" id="toc-similarity-cutoff-interpretation" class="nav-link" data-scroll-target="#similarity-cutoff-interpretation"><span class="header-section-number">6.4</span> Similarity Cutoff Interpretation</a></li>
-  <li><a href="#results-interpretation" id="toc-results-interpretation" class="nav-link" data-scroll-target="#results-interpretation"><span class="header-section-number">6.5</span> Results Interpretation</a>
+  <li><a href="#what-annotate_module-does" id="toc-what-annotate_module-does" class="nav-link active" data-scroll-target="#what-annotate_module-does"><span class="header-section-number">6.1</span> What <code>annotate_module()</code> Does</a></li>
+  <li><a href="#key-parameters" id="toc-key-parameters" class="nav-link" data-scroll-target="#key-parameters"><span class="header-section-number">6.2</span> Key Parameters</a></li>
+  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage"><span class="header-section-number">6.3</span> Basic Usage</a></li>
+  <li><a href="#result-interpretation" id="toc-result-interpretation" class="nav-link" data-scroll-target="#result-interpretation"><span class="header-section-number">6.4</span> Result Interpretation</a>
   <ul class="collapse">
-  <li><a href="#key-result-columns" id="toc-key-result-columns" class="nav-link" data-scroll-target="#key-result-columns"><span class="header-section-number">6.5.1</span> Key Result Columns</a></li>
+  <li><a href="#module-interpretation-table" id="toc-module-interpretation-table" class="nav-link" data-scroll-target="#module-interpretation-table"><span class="header-section-number">6.4.1</span> Module interpretation table</a></li>
+  <li><a href="#literature-evidence-table" id="toc-literature-evidence-table" class="nav-link" data-scroll-target="#literature-evidence-table"><span class="header-section-number">6.4.2</span> Literature evidence table</a></li>
   </ul></li>
-  <li><a href="#quality-assessment" id="toc-quality-assessment" class="nav-link" data-scroll-target="#quality-assessment"><span class="header-section-number">6.6</span> Quality Assessment</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">6.7</span> Next Steps</a></li>
+  <li><a href="#common-issues" id="toc-common-issues" class="nav-link" data-scroll-target="#common-issues"><span class="header-section-number">6.5</span> Common Issues</a></li>
+  <li><a href="#practical-checks-before-running" id="toc-practical-checks-before-running" class="nav-link" data-scroll-target="#practical-checks-before-running"><span class="header-section-number">6.6</span> Practical Checks Before Running</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">6.7</span> Next Step</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/edit/main/06_function_annotation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/jaspershen-lab/mapa-tutorial/blob/main/06_function_annotation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -471,10 +472,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter describes how to group related pathways into functional modules using the optimal clustering parameters determined in the previous chapter.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapa)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<p>This chapter describes <strong>Step 4</strong> of the FeatureMAP pipeline: annotating statistically supported modules with <code>annotate_module()</code>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -485,104 +483,211 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Prerequisites:</strong></p>
+<p><strong>Prerequisites:</strong> Complete module identification with <code>identify_module()</code>and Make sure your <code>res</code> object is already at stage <code>"module_identified"</code>.</p>
+</div>
+</div>
+<section id="what-annotate_module-does" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="what-annotate_module-does"><span class="header-section-number">6.1</span> What <code>annotate_module()</code> Does</h2>
+<p><code>annotate_module()</code> performs <strong>module-level biological interpretation</strong> for statistically supported modules in Step 3.</p>
+<p>This step integrates three sources of information:</p>
 <ol type="1">
-<li><strong>Similarity calculation</strong>: Complete pathway similarity calculation using either <code>merge_pathways()</code> or <code>get_bioembedsim()</code> (<span class="quarto-unresolved-ref">?sec-pathway_similarity</span>)</li>
-<li><strong>Parameter optimization</strong> (recommended): Determine optimal clustering parameters using <code>determine_optimal_clusters()</code> (<span class="quarto-unresolved-ref">?sec-optimal_clustering</span>)</li>
+<li><p><strong>Metabolite annotation summary:</strong> Metabolites contained in each significant module are summarized using the selected reference namespace (<code>kegg</code> or <code>hmdb</code>).</p></li>
+<li><p><strong>Optional literature retrieval:</strong> Relevant PubMed articles are retrieved and ranked for the top metabolites in each module.</p></li>
+<li><p><strong>LLM-based interpretation:</strong> A language model synthesizes module-level interpretations including title, summary, confidence label, and reasoning.</p></li>
 </ol>
-</div>
-</div>
-<section id="overview" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">6.1</span> Overview</h2>
-<p>The <code>get_functional_modules()</code> function is a generic function that identifies functional modules from pathway similarity results. It automatically detects the type of input object and applies the appropriate clustering method:</p>
-<ul>
-<li><strong>Traditional similarity objects</strong>: Uses Jaccard similarity between modules from different databases</li>
-<li><strong>Biotext embedding objects</strong>: Uses pre-computed semantic similarity matrices</li>
-</ul>
+<p>Only modules passing the significance cutoff (<code>p</code> or <code>fdr</code>) are annotated. This step converts statistically identified network modules into <strong>interpretable biological hypotheses</strong>.</p>
+<hr>
 </section>
-<section id="basic-usage" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">6.2</span> Basic Usage</h2>
-<p>The function automatically detects your input type and applies the appropriate clustering strategy, take metabolomic data for example:</p>
+<section id="key-parameters" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="key-parameters"><span class="header-section-number">6.2</span> Key Parameters</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 39%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th style="text-align: right;">Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>res</code></td>
+<td style="text-align: right;">required</td>
+<td><code>featuremap_result</code> returned by <code>identify_module()</code></td>
+</tr>
+<tr class="even">
+<td><code>p</code></td>
+<td style="text-align: right;"><code>"fdr"</code></td>
+<td>Column in <code>res$module_score</code> used for filtering</td>
+</tr>
+<tr class="odd">
+<td><code>pcutoff</code></td>
+<td style="text-align: right;"><code>0.05</code></td>
+<td>Threshold applied to the selected significance column</td>
+</tr>
+<tr class="even">
+<td><code>ref_data</code></td>
+<td style="text-align: right;"><code>NULL</code></td>
+<td>Optional functional reference annotation table</td>
+</tr>
+<tr class="odd">
+<td><code>species</code></td>
+<td style="text-align: right;"><code>"human"</code></td>
+<td>Species context used in module interpretation</td>
+</tr>
+<tr class="even">
+<td><code>biospecimen</code></td>
+<td style="text-align: right;"><code>NULL</code></td>
+<td>Biospecimen context (e.g.&nbsp;plasma, serum, tissue)</td>
+</tr>
+<tr class="odd">
+<td><code>phenotype</code></td>
+<td style="text-align: right;"><code>NULL</code></td>
+<td>Disease or phenotype context</td>
+</tr>
+<tr class="even">
+<td><code>pubmed</code></td>
+<td style="text-align: right;"><code>TRUE</code></td>
+<td>Whether to retrieve PubMed evidence</td>
+</tr>
+<tr class="odd">
+<td><code>years</code></td>
+<td style="text-align: right;"><code>5</code></td>
+<td>Time window for literature search</td>
+</tr>
+<tr class="even">
+<td><code>top_paper</code></td>
+<td style="text-align: right;"><code>3</code></td>
+<td>Number of retained papers per metabolite</td>
+</tr>
+<tr class="odd">
+<td><code>min_similarity</code></td>
+<td style="text-align: right;"><code>0.6</code></td>
+<td>Embedding similarity cutoff used to filter literature</td>
+</tr>
+<tr class="even">
+<td><code>provider</code></td>
+<td style="text-align: right;"><code>"openai"</code></td>
+<td>LLM and embedding provider. Currently supported options include <code>"openai"</code>, <code>"gemini"</code>, and <code>"siliconflow"</code></td>
+</tr>
+<tr class="odd">
+<td><code>embed_model</code></td>
+<td style="text-align: right;"><code>"text-embedding-3-small"</code></td>
+<td>Embedding model used for literature ranking (model availability depends on the selected provider)</td>
+</tr>
+<tr class="even">
+<td><code>llm_model</code></td>
+<td style="text-align: right;"><code>"gpt-4.1-mini"</code></td>
+<td>Language model used for module interpretation (model availability depends on the selected provider)</td>
+</tr>
+<tr class="odd">
+<td><code>NCBI_api_key</code></td>
+<td style="text-align: right;"><code>""</code></td>
+<td>NCBI Entrez API key for PubMed</td>
+</tr>
+<tr class="even">
+<td><code>llm_api_key</code></td>
+<td style="text-align: right;"><code>""</code></td>
+<td>API key for the selected LLM provider</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If <code>ref_data = NULL</code>, FeatureMAP automatically loads the functional reference resource corresponding to the metabolite namespace used in earlier steps.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>How to obtain an LLM API key</strong></p>
+<p>FeatureMAP currently supports <code>"openai"</code>, <code>"gemini"</code>, and <code>"siliconflow"</code> as LLM providers.<br>
+You can apply for an API key from the corresponding official platform:</p>
+<ul>
+<li>OpenAI: <a href="https://platform.openai.com/" class="uri">https://platform.openai.com/</a></li>
+<li>Gemini (Google AI Studio): <a href="https://ai.google.dev/aistudio" class="uri">https://ai.google.dev/aistudio</a></li>
+<li>SiliconFlow: <a href="https://siliconflow.cn/" class="uri">https://siliconflow.cn/</a></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>How to obtain a PubMed / NCBI API key</strong></p>
+<p>If you enable PubMed retrieval, you need to apply for an NCBI API key for higher request limits: <a href="https://account.ncbi.nlm.nih.gov/settings/" class="uri">https://account.ncbi.nlm.nih.gov/settings/</a></p>
+</div>
+</div>
+<hr>
+</section>
+<section id="basic-usage" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">6.3</span> Basic Usage</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Traditional Similarity Results</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Biotext Embedding Results</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Database + LLM only</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Database + PubMed + LLM</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>functional_modules <span class="ot">&lt;-</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_functional_modules</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> met_similarity_result,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sim.cutoff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cluster_method =</span> <span class="st">"louvain"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get functional modules from traditional pathway similarity calculation results ...</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating the similarity matrix...</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying functional modules...</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_data =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="st">"human"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype =</span> <span class="st">"disease phenotype"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider =</span> <span class="st">"openai"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model =</span> <span class="st">"gpt-4.1-mini"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key =</span> <span class="st">"your llm api key"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>functional_modules <span class="ot">&lt;-</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_functional_modules</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> met_biotext_similarity,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sim.cutoff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cluster_method =</span> <span class="st">"louvain"</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get functional modules from Biotext embedding results ...</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying functional modules...</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Joining with `by = join_by(node)`</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_data =</span> <span class="cn">NULL</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="st">"human"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype =</span> <span class="st">"disease phenotype"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">years =</span> <span class="dv">5</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">top_paper =</span> <span class="dv">3</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_similarity =</span> <span class="fl">0.6</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider =</span> <span class="st">"openai"</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">embed_model =</span> <span class="st">"text-embedding-3-small"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model =</span> <span class="st">"gpt-4.1-mini"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">NCBI_api_key =</span> <span class="st">"your ncbi api key"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key =</span> <span class="st">"your llm api key"</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-</div>
-</div>
-</section>
-<section id="using-optimal-parameters" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="using-optimal-parameters"><span class="header-section-number">6.3</span> Using Optimal Parameters</h2>
-<p>Apply the parameters identified in your clustering evaluation:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract optimal parameters from your evaluation</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>best_params <span class="ot">&lt;-</span> cluster_evaluation<span class="sc">$</span>best_combination</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use modularity-optimized parameters</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>modularity_optimal <span class="ot">&lt;-</span> best_params[best_params<span class="sc">$</span>metric <span class="sc">==</span> <span class="st">"modularity"</span>, ]</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>optimal_method <span class="ot">&lt;-</span> modularity_optimal<span class="sc">$</span>method[<span class="dv">1</span>]</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>optimal_cutoff <span class="ot">&lt;-</span> modularity_optimal<span class="sc">$</span>cutoff[<span class="dv">1</span>]</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply optimal parameters</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>functional_modules <span class="ot">&lt;-</span> </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_functional_modules</span>(</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">object =</span> met_similarity_result,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">sim.cutoff =</span> optimal_cutoff,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">cluster_method =</span> optimal_method</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, use silhouette-optimized parameters for better separation</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>silhouette_optimal <span class="ot">&lt;-</span> best_params[best_params<span class="sc">$</span>metric <span class="sc">==</span> <span class="st">"silhouette"</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="similarity-cutoff-interpretation" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="similarity-cutoff-interpretation"><span class="header-section-number">6.4</span> Similarity Cutoff Interpretation</h2>
-<p>The meaning of <code>sim.cutoff</code> depends on your clustering method:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Girvan-Newman</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Binary Cut &amp; Hierarchical</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<p><strong>Edge Filter</strong>: Only pathway pairs with similarity above this threshold are connected.</p>
-<ul>
-<li><strong>Lower values (0.3-0.4)</strong>: More permissive, denser networks, larger modules</li>
-<li><strong>Higher values (0.6-0.8)</strong>: More stringent, sparser networks, smaller modules</li>
-</ul>
-</div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<p><strong>Dendrogram Cutting Height</strong>: Determines where to cut the clustering tree.</p>
-<ul>
-<li><strong>Lower values (0.3-0.4)</strong>: Cut lower in tree, more fine-grained modules<br>
-</li>
-<li><strong>Higher values (0.6-0.8)</strong>: Cut higher in tree, fewer but larger modules</li>
-</ul>
 </div>
 </div>
 </div>
@@ -596,101 +701,119 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Key Difference in Cutoff Interpretation</strong>:</p>
 <ul>
-<li>In <strong>Girvan-Newman</strong>, higher cutoffs = smaller modules</li>
-<li>In <strong>Binary Cut/Hierarchical</strong>, higher cutoffs = larger modules</li>
+<li>Provide <code>species</code>, <code>biospecimen</code>, and <code>phenotype</code> whenever possible</li>
+<li>Use API keys from environment variables rather than hard-coding them</li>
 </ul>
-<p>Always examine your results and adjust based on the biological interpretability of resulting modules.</p>
 </div>
 </div>
 </section>
-<section id="results-interpretation" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="results-interpretation"><span class="header-section-number">6.5</span> Results Interpretation</h2>
-<p>After functional module identification, examine your results:</p>
+<section id="result-interpretation" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="result-interpretation"><span class="header-section-number">6.4</span> Result Interpretation</h2>
+<p>After successful annotation:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View analysis summary</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>functional_modules</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------- </span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis method: enrich_pathway </span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------- </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------Variable information------------</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 119  features/markers in total</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------Enrichment results and modules of genes------------</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------GO------------</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 1025 GO terms with p.adjust &lt; 0.05 </span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 250 GO modules </span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------KEGG------------</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 48 KEGG pathways with p.adjust &lt; 0.05 </span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 29 KEGG modules</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------Reactome------------</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 48 Reactome pathways with p.adjust &lt; 0.05 </span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 13 Reactome modules</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------Functional modules------------</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 158 Functional modules</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------LLM module interpretation------------</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># No LLM module interpretation results</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------- </span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Processing information</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 processings in total</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># enrich_pathway ---------- </span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#   Package    Function.used                Time</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 1    mapa enrich_pathway() 2025-06-09 21:32:51</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co"># merge_pathways ---------- </span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#   Package    Function.used                Time</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co"># 1    mapa merge_pathways() 2025-06-09 21:34:00</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co"># merge_modules ---------- </span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   Package   Function.used                Time</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 1    mapa merge_modules() 2025-06-09 21:34:56</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Access functional modules</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(functional_modules<span class="sc">@</span>merged_module<span class="sc">$</span>functional_module_result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>stage</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "module_annotated"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>title</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "Nucleotide Metabolism and Cofactor-Linked Energy Transfer"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>summary</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "This module primarily represents biochemical processes centered on </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># nucleotide metabolism, including purine nucleotide synthesis and turnover, </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># as indicated by the high importance and robustness of purine nucleotides such </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># as phosphoribosyl-ATP, ADP, and ATP. The presence of ribose phosphate derivatives </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># and organooxygen compounds supports active ribose phosphate metabolism, which </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># is essential for nucleotide biosynthesis. Additionally, the module includes </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># pyridines and derivatives like pyridoxamine 5'-phosphate, highlighting involvement </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># in coenzyme-dependent amino acid metabolism and transamination reactions. The </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># medium structural stability and low signal concentration suggest a coordinated </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># pathway-level shift rather than a hub-driven signal. Fatty acyls with high </span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># importance also suggest ancillary roles in acyl-CoA metabolism linked to energy </span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># homeostasis. The presence of tetrapyrroles and molybdenum cofactors further </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># indicates involvement in redox and enzymatic cofactor functions. Overall, this </span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># module reflects integrated nucleotide biosynthesis and cofactor-mediated metabolic </span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># energy processes."</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>confidence_label</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "high"</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>rationale</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "The inferred function is biologically plausible in humans and detectable </span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># in plasma, where nucleotide metabolites and cofactors circulate. These pathways </span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># are relevant to systemic metabolic regulation and could be linked to age-related </span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># metabolic changes, supporting high confidence."</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_top_metabolite_pmids <span class="sc">%&gt;%</span> </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>       <span class="fu">arrange</span>(PMID_rank))</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#   Module Module_label Compound_ID                                    Compound_name PMID_rank     PMID</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># 1      1      module1      C20978                                    Glucoselysine         1 38879006</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 2      1      module1      C00647                           Pyridoxamine phosphate         1 38846080</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co"># 3      1      module1      C02739                      1-(5-Phospho-D-ribosyl)-ATP        NA     &lt;NA&gt;</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 4      1      module1      C11039 2'-Deoxy-5-hydroxymethylcytidine-5'-triphosphate        NA     &lt;NA&gt;</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 5      1      module1      C01244               3,5-Diiodo-4-hydroxyphenylpyruvate        NA     &lt;NA&gt;</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 6      1      module1      C15761                                   Concanamycin A        NA     &lt;NA&gt;</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">#                                                                                                                                             title</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 Glucoselysine, a unique advanced glycation end-product of the polyol pathway and its association with vascular complications in type 2 diabetes.</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 2                 Why pyridoxal phosphate could be a functional predecessor of thiamine pyrophosphate and speculations on a primordial metabolism.</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 3                                                                                                                                             &lt;NA&gt;</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 4                                                                                                                                             &lt;NA&gt;</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 5                                                                                                                                             &lt;NA&gt;</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co"># 6                                                                                                                                             &lt;NA&gt;</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#   score_embed</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 1   0.6432722</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co"># 2   0.6080499</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co"># 3          NA</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># 4          NA</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co"># 5          NA</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co"># 6          NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="key-result-columns" class="level3" data-number="6.5.1">
-<h3 data-number="6.5.1" class="anchored" data-anchor-id="key-result-columns"><span class="header-section-number">6.5.1</span> Key Result Columns</h3>
+<section id="module-interpretation-table" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="module-interpretation-table"><span class="header-section-number">6.4.1</span> Module interpretation table</h3>
+<p><code>module_function</code> contains the final module-level interpretation generated by the LLM. Important fields include:</p>
 <ul>
-<li><strong>module</strong>: Functional Module identifier (e.g., “Functional_module_127”)</li>
-<li><strong>module_annotation</strong>: Representative pathway name (lowest p-value for ORA, highest |NES| for GSEA)</li>
-<li><strong>Description</strong>: Names of all pathways in the module (separated by <code>;</code>)</li>
-<li><strong>module_content</strong>: All pathway/term IDs grouped in this module</li>
-<li><strong>Count</strong>: Number of genes/metabolites from input list in the module</li>
-<li><strong>p_adjust</strong>: Best (lowest) adjusted p-value among pathways in the module</li>
+<li><code>module_id</code> – the module ID identified by previous step</li>
+<li><code>title</code> – a concise functional label summarizing the dominant biological theme of the module</li>
+<li><code>summary</code> – a paragraph-level interpretation of the module based on metabolite composition, network context, and optional literature evidence</li>
+<li><code>confidence_label</code> – a qualitative confidence level for the interpretation</li>
+<li><code>rationale</code> – a short explanation of why the inferred function is biologically plausible in the specified study context</li>
+<li><code>raw_response</code> – the original LLM response retained for transparency</li>
 </ul>
-<p>For <strong>GSEA results</strong>, additional columns include: - <strong>NES</strong>: Normalized Enrichment Score of the representative pathway - <strong>core_enrichment</strong>: Core enriched genes contributing to the module</p>
+<p>This table provides a concise interpretation of each statistically supported module.</p>
+</section>
+<section id="literature-evidence-table" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="literature-evidence-table"><span class="header-section-number">6.4.2</span> Literature evidence table</h3>
+<p>When <code>pubmed = TRUE</code>, FeatureMAP also returns ranked PubMed evidence (<code>module_top_metabolite_pmids</code>) for top metabolites in each module.</p>
+<ul>
+<li><code>Module</code> and <code>Module_label</code> – the module being annotated</li>
+<li><code>Compound_ID</code> and <code>Compound_name</code> – the metabolite used for literature retrieval</li>
+<li><code>PMID_rank</code> – the rank of the selected paper for that metabolite</li>
+<li><code>PMID</code> – PubMed identifier</li>
+<li><code>title</code> – article title</li>
+<li><code>score_embed</code> – semantic relevance score used for literature ranking</li>
+</ul>
+<p>Higher <code>score_embed</code> values indicate stronger semantic relevance between the literature and the module context.</p>
 </section>
 </section>
-<section id="quality-assessment" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="quality-assessment"><span class="header-section-number">6.6</span> Quality Assessment</h2>
-<p>Evaluate the quality of your functional modules:</p>
+<section id="common-issues" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="common-issues"><span class="header-section-number">6.5</span> Common Issues</h2>
+<ul>
+<li><p><strong>PubMed retrieval is slow</strong> Start with fewer modules, a shorter <code>years</code> window, or <code>pubmed = FALSE</code> for validation.</p></li>
+<li><p><strong>No useful literature retained</strong> Relax <code>min_similarity</code>, increase <code>years</code>, or provide a more specific <code>phenotype</code>.</p></li>
+<li><p><strong>Provider/model mismatch</strong> Make sure the selected <code>provider</code>, <code>embed_model</code>, and <code>llm_model</code> are compatible.</p></li>
+</ul>
+</section>
+<section id="practical-checks-before-running" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="practical-checks-before-running"><span class="header-section-number">6.6</span> Practical Checks Before Running</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check module size distribution</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>module_results <span class="ot">&lt;-</span> functional_modules<span class="sc">@</span>merged_module<span class="sc">$</span>functional_module_result</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>module_sizes <span class="ot">&lt;-</span> <span class="fu">table</span>(module_results<span class="sc">$</span>Count)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot module size distribution</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(module_sizes, </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Distribution of Module Sizes"</span>, </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Number of Genes/Metabolites per Module"</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"Number of Modules"</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine top modules by significance</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>top_modules <span class="ot">&lt;-</span> </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  module_results <span class="sc">%&gt;%</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(p_adjust) <span class="sc">%&gt;%</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(top_modules[, <span class="fu">c</span>(<span class="st">"module_annotation"</span>, <span class="st">"Count"</span>, <span class="st">"p_adjust"</span>)])</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for singleton modules (modules with only one pathway)</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>chr <span class="ot">&lt;-</span> <span class="fu">as.character</span>(module_results<span class="sc">$</span>module_content); chr[<span class="fu">is.na</span>(chr)] <span class="ot">&lt;-</span> <span class="st">""</span>; counts <span class="ot">&lt;-</span> <span class="fu">lengths</span>(<span class="fu">strsplit</span>(chr, <span class="st">";"</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>singleton_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(counts <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> <span class="fu">nzchar</span>(chr))</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Number of singleton modules:"</span>, singleton_count, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Percentage of singleton modules:"</span>, <span class="fu">round</span>(singleton_count<span class="sc">/</span><span class="fu">nrow</span>(module_results)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_score)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(res<span class="sc">$</span>module_score<span class="sc">$</span>fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>If this count is zero, it is better to revisit Step 3 before trying module annotation.</p>
 </section>
-<section id="next-steps" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">6.7</span> Next Steps</h2>
-<p>Continue to <a href="07_llm_interpretation.qmd">LLM Interpretation</a> to add AI-powered functional annotations to your modules, or proceed to <a href="08_data_vis.qmd">Data Visualization</a> to create informative plots of your functional modules.</p>
+<section id="next-step" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="next-step"><span class="header-section-number">6.7</span> Next Step</h2>
+<p>Module annotation is the last step of the current R-package tutorial workflow. If needed, you can next inspect <code>res$module_function</code> and the PubMed evidence tables for downstream reporting or visualization.</p>
 
 
 </section>
