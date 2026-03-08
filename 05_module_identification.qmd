@@ -212,4 +212,6 @@ Modules with lower `p` or `fdr` values indicate stronger statistical support and
 If too many tiny modules appear, increase `min_size` or tighten `node_freq`. If modules are too coarse, try alternative methods or relax these cutoffs.
 :::
 
-Once modules are identified, continue to next step.
+## Next Step
+
+Once modules are identified, continue to [Function Annotation](06_function_annotation.qmd) to interpret significant modules in biological terms.

@@ -23,7 +23,7 @@ The function returns a `featuremap_result` object with stage marker `"feature_an
 ## Key Parameters
 
 | Parameter | Default | Description |
-|----|---:|----|
+|------------------------|-----------------------:|------------------------|
 | `feature_table` | required | Feature-level input table (Chapter 2 format) |
 | `ms2_table` | `NULL` | Optional MS2 annotation table |
 | `metabolite_database` | `NULL` | Optional user-supplied `metid` database |
@@ -178,4 +178,6 @@ This summary reports the level of annotation redundancy before and after refinem
 
 -   `metabolite_per_feature`: the average number of metabolite candidates assigned to each LC–MS feature.
 
-Once feature annotation is complete, continue to next step.
+## Next Step
+
+Once feature annotation is complete, continue to [Subnetwork Extraction](04_pcsf_subnetwork.qmd) to refine annotations with network context and extract the metabolic subnetwork.

@@ -95,4 +95,6 @@ sum(is.na(feature_table[, required_cols]))
 # ideally 0 for required fields
 ```
 
-Once your input tables are ready, continue to next step.
+## Next Step
+
+Once your input tables are ready, continue to [Feature Annotation](03_feature_annotation.qmd) to generate the first-round metabolite annotation results.

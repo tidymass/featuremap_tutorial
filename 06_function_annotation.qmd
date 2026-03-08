@@ -233,3 +233,5 @@ If this count is zero, it is better to revisit Step 4 before trying module annot
 ## Next Step
 
 Module annotation is the last step of the current R-package tutorial workflow. If needed, you can next inspect `res$module_function` and the PubMed evidence tables for downstream reporting or visualization.
+
+If you want to continue with the interactive interface, move to [Shiny App Installation](10_shinyapp_installation.qmd) to start the Shiny tutorial.

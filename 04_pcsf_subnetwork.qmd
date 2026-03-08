@@ -161,4 +161,6 @@ Compared with `anno_feature_table1`, this table incorporates network support fro
 -   `res$edge_frequency`: edge appearance frequency across repeated runs
 -   `res$tuning_grid`, `res$tuning_best`: available when grid tuning is used
 
-Once subnetwork extraction is complete, continue to next step.
+## Next Step
+
+Once subnetwork extraction is complete, continue to [Module Identification](05_module_identification.qmd) to detect connected functional modules from the extracted network.

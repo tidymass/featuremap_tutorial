@@ -60,4 +60,6 @@ packageVersion("featuremap")
 
 ```
 
-If all checks pass, continue to the next chapter.
+## Next Step
+
+If all checks pass, continue to [Data Preparation](02_data_preparation.qmd) to prepare the input tables for the FeatureMAP workflow.
