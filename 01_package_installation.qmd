@@ -29,8 +29,8 @@ if (!requireNamespace("massdataset", quietly = TRUE)) {
 if (!requireNamespace("metid", quietly = TRUE)) {
   remotes::install_github("tidymass/metid")
 }
-if (!requireNamespace("PCSF2", quietly = TRUE)) {
-  remotes::install_github("ytwangZero/PCSF2")
+if (!requireNamespace("pcsf2featuremap", quietly = TRUE)) {
+  remotes::install_github("tidymass/pcsf2featuremap")
 }
 
 ```
