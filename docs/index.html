@@ -356,7 +356,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -380,13 +380,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -463,7 +463,7 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Feature annotation</strong>: annotate raw LC-MS features to metabolite candidates using MS1 (and optional MS2) information.</li>
 <li><strong>Subnetwork extraction</strong>: construct a robust prize-collecting Steiner forest (PCSF)-based metabolic subnetwork.</li>
 <li><strong>Module identification</strong>: detect functional modules by community detection and evaluate module significance.</li>
-<li><strong>Module annotation</strong>: interpret significant modules with database knowledge, optional PubMed evidence, and optional LLM summarization.</li>
+<li><strong>Module annotation</strong>: interpret significant modules with database knowledge, optional PubMed evidence, and LLM reasoning, either in a fast two-call mode or in an advanced multi-agent debate mode that can also synthesize the annotated modules into one study-level picture.</li>
 </ol>
 <p>This workflow helps convert feature-level metabolomics signals into interpretable biological modules in a reproducible and analysis-ready format.</p>
 </section>
@@ -475,6 +475,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Run the complete five-step FeatureMAP workflow with R code.</li>
 <li>Complete the same analysis with the FeatureMAP Shiny App/Web interface.</li>
 <li>Understand and inspect key result objects and module-level interpretations.</li>
+<li>Export interactive HTML reports for the module debate traces and the cross-module synthesis network.</li>
 </ol>
 <p>Whether you favour the command line or a browser, this tutorial gives you everything you need to apply FeatureMAP confidently in your metabolomics projects.</p>
 </section>

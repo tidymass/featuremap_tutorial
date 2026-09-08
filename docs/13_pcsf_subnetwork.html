@@ -355,7 +355,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -379,13 +379,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -442,7 +442,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This chapter focuses on how to use <strong>Step 3: Subnetwork Extraction</strong> in <strong>FeatureMAP Shiny</strong>. The detailed method, parameter definitions, and result structure have already been introduced in <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>, so here we focus on the Shiny workflow itself.</p>
+<p>This chapter focuses on how to use <strong>Step 3: PCSF Subnetwork</strong> in <strong>FeatureMAP Shiny</strong>. The detailed method, parameter definitions, and result structure have already been introduced in <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>, so here we focus on the Shiny workflow itself.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -458,21 +458,83 @@ Important
 </div>
 <section id="enter-the-pcsf-subnetwork-page" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="enter-the-pcsf-subnetwork-page"><span class="header-section-number">10.1</span> Enter the PCSF Subnetwork Page</h2>
-<p>After finishing <strong>Feature Annotation</strong>, click <strong>Next Step</strong> or select <strong>PCSF Subnetwork</strong> from the navigation bar. This page is also divided into two areas:</p>
-<ul>
-<li><strong>Parameter area</strong> on the left: set the subnetwork extraction options and click <strong>Run PCSF</strong></li>
-<li><strong>Result area</strong> on the right: inspect the extracted subnetwork and the refined annotation results</li>
-</ul>
+<p>After finishing <strong>Feature Annotation</strong>, click <strong>Next Step</strong>, or open <strong>Analysis → 3 PCSF Subnetwork</strong> in the navigation bar.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step2_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s3_network_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <p>The purpose of this step is to use the PCSF strategy to extract a network-supported metabolite subnetwork for downstream module identification.</p>
 </section>
 <section id="parameter-area" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="parameter-area"><span class="header-section-number">10.2</span> Parameter Area</h2>
-<p>The left panel is where you set the PCSF-related parameters before clicking <strong>Run PCSF</strong>. Since the detailed meanings of these parameters have already been introduced in <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>, we do not repeat them here.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Field</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Feature Selection</strong></td>
+<td>Features used as terminals (Significant only / All features)</td>
+<td><code>Significant only</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Significance cutoff (p-value), shown for <em>Significant only</em></td>
+<td><code>0.05</code></td>
+</tr>
+<tr class="odd">
+<td><strong>PCSF Parameters</strong></td>
+<td>Enable grid tuning</td>
+<td>off</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Node prize weight (b)</td>
+<td><code>20</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Steiner penalty (w)</td>
+<td><code>25</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Grid tuning range: b min / max / step, w min / max / step</td>
+<td><code>20 / 40 / 5</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Iterations (final)</td>
+<td><code>100</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Iterations (grid tuning)</td>
+<td><code>10</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Threads</td>
+<td><code>4</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Visualize PCSF subnetwork</td>
+<td>on</td>
+</tr>
+</tbody>
+</table>
+<p>When <strong>Enable grid tuning</strong> is off, you set <code>b</code> and <code>w</code> directly; when it is on, those two fields are replaced by the grid ranges and by the tuning-iteration field. The meaning of each parameter is the same as in <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -490,49 +552,35 @@ Note
 <section id="run-pcsf-subnetwork-extraction" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="run-pcsf-subnetwork-extraction"><span class="header-section-number">10.3</span> Run PCSF Subnetwork Extraction</h2>
 <p>Once the parameters are ready, click <strong>Run PCSF</strong>.</p>
-<p>The app will start the PCSF subnetwork extraction procedure and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the <strong>Next Step</strong> button will become available.</p>
-<p>If you enable <strong>grid tuning</strong>, the app will additionally report the selected best parameter combination after the run finishes.</p>
+<p>The app shows a progress card while the repeated PCSF runs are executed. When the step finishes successfully, the result panel on the right is updated automatically and the <strong>Next Step</strong> button becomes available.</p>
+<p>If you enable <strong>grid tuning</strong>, the selected best <code>b / w</code> combination is recorded and shown later in the <strong>Analysis Parameters</strong> card on the <strong>Results Download</strong> page.</p>
 </section>
 <section id="result-area" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="result-area"><span class="header-section-number">10.4</span> Result Area</h2>
 <section id="subnetwork" class="level3" data-number="10.4.1">
 <h3 data-number="10.4.1" class="anchored" data-anchor-id="subnetwork"><span class="header-section-number">10.4.1</span> Subnetwork</h3>
-<p>The <strong>Subnetwork</strong> tab is used to inspect the extracted PCSF network. If <strong>Visualize PCSF subnetwork</strong> is enabled in the parameter area, this tab will show the network plot directly in the app. If visualization is disabled, the run can still finish normally, but the plot area will remain empty.</p>
+<p>The <strong>Subnetwork</strong> tab shows the extracted PCSF network, provided <strong>Visualize PCSF subnetwork</strong> was enabled in the parameter area. If visualization is disabled, the run still finishes normally, but this tab stays empty.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step2_subnetwork.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s3_network_subnetwork.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This network plot is interactive in the Shiny app. You can zoom, drag, and click nodes to explore the subnetwork in more detail.</p>
-</div>
-</div>
-<p>When grid tuning is enabled, the best selected parameter combination is also shown in this tab after the analysis is complete.</p>
+<p>The network is interactive: you can zoom, drag and click nodes. Two selectors above the plot help you navigate a large network:</p>
+<ul>
+<li>the <strong>Feature</strong> selector highlights a chosen LC–MS feature and its directly connected metabolites</li>
+<li>the <strong>Metabolite</strong> selector highlights a chosen metabolite and its directly connected features</li>
+</ul>
+<p>The rows listed under the network follow the current selection. The legend distinguishes <strong>Feature</strong> nodes (orange) from <strong>Metabolite</strong> nodes (blue).</p>
 </section>
 <section id="annotation-table-2" class="level3" data-number="10.4.2">
 <h3 data-number="10.4.2" class="anchored" data-anchor-id="annotation-table-2"><span class="header-section-number">10.4.2</span> Annotation Table 2</h3>
-<p>The <strong>Annotation Table 2</strong> tab contains the network-refined annotation results generated after PCSF extraction. Compared with the previous annotation table, this table reflects the additional support from the extracted subnetwork and is the main output that will be carried into the next step.</p>
+<p>The <strong>Annotation Table 2</strong> tab contains the network-refined annotation results generated after PCSF extraction, that is <code>res$anno_feature_table2</code> in the R package. Compared with the previous annotation table, it adds the network evidence (<code>edge_freq</code>, <code>weighted_anno_score</code>, <code>confidence_rank</code>) and is the main output carried into the next step.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step2_annotation.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s3_network_table2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <p>For a full explanation of the result columns, see <a href="./04_pcsf_subnetwork.html">R package-Subnetwork Extraction</a>.</p>
-<p>Below the table, the app also shows an <strong>Annotation Status</strong> summary, including:</p>
-<ul>
-<li>how many features were matched in the refined table</li>
-<li>how many feature-metabolite entries were retained</li>
-<li>the average number of entries per matched feature</li>
-</ul>
 </section>
 </section>
 <section id="recommended-run-the-demo-data-first" class="level2" data-number="10.5">
@@ -541,7 +589,7 @@ Tip
 <ol type="1">
 <li>keep the default parameter settings</li>
 <li>leave <strong>Enable grid tuning</strong> unchecked for the first run</li>
-<li>optionally enable <strong>Visualize PCSF subnetwork</strong> if you want to see the network directly</li>
+<li>keep <strong>Visualize PCSF subnetwork</strong> enabled if you want to see the network directly</li>
 <li>click <strong>Run PCSF</strong></li>
 <li>check the <strong>Subnetwork</strong> tab first</li>
 <li>then open <strong>Annotation Table 2</strong> to inspect the refined results</li>
@@ -557,7 +605,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If the result tab stays empty, first check whether <strong>Feature Annotation</strong> finished successfully in the previous step.</p>
+<p>If the result tab stays empty, first check whether <strong>Feature Annotation</strong> finished successfully in the previous step. Note that repeated PCSF runs are the slowest part of the workflow: lowering <strong>Iterations (final)</strong> gives a quicker first look, at the cost of robustness.</p>
 </div>
 </div>
 </section>

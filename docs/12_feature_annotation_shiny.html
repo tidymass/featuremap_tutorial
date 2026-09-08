@@ -355,7 +355,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -379,13 +379,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -412,7 +412,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#result-area" id="toc-result-area" class="nav-link" data-scroll-target="#result-area"><span class="header-section-number">9.4</span> Result Area</a>
   <ul class="collapse">
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.4.1</span> Summary</a></li>
-  <li><a href="#annotation-table-1" id="toc-annotation-table-1" class="nav-link" data-scroll-target="#annotation-table-1"><span class="header-section-number">9.4.2</span> Annotation Table 1</a></li>
+  <li><a href="#annotation-table" id="toc-annotation-table" class="nav-link" data-scroll-target="#annotation-table"><span class="header-section-number">9.4.2</span> Annotation Table</a></li>
   </ul></li>
   <li><a href="#recommended-run-the-demo-data-first" id="toc-recommended-run-the-demo-data-first" class="nav-link" data-scroll-target="#recommended-run-the-demo-data-first"><span class="header-section-number">9.5</span> Recommended: Run the Demo Data First</a></li>
   <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">9.6</span> Next Step</a></li>
@@ -458,22 +458,59 @@ Important
 </div>
 <section id="enter-the-feature-annotation-page" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="enter-the-feature-annotation-page"><span class="header-section-number">9.1</span> Enter the Feature Annotation Page</h2>
-<p>After finishing <strong>Data Upload</strong>, click <strong>Next Step</strong> or select <strong>Feature Annotation</strong> from the top navigation bar.</p>
-<p>This page is also divided into two areas:</p>
-<ul>
-<li><strong>Parameter area</strong> on the left: set annotation parameters and click <strong>Run</strong></li>
-<li><strong>Result area</strong> on the right: view the annotation summary and detailed result table</li>
-</ul>
+<p>After finishing <strong>Data Upload</strong>, click <strong>Next Step</strong>, or open <strong>Analysis → 2 Feature Annotation</strong> in the navigation bar.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step1_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s2_annotation_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <p>The purpose of this step is to map metabolomics features to candidate metabolites and prepare the refined annotation table for downstream network analysis.</p>
 </section>
 <section id="parameter-area" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="parameter-area"><span class="header-section-number">9.2</span> Parameter Area</h2>
-<p>The left panel is where you set the feature annotation parameters before clicking <strong>Run</strong>. Since the detailed meanings of these parameters have already been introduced in <a href="./03_feature_annotation.html">R package-Feature Annotation</a>, we do not repeat them here.</p>
+<p>The left panel groups the annotation parameters into two sections:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Field</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Matching Tolerance</strong></td>
+<td>MS1 match (ppm)</td>
+<td><code>15</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>RT tolerance (second)</td>
+<td><code>5</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Advanced Options</strong></td>
+<td>Column type (Reverse Phase / HILIC)</td>
+<td><code>Reverse Phase</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Isotope number</td>
+<td><code>3</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Threads</td>
+<td><code>4</code></td>
+</tr>
+</tbody>
+</table>
+<p>The meaning of each parameter is the same as in <a href="./03_feature_annotation.html">R package-Feature Annotation</a>, and the ⓘ icon next to each section title repeats the short version inside the app.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -491,36 +528,39 @@ Note
 <section id="run-feature-annotation" class="level2" data-number="9.3">
 <h2 data-number="9.3" class="anchored" data-anchor-id="run-feature-annotation"><span class="header-section-number">9.3</span> Run Feature Annotation</h2>
 <p>Once the parameters are ready, click <strong>Run</strong>.</p>
-<p>The app will start the feature annotation procedure and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the <strong>Next Step</strong> button will become available.</p>
+<p>A progress card appears while the step is running. When it finishes, the card reports:</p>
+<ul>
+<li><strong>Annotated features</strong> – how many of the uploaded features received at least one candidate, with the percentage</li>
+<li><strong>Feature-metabolite pairs</strong> – how many annotation rows were produced</li>
+</ul>
+<p>The result panel on the right is updated automatically and the <strong>Next Step</strong> button becomes available.</p>
 <p>If you did not provide an MS2 annotation table in the previous step, the app will still run using MS1-based annotation only.</p>
 </section>
 <section id="result-area" class="level2" data-number="9.4">
 <h2 data-number="9.4" class="anchored" data-anchor-id="result-area"><span class="header-section-number">9.4</span> Result Area</h2>
 <section id="summary" class="level3" data-number="9.4.1">
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.4.1</span> Summary</h3>
-<p>The <strong>Summary</strong> tab gives a quick overview of the annotation results. It mainly helps you see how the annotation changed before and after refinement at both the metabolite level and the feature level.</p>
+<p>The <strong>Summary</strong> tab reports how much annotation ambiguity was removed by the refinement stage, comparing the state <strong>before</strong> and <strong>after</strong> filtering along two axes:</p>
+<ul>
+<li><strong>Candidate metabolites per feature</strong> – how many metabolites a single feature is still assigned to</li>
+<li><strong>Feature groups per metabolite</strong> – how many metabolite feature clusters (MFCs) point at the same metabolite</li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step1_summary.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s2_annotation_summary.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <p>This view is useful for checking whether the annotation step completed normally and whether the refinement reduced redundancy.</p>
 </section>
-<section id="annotation-table-1" class="level3" data-number="9.4.2">
-<h3 data-number="9.4.2" class="anchored" data-anchor-id="annotation-table-1"><span class="header-section-number">9.4.2</span> Annotation Table 1</h3>
-<p>The <strong>Annotation Table 1</strong> tab contains the detailed feature-to-metabolite annotation results produced by this step.</p>
+<section id="annotation-table" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="annotation-table"><span class="header-section-number">9.4.2</span> Annotation Table</h3>
+<p>The <strong>Annotation Table</strong> tab contains the detailed feature-to-metabolite annotation results produced by this step; it is the same table as <code>res$anno_feature_table1</code> in the R package.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step1_annotation.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s2_annotation_table.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
-<p>For a full explanation of the result columns, see <a href="./03_feature_annotation.html">R package-3 Feature Annotation</a>.</p>
-<p>Below the table, the app also shows an <strong>Annotation Status</strong> summary, including:</p>
-<ul>
-<li>how many features were annotated</li>
-<li>how many feature-metabolite entries were produced</li>
-<li>the average number of metabolite candidates per annotated feature</li>
-</ul>
+<p>For a full explanation of the result columns, see <a href="./03_feature_annotation.html">R package-Feature Annotation</a>. The table supports searching, sorting, and column filtering directly in the browser.</p>
 </section>
 </section>
 <section id="recommended-run-the-demo-data-first" class="level2" data-number="9.5">
@@ -531,7 +571,7 @@ Note
 <li>click <strong>Run</strong></li>
 <li>wait for the annotation step to finish</li>
 <li>check the <strong>Summary</strong> tab first</li>
-<li>then open <strong>Annotation Table 1</strong> to inspect the detailed annotation results</li>
+<li>then open <strong>Annotation Table</strong> to inspect the detailed annotation results</li>
 </ol>
 <p>This is the easiest way to understand what the step produces before applying it to your own dataset.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -544,13 +584,13 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If the result table looks empty, first check whether <strong>Data Upload</strong> finished successfully in the previous step, and then confirm that the selected reference database and input files were loaded correctly.</p>
+<p>If the result table looks empty, first check whether <strong>Data Upload</strong> finished successfully in the previous step, and then confirm that the input files were loaded correctly.</p>
 </div>
 </div>
 </section>
 <section id="next-step" class="level2" data-number="9.6">
 <h2 data-number="9.6" class="anchored" data-anchor-id="next-step"><span class="header-section-number">9.6</span> Next Step</h2>
-<p>Once feature annotation is complete, click <strong>Next Step</strong> to continue to <strong>Subnetwork Extraction</strong>.</p>
+<p>Once feature annotation is complete, click <strong>Next Step</strong> to continue to <strong>PCSF Subnetwork</strong>.</p>
 
 
 </section>
@@ -971,8 +1011,8 @@ Tip
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./11_data_preparation_shiny.html" class="pagination-link" aria-label="Data Preparation">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span>
+      <a href="./11_data_preparation_shiny.html" class="pagination-link" aria-label="Data Upload">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

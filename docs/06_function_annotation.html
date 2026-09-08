@@ -390,7 +390,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -414,13 +414,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -441,17 +441,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#what-annotate_module-does" id="toc-what-annotate_module-does" class="nav-link active" data-scroll-target="#what-annotate_module-does"><span class="header-section-number">6.1</span> What <code>annotate_module()</code> Does</a></li>
+  <li><a href="#what-annotate_module-does" id="toc-what-annotate_module-does" class="nav-link active" data-scroll-target="#what-annotate_module-does"><span class="header-section-number">6.1</span> What <code>annotate_module()</code> Does</a>
+  <ul class="collapse">
+  <li><a href="#fast-mode-mode-fast" id="toc-fast-mode-mode-fast" class="nav-link" data-scroll-target="#fast-mode-mode-fast"><span class="header-section-number">6.1.1</span> Fast mode (<code>mode = "fast"</code>)</a></li>
+  <li><a href="#advanced-mode-mode-advanced" id="toc-advanced-mode-mode-advanced" class="nav-link" data-scroll-target="#advanced-mode-mode-advanced"><span class="header-section-number">6.1.2</span> Advanced mode (<code>mode = "advanced"</code>)</a></li>
+  </ul></li>
   <li><a href="#key-parameters" id="toc-key-parameters" class="nav-link" data-scroll-target="#key-parameters"><span class="header-section-number">6.2</span> Key Parameters</a></li>
   <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage"><span class="header-section-number">6.3</span> Basic Usage</a></li>
   <li><a href="#result-interpretation" id="toc-result-interpretation" class="nav-link" data-scroll-target="#result-interpretation"><span class="header-section-number">6.4</span> Result Interpretation</a>
   <ul class="collapse">
   <li><a href="#module-interpretation-table" id="toc-module-interpretation-table" class="nav-link" data-scroll-target="#module-interpretation-table"><span class="header-section-number">6.4.1</span> Module interpretation table</a></li>
-  <li><a href="#literature-evidence-table" id="toc-literature-evidence-table" class="nav-link" data-scroll-target="#literature-evidence-table"><span class="header-section-number">6.4.2</span> Literature evidence table</a></li>
+  <li><a href="#supporting-evidence" id="toc-supporting-evidence" class="nav-link" data-scroll-target="#supporting-evidence"><span class="header-section-number">6.4.2</span> Supporting evidence</a></li>
+  <li><a href="#advanced-mode-verdicts" id="toc-advanced-mode-verdicts" class="nav-link" data-scroll-target="#advanced-mode-verdicts"><span class="header-section-number">6.4.3</span> Advanced-mode verdicts</a></li>
   </ul></li>
-  <li><a href="#common-issues" id="toc-common-issues" class="nav-link" data-scroll-target="#common-issues"><span class="header-section-number">6.5</span> Common Issues</a></li>
-  <li><a href="#practical-checks-before-running" id="toc-practical-checks-before-running" class="nav-link" data-scroll-target="#practical-checks-before-running"><span class="header-section-number">6.6</span> Practical Checks Before Running</a></li>
-  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">6.7</span> Next Step</a></li>
+  <li><a href="#interactive-html-reports" id="toc-interactive-html-reports" class="nav-link" data-scroll-target="#interactive-html-reports"><span class="header-section-number">6.5</span> Interactive HTML Reports</a>
+  <ul class="collapse">
+  <li><a href="#debate-traces" id="toc-debate-traces" class="nav-link" data-scroll-target="#debate-traces"><span class="header-section-number">6.5.1</span> Debate traces</a></li>
+  <li><a href="#synthesis-network" id="toc-synthesis-network" class="nav-link" data-scroll-target="#synthesis-network"><span class="header-section-number">6.5.2</span> Synthesis network</a></li>
+  </ul></li>
+  <li><a href="#sec-cross_module_synthesis" id="toc-sec-cross_module_synthesis" class="nav-link" data-scroll-target="#sec-cross_module_synthesis"><span class="header-section-number">6.6</span> Cross-Module Synthesis</a></li>
+  <li><a href="#practical-checks-before-running" id="toc-practical-checks-before-running" class="nav-link" data-scroll-target="#practical-checks-before-running"><span class="header-section-number">6.7</span> Practical Checks Before Running</a></li>
+  <li><a href="#common-issues" id="toc-common-issues" class="nav-link" data-scroll-target="#common-issues"><span class="header-section-number">6.8</span> Common Issues</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">6.9</span> Next Step</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/06_function_annotation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/06_function_annotation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -478,7 +489,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter describes <strong>Step 5</strong> of the FeatureMAP pipeline: annotating statistically supported modules with <code>annotate_module()</code>.</p>
+<p>This chapter describes <strong>Step 5</strong> of the FeatureMAP pipeline: annotating statistically supported modules with <code>annotate_module()</code>, and, optionally, integrating the annotated modules into a study-level picture with <code>synthesize_modules()</code>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -489,20 +500,55 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Prerequisites:</strong> Complete module identification with <code>identify_module()</code>and Make sure your <code>res</code> object is already at stage <code>"module_identified"</code>.</p>
+<p><strong>Prerequisites:</strong> Complete module identification with <code>identify_module()</code> and make sure your <code>res</code> object is already at stage <code>"module_identified"</code>.</p>
 </div>
 </div>
 <section id="what-annotate_module-does" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="what-annotate_module-does"><span class="header-section-number">6.1</span> What <code>annotate_module()</code> Does</h2>
-<p><code>annotate_module()</code> performs <strong>module-level biological interpretation</strong> for statistically supported modules in Step 4.</p>
-<p>This step integrates three sources of information:</p>
+<p><code>annotate_module()</code> performs <strong>module-level biological interpretation</strong> for the modules that passed the significance filter in Step 4.</p>
+<p>Regardless of the mode you choose, the function always starts from the same deterministic evidence, computed in R rather than by the language model:</p>
 <ol type="1">
-<li><p><strong>Metabolite annotation summary:</strong> Metabolites contained in each significant module are summarized using the selected reference namespace (<code>kegg</code> or <code>hmdb</code>).</p></li>
-<li><p><strong>Optional literature retrieval:</strong> Relevant PubMed articles are retrieved and ranked for the top metabolites in each module.</p></li>
-<li><p><strong>LLM-based interpretation:</strong> A language model synthesizes module-level interpretations including title, summary, confidence label, and reasoning.</p></li>
+<li><strong>Metabolite annotation:</strong> Metabolites of each significant module are annotated with class and pathway metadata from both HMDB and KEGG references.</li>
+<li><strong>Top and anchor metabolite selection:</strong> Module members are ranked by <code>0.7 * Importance + 0.3 * Node_freq</code>, and a Gaussian mixture model selects the leading metabolites that represent the module.</li>
+<li><strong>Module-level statistics:</strong> Signal concentration, KEGG and HMDB pathway coverage, global direction of change, and the endogenous/exogenous origin profile are computed.</li>
 </ol>
-<p>Only modules passing the significance cutoff (<code>p</code> or <code>fdr</code>) are annotated. This step converts statistically identified network modules into <strong>interpretable biological hypotheses</strong>.</p>
+<p>The interpretation itself is then produced by an LLM, in one of <strong>two modes</strong>.</p>
+<section id="fast-mode-mode-fast" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="fast-mode-mode-fast"><span class="header-section-number">6.1.1</span> Fast mode (<code>mode = "fast"</code>)</h3>
+<p>A two-call pipeline, and the recommended default:</p>
+<ol type="1">
+<li><strong>LLM call 1</strong> – from metabolite evidence only (no phenotype), the model returns <code>hypothesis_type</code>, <code>title</code> and <code>functional_summary</code>.</li>
+<li><strong>Optional PubMed retrieval</strong> – the module title and each top metabolite are searched separately; the retained articles are deduplicated by PMID.</li>
+<li><strong>LLM call 2</strong> – with the study context and the literature, the model returns <code>phenotype_relationship</code>, <code>confidence_label</code> and <code>rationale</code>.</li>
+</ol>
+</section>
+<section id="advanced-mode-mode-advanced" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="advanced-mode-mode-advanced"><span class="header-section-number">6.1.2</span> Advanced mode (<code>mode = "advanced"</code>)</h3>
+<p>A multi-agent debate pipeline that produces one row per surviving hypothesis instead of one row per module:</p>
+<ol type="1">
+<li><strong>P0 Proposer</strong> – generates 1–3 candidate biochemical hypotheses from the metabolite evidence only.</li>
+<li><strong>S1 Skeptic</strong> – challenges each hypothesis on biochemical, origin, species and biospecimen grounds, without seeing the phenotype or the literature.</li>
+<li><strong>P1 Proposer revision</strong> – keeps, modifies or drops each hypothesis.</li>
+<li><strong>S2 / P2</strong> – a second debate round runs only if revisions were made or major challenges remained unanswered.</li>
+<li><strong>Optional PubMed</strong> – anchor-metabolite and per-hypothesis title searches, retained for the arbiter only.</li>
+<li><strong>A0 Arbiter</strong> – delivers a final <code>accepted</code> / <code>rejected</code> verdict per hypothesis, with a confidence score and a residual-ambiguity note.</li>
+<li><strong>Optional synthesis</strong> – with <code>synthesize = TRUE</code>, accepted hypotheses from all modules are integrated across modules (see <a href="#sec-cross_module_synthesis" class="quarto-xref"><span>Section 6.6</span></a>).</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use <strong>fast mode</strong> for routine analyses and for a first look at your data: it is markedly cheaper and faster. Use <strong>advanced mode</strong> when a module is ambiguous, when you want to see the reasoning that supports or rejects an interpretation, or when you want a study-level synthesis across modules.</p>
+</div>
+</div>
 <hr>
+</section>
 </section>
 <section id="key-parameters" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="key-parameters"><span class="header-section-number">6.2</span> Key Parameters</h2>
@@ -528,7 +574,7 @@ Important
 <tr class="even">
 <td><code>p</code></td>
 <td style="text-align: right;"><code>"fdr"</code></td>
-<td>Column in <code>res$module_score</code> used for filtering</td>
+<td>Column in <code>res$module_score</code> used for filtering (<code>"p"</code> or <code>"fdr"</code>)</td>
 </tr>
 <tr class="odd">
 <td><code>pcutoff</code></td>
@@ -538,67 +584,82 @@ Important
 <tr class="even">
 <td><code>ref_data</code></td>
 <td style="text-align: right;"><code>NULL</code></td>
-<td>Optional functional reference annotation table</td>
+<td>Optional functional reference; a data frame with an <code>id</code> column, or a list with <code>hmdb</code> and <code>kegg</code> components</td>
 </tr>
 <tr class="odd">
+<td><code>mode</code></td>
+<td style="text-align: right;"><code>"fast"</code></td>
+<td><code>"fast"</code> (two-call pipeline) or <code>"advanced"</code> (multi-agent debate)</td>
+</tr>
+<tr class="even">
 <td><code>species</code></td>
 <td style="text-align: right;"><code>"human"</code></td>
 <td>Species context used in module interpretation</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>biospecimen</code></td>
 <td style="text-align: right;"><code>NULL</code></td>
-<td>Biospecimen context (e.g.&nbsp;plasma, serum, tissue)</td>
+<td>Biospecimen context (e.g.&nbsp;plasma, serum, CSF, tissue)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>phenotype</code></td>
 <td style="text-align: right;"><code>NULL</code></td>
 <td>Disease or phenotype context</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>pubmed</code></td>
 <td style="text-align: right;"><code>TRUE</code></td>
 <td>Whether to retrieve PubMed evidence</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>years</code></td>
 <td style="text-align: right;"><code>5</code></td>
-<td>Time window for literature search</td>
-</tr>
-<tr class="even">
-<td><code>top_paper</code></td>
-<td style="text-align: right;"><code>3</code></td>
-<td>Number of retained papers per metabolite</td>
+<td>Time window for the literature search</td>
 </tr>
 <tr class="odd">
-<td><code>min_similarity</code></td>
-<td style="text-align: right;"><code>0.6</code></td>
-<td>Embedding similarity cutoff used to filter literature</td>
-</tr>
-<tr class="even">
 <td><code>provider</code></td>
 <td style="text-align: right;"><code>"openai"</code></td>
-<td>LLM and embedding provider. Currently supported options include <code>"openai"</code>, <code>"gemini"</code>, and <code>"siliconflow"</code></td>
-</tr>
-<tr class="odd">
-<td><code>embed_model</code></td>
-<td style="text-align: right;"><code>"text-embedding-3-small"</code></td>
-<td>Embedding model used for literature ranking (model availability depends on the selected provider)</td>
+<td>LLM provider: <code>"openai"</code>, <code>"gemini"</code>, <code>"siliconflow"</code> or <code>"local"</code></td>
 </tr>
 <tr class="even">
 <td><code>llm_model</code></td>
 <td style="text-align: right;"><code>"gpt-4.1-mini"</code></td>
-<td>Language model used for module interpretation (model availability depends on the selected provider)</td>
+<td>Language model used for module interpretation</td>
 </tr>
 <tr class="odd">
 <td><code>NCBI_api_key</code></td>
 <td style="text-align: right;"><code>""</code></td>
-<td>NCBI Entrez API key for PubMed</td>
+<td>NCBI Entrez API key, used when <code>pubmed = TRUE</code></td>
 </tr>
 <tr class="even">
 <td><code>llm_api_key</code></td>
 <td style="text-align: right;"><code>""</code></td>
 <td>API key for the selected LLM provider</td>
+</tr>
+<tr class="odd">
+<td><code>base_url</code></td>
+<td style="text-align: right;"><code>NULL</code></td>
+<td>Custom API base URL; <strong>required</strong> when <code>provider = "local"</code></td>
+</tr>
+<tr class="even">
+<td><code>synthesize</code></td>
+<td style="text-align: right;"><code>FALSE</code></td>
+<td>Advanced mode only: run the cross-module synthesis agent after annotation</td>
+</tr>
+<tr class="odd">
+<td><code>synthesis_model</code></td>
+<td style="text-align: right;"><code>llm_model</code></td>
+<td>Model used by the synthesis agent</td>
+</tr>
+<tr class="even">
+<td><code>debate_html</code></td>
+<td style="text-align: right;"><code>FALSE</code></td>
+<td>Advanced mode only: export one chat-style debate trace per module</td>
+</tr>
+<tr class="odd">
+<td><code>html_dir</code></td>
+<td style="text-align: right;"><code>getwd()</code></td>
+<td>Directory for the advanced-mode HTML outputs</td>
 </tr>
 </tbody>
 </table>
@@ -612,7 +673,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If <code>ref_data = NULL</code>, FeatureMAP automatically loads the functional reference resource corresponding to the metabolite namespace used in earlier steps.</p>
+<p>If <code>ref_data = NULL</code>, FeatureMAP automatically loads the cached HMDB and KEGG functional and pathway references.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -626,13 +687,12 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>How to obtain an LLM API key</strong></p>
-<p>FeatureMAP currently supports <code>"openai"</code>, <code>"gemini"</code>, and <code>"siliconflow"</code> as LLM providers.<br>
-You can apply for an API key from the corresponding official platform:</p>
 <ul>
 <li>OpenAI: <a href="https://platform.openai.com/" class="uri">https://platform.openai.com/</a></li>
 <li>Gemini (Google AI Studio): <a href="https://ai.google.dev/aistudio" class="uri">https://ai.google.dev/aistudio</a></li>
 <li>SiliconFlow: <a href="https://siliconflow.cn/" class="uri">https://siliconflow.cn/</a></li>
 </ul>
+<p><code>provider = "local"</code> targets any OpenAI-compatible endpoint (for example a self-hosted vLLM server) and needs no key, only a <code>base_url</code>.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -646,7 +706,7 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>How to obtain a PubMed / NCBI API key</strong></p>
-<p>If you enable PubMed retrieval, you need to apply for an NCBI API key for higher request limits: <a href="https://account.ncbi.nlm.nih.gov/settings/" class="uri">https://account.ncbi.nlm.nih.gov/settings/</a></p>
+<p>If you enable PubMed retrieval, apply for an NCBI API key for higher request limits: <a href="https://account.ncbi.nlm.nih.gov/settings/" class="uri">https://account.ncbi.nlm.nih.gov/settings/</a></p>
 </div>
 </div>
 <hr>
@@ -654,45 +714,84 @@ Tip
 <section id="basic-usage" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">6.3</span> Basic Usage</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Database + LLM only</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Database + PubMed + LLM</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Fast mode</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Fast mode, no literature</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Advanced mode</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Local / self-hosted model</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="st">"fdr"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_data =</span> <span class="cn">NULL</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="st">"human"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype =</span> <span class="st">"disease phenotype"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider =</span> <span class="st">"openai"</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model =</span> <span class="st">"gpt-4.1-mini"</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key =</span> <span class="st">"your llm api key"</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>res_fast <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_data    =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"fast"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">species     =</span> <span class="st">"human"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype   =</span> <span class="st">"your disease phenotype"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed      =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">years       =</span> <span class="dv">5</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider    =</span> <span class="st">"openai"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model   =</span> <span class="st">"gpt-4.1-mini"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">NCBI_api_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"NCBI_API_KEY"</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key  =</span> <span class="fu">Sys.getenv</span>(<span class="st">"OPENAI_API_KEY"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="st">"fdr"</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_data =</span> <span class="cn">NULL</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="st">"human"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>res_fast <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"fast"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species     =</span> <span class="st">"human"</span>,</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype =</span> <span class="st">"disease phenotype"</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">years =</span> <span class="dv">5</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">top_paper =</span> <span class="dv">3</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_similarity =</span> <span class="fl">0.6</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider =</span> <span class="st">"openai"</span>,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">embed_model =</span> <span class="st">"text-embedding-3-small"</span>,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model =</span> <span class="st">"gpt-4.1-mini"</span>,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">NCBI_api_key =</span> <span class="st">"your ncbi api key"</span>,</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key =</span> <span class="st">"your llm api key"</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype   =</span> <span class="st">"your disease phenotype"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed      =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider    =</span> <span class="st">"openai"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model   =</span> <span class="st">"gpt-4.1-mini"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"OPENAI_API_KEY"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res_adv <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"advanced"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species     =</span> <span class="st">"human"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype   =</span> <span class="st">"your disease phenotype"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed      =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">years       =</span> <span class="dv">5</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">debate_html =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">synthesize  =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">synthesis_model =</span> <span class="st">"gpt-4.1"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">html_dir    =</span> <span class="st">"featuremap_html"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider    =</span> <span class="st">"openai"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model   =</span> <span class="st">"gpt-4.1"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">NCBI_api_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"NCBI_API_KEY"</span>),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key  =</span> <span class="fu">Sys.getenv</span>(<span class="st">"OPENAI_API_KEY"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res_fast <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"fast"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species     =</span> <span class="st">"human"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenotype   =</span> <span class="st">"your disease phenotype"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pubmed      =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider    =</span> <span class="st">"local"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model   =</span> <span class="st">"your-local-model-name"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">base_url    =</span> <span class="st">"http://127.0.0.1:8000"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">NCBI_api_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"NCBI_API_KEY"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -708,118 +807,292 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>Provide <code>species</code>, <code>biospecimen</code>, and <code>phenotype</code> whenever possible</li>
-<li>Use API keys from environment variables rather than hard-coding them</li>
+<li>Provide <code>species</code>, <code>biospecimen</code> and <code>phenotype</code> whenever possible: they are what turns a biochemical description into a study-specific interpretation.</li>
+<li>Keep API keys in environment variables rather than hard-coding them.</li>
+<li>Assign the result to a <strong>new object</strong> (<code>res_fast</code>, <code>res_adv</code>) if you want to compare both modes on the same <code>res</code>.</li>
 </ul>
 </div>
 </div>
+<hr>
 </section>
 <section id="result-interpretation" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="result-interpretation"><span class="header-section-number">6.4</span> Result Interpretation</h2>
 <p>After successful annotation:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>stage</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "module_annotated"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>title</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "Nucleotide Metabolism and Cofactor-Linked Energy Transfer"</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>summary</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "This module primarily represents biochemical processes centered on </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># nucleotide metabolism, including purine nucleotide synthesis and turnover, </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># as indicated by the high importance and robustness of purine nucleotides such </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># as phosphoribosyl-ATP, ADP, and ATP. The presence of ribose phosphate derivatives </span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># and organooxygen compounds supports active ribose phosphate metabolism, which </span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># is essential for nucleotide biosynthesis. Additionally, the module includes </span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># pyridines and derivatives like pyridoxamine 5'-phosphate, highlighting involvement </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># in coenzyme-dependent amino acid metabolism and transamination reactions. The </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># medium structural stability and low signal concentration suggest a coordinated </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># pathway-level shift rather than a hub-driven signal. Fatty acyls with high </span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># importance also suggest ancillary roles in acyl-CoA metabolism linked to energy </span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># homeostasis. The presence of tetrapyrroles and molybdenum cofactors further </span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># indicates involvement in redox and enzymatic cofactor functions. Overall, this </span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># module reflects integrated nucleotide biosynthesis and cofactor-mediated metabolic </span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># energy processes."</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>confidence_label</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "high"</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>module_function<span class="sc">$</span>rationale</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "The inferred function is biologically plausible in humans and detectable </span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># in plasma, where nucleotide metabolites and cofactors circulate. These pathways </span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># are relevant to systemic metabolic regulation and could be linked to age-related </span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># metabolic changes, supporting high confidence."</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_top_metabolite_pmids <span class="sc">%&gt;%</span> </span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>       <span class="fu">arrange</span>(PMID_rank))</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#   Module Module_label Compound_ID                                    Compound_name PMID_rank     PMID</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># 1      1      module1      C20978                                    Glucoselysine         1 38879006</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 2      1      module1      C00647                           Pyridoxamine phosphate         1 38846080</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co"># 3      1      module1      C02739                      1-(5-Phospho-D-ribosyl)-ATP        NA     &lt;NA&gt;</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 4      1      module1      C11039 2'-Deoxy-5-hydroxymethylcytidine-5'-triphosphate        NA     &lt;NA&gt;</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 5      1      module1      C01244               3,5-Diiodo-4-hydroxyphenylpyruvate        NA     &lt;NA&gt;</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 6      1      module1      C15761                                   Concanamycin A        NA     &lt;NA&gt;</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">#                                                                                                                                             title</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 Glucoselysine, a unique advanced glycation end-product of the polyol pathway and its association with vascular complications in type 2 diabetes.</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 2                 Why pyridoxal phosphate could be a functional predecessor of thiamine pyrophosphate and speculations on a primordial metabolism.</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 3                                                                                                                                             &lt;NA&gt;</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 4                                                                                                                                             &lt;NA&gt;</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 5                                                                                                                                             &lt;NA&gt;</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co"># 6                                                                                                                                             &lt;NA&gt;</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">#   score_embed</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 1   0.6432722</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co"># 2   0.6080499</span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co"># 3          NA</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># 4          NA</span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co"># 5          NA</span></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co"># 6          NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>res_fast<span class="sc">$</span>stage</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "module_annotated"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res_fast)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="module-interpretation-table" class="level3" data-number="6.4.1">
 <h3 data-number="6.4.1" class="anchored" data-anchor-id="module-interpretation-table"><span class="header-section-number">6.4.1</span> Module interpretation table</h3>
-<p><code>module_function</code> contains the final module-level interpretation generated by the LLM. Important fields include:</p>
-<ul>
-<li><code>module_id</code> – the module ID identified by previous step</li>
-<li><code>title</code> – a concise functional label summarizing the dominant biological theme of the module</li>
-<li><code>summary</code> – a paragraph-level interpretation of the module based on metabolite composition, network context, and optional literature evidence</li>
-<li><code>confidence_label</code> – a qualitative confidence level for the interpretation</li>
-<li><code>rationale</code> – a short explanation of why the inferred function is biologically plausible in the specified study context</li>
-<li><code>raw_response</code> – the original LLM response retained for transparency</li>
-</ul>
-<p>This table provides a concise interpretation of each statistically supported module.</p>
-</section>
-<section id="literature-evidence-table" class="level3" data-number="6.4.2">
-<h3 data-number="6.4.2" class="anchored" data-anchor-id="literature-evidence-table"><span class="header-section-number">6.4.2</span> Literature evidence table</h3>
-<p>When <code>pubmed = TRUE</code>, FeatureMAP also returns ranked PubMed evidence (<code>module_top_metabolite_pmids</code>) for top metabolites in each module.</p>
-<ul>
-<li><code>Module</code> and <code>Module_label</code> – the module being annotated</li>
-<li><code>Compound_ID</code> and <code>Compound_name</code> – the metabolite used for literature retrieval</li>
-<li><code>PMID_rank</code> – the rank of the selected paper for that metabolite</li>
-<li><code>PMID</code> – PubMed identifier</li>
-<li><code>title</code> – article title</li>
-<li><code>score_embed</code> – semantic relevance score used for literature ranking</li>
-</ul>
-<p>Higher <code>score_embed</code> values indicate stronger semantic relevance between the literature and the module context.</p>
-</section>
-</section>
-<section id="common-issues" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="common-issues"><span class="header-section-number">6.5</span> Common Issues</h2>
-<ul>
-<li><p><strong>PubMed retrieval is slow</strong> Start with fewer modules, a shorter <code>years</code> window, or <code>pubmed = FALSE</code> for validation.</p></li>
-<li><p><strong>No useful literature retained</strong> Relax <code>min_similarity</code>, increase <code>years</code>, or provide a more specific <code>phenotype</code>.</p></li>
-<li><p><strong>Provider/model mismatch</strong> Make sure the selected <code>provider</code>, <code>embed_model</code>, and <code>llm_model</code> are compatible.</p></li>
-</ul>
-</section>
-<section id="practical-checks-before-running" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="practical-checks-before-running"><span class="header-section-number">6.6</span> Practical Checks Before Running</h2>
+<p><code>module_function</code> contains the final module-level interpretation. In fast mode it has one row per annotated module; in advanced mode one row per accepted hypothesis (or a single summary row when all hypotheses of a module were rejected).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_score)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(res<span class="sc">$</span>module_score<span class="sc">$</span>fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>res_fast<span class="sc">$</span>module_function<span class="sc">$</span>title</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>res_fast<span class="sc">$</span>module_function <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(module_id, hypothesis_type, title, confidence_label) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>res_fast<span class="sc">$</span>module_function<span class="sc">$</span>functional_summary[<span class="dv">1</span>]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>res_fast<span class="sc">$</span>module_function<span class="sc">$</span>phenotype_relationship[<span class="dv">1</span>]</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>If this count is zero, it is better to revisit Step 4 before trying module annotation.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>module_id</code></td>
+<td>Module ID from Step 4 (<code>"M1"</code>, <code>"M2"</code>, …)</td>
+</tr>
+<tr class="even">
+<td><code>annotation_mode</code></td>
+<td><code>"fast"</code> or <code>"advanced"</code></td>
+</tr>
+<tr class="odd">
+<td><code>hypothesis_id</code>, <code>verdict_status</code></td>
+<td>Advanced mode only: hypothesis ID (<code>"H1"</code>, …) and <code>accepted</code> / <code>rejected</code></td>
+</tr>
+<tr class="even">
+<td><code>hypothesis_type</code></td>
+<td><code>Host-Endogenous</code>, <code>Microbiome-Derived</code>, <code>Diet-Derived</code>, <code>Xenobiotic / Exogenous</code> or <code>Host–Microbiome</code></td>
+</tr>
+<tr class="odd">
+<td><code>title</code></td>
+<td>Concise functional label for the module</td>
+</tr>
+<tr class="even">
+<td><code>functional_summary</code></td>
+<td>Paragraph-level biochemical interpretation, written without the phenotype</td>
+</tr>
+<tr class="odd">
+<td><code>anchor_metabolites</code>, <code>anchor_metabolite_ids</code></td>
+<td>Metabolites the interpretation is anchored on</td>
+</tr>
+<tr class="even">
+<td><code>top_metabolites</code>, <code>top_metabolite_ids</code></td>
+<td>Leading metabolites of the module</td>
+</tr>
+<tr class="odd">
+<td><code>class_names</code></td>
+<td>Dominant compound classes</td>
+</tr>
+<tr class="even">
+<td><code>phenotype_relationship</code></td>
+<td>How the module relates to the study phenotype</td>
+</tr>
+<tr class="odd">
+<td><code>confidence_label</code></td>
+<td><code>high</code>, <code>medium</code> or <code>low</code></td>
+</tr>
+<tr class="even">
+<td><code>rationale</code></td>
+<td>Why the inferred function is plausible in the study context</td>
+</tr>
+<tr class="odd">
+<td><code>global_direction</code></td>
+<td>Overall direction of change across the module</td>
+</tr>
+<tr class="even">
+<td><code>origin_endogenous_frac</code>, <code>origin_exogenous_frac</code></td>
+<td>Endogenous / exogenous origin profile</td>
+</tr>
+<tr class="odd">
+<td><code>top_kegg_pathways</code>, <code>top_hmdb_pathways</code></td>
+<td>Best-covered pathways</td>
+</tr>
+<tr class="even">
+<td><code>pubmed_pmids</code></td>
+<td>PMIDs of the retained articles</td>
+</tr>
+</tbody>
+</table>
+<p>A common reporting pattern is to join the interpretation with the module statistics:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>res_fast<span class="sc">$</span>module_function <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(res_fast<span class="sc">$</span>module_score, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"module_id"</span> <span class="ot">=</span> <span class="st">"Module"</span>)) <span class="ot">-&gt;</span> module_report</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(module_report, <span class="st">"module_function_report.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
-<section id="next-step" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="next-step"><span class="header-section-number">6.7</span> Next Step</h2>
-<p>Module annotation is the last step of the current R-package tutorial workflow. If needed, you can next inspect <code>res$module_function</code> and the PubMed evidence tables for downstream reporting or visualization.</p>
+<section id="supporting-evidence" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="supporting-evidence"><span class="header-section-number">6.4.2</span> Supporting evidence</h3>
+<p>All evidence used for the annotation is kept in <code>res$module_evidence</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res_fast<span class="sc">$</span>module_evidence)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "class_coverage" "pathway_coverage" "pubmed_evidence" "top_metabolites"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     "anchor_metabolites" "debate_trace" "debate_html_payload"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res_fast<span class="sc">$</span>module_evidence<span class="sc">$</span>class_coverage)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res_fast<span class="sc">$</span>module_evidence<span class="sc">$</span>pathway_coverage<span class="sc">$</span>kegg)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res_fast<span class="sc">$</span>module_evidence<span class="sc">$</span>pathway_coverage<span class="sc">$</span>hmdb)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res_fast<span class="sc">$</span>module_evidence<span class="sc">$</span>top_metabolites)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res_fast<span class="sc">$</span>module_evidence<span class="sc">$</span>pubmed_evidence)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>class_coverage</code> – compound class composition per module</li>
+<li><code>pathway_coverage$hmdb</code> / <code>pathway_coverage$kegg</code> – pathway ID, name, coverage and number of hits per module</li>
+<li><code>top_metabolites</code> / <code>anchor_metabolites</code> – the metabolites shown to the model, with their ranks</li>
+<li><code>pubmed_evidence</code> – retained PMIDs, the evidence JSON and the phenotype-literature support per module (and per hypothesis in advanced mode)</li>
+<li><code>debate_trace</code> – advanced mode only: raw responses of every agent (<code>raw_response_p0</code>, <code>raw_response_s1</code>, <code>raw_response_arbiter</code>, …), the debate digest, and the counts of proposed, surviving, accepted and rejected hypotheses</li>
+<li><code>debate_html_payload</code> – advanced mode only: the data needed to re-export the debate pages</li>
+</ul>
+</section>
+<section id="advanced-mode-verdicts" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="advanced-mode-verdicts"><span class="header-section-number">6.4.3</span> Advanced-mode verdicts</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>res_adv<span class="sc">$</span>module_function <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(module_id, verdict_status)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>res_adv<span class="sc">$</span>module_evidence<span class="sc">$</span>debate_trace <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(module_id, n_proposed, n_survived_debate, n_accepted, n_rejected, residual_ambiguity)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="interactive-html-reports" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="interactive-html-reports"><span class="header-section-number">6.5</span> Interactive HTML Reports</h2>
+<section id="debate-traces" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="debate-traces"><span class="header-section-number">6.5.1</span> Debate traces</h3>
+<p>With <code>debate_html = TRUE</code>, advanced mode writes one chat-style page per module to <code>html_dir</code>, named <code>debate_&lt;module_id&gt;.html</code>. You can also re-export them later from a saved result, without calling the LLM again:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all modules</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">export_debate_html</span>(<span class="at">res =</span> res_adv, <span class="at">html_dir =</span> <span class="st">"featuremap_html"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># a single module</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">export_debate_html</span>(<span class="at">res =</span> res_adv, <span class="at">module_id =</span> <span class="st">"M1"</span>, <span class="at">html_dir =</span> <span class="st">"featuremap_html"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Each page shows the Proposer, Skeptic and Arbiter turns in order, so you can follow exactly why a hypothesis was kept, revised or rejected.</p>
+</section>
+<section id="synthesis-network" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="synthesis-network"><span class="header-section-number">6.5.2</span> Synthesis network</h3>
+<p>When <code>synthesize = TRUE</code>, an interactive network page <code>synthesis_network.html</code> is written to <code>html_dir</code> automatically. To re-export it from a saved result:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">export_synthesis_network_html</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res_adv,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">html_dir    =</span> <span class="st">"featuremap_html"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_file =</span> <span class="st">"synthesis_network.html"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>generate_synthesis_network_html()</code> does the same from a bare <code>res$module_synthesis</code> list, which is useful when you keep only the synthesis object:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">generate_synthesis_network_html</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">synthesis     =</span> res_adv<span class="sc">$</span>module_synthesis,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">study_context =</span> res_adv<span class="sc">$</span>study_context,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_dir    =</span> <span class="st">"featuremap_html"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">output_file   =</span> <span class="st">"synthesis_network.html"</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="sec-cross_module_synthesis" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="sec-cross_module_synthesis"><span class="header-section-number">6.6</span> Cross-Module Synthesis</h2>
+<p><code>synthesize_modules()</code> takes the accepted hypotheses of <strong>all</strong> annotated modules and integrates them into one picture of the study. It is run automatically by <code>annotate_module(mode = "advanced", synthesize = TRUE)</code>, and can also be called on its own, for example to re-run the synthesis with a stronger model:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>res_adv <span class="ot">&lt;-</span> <span class="fu">synthesize_modules</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res           =</span> res_adv,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">study_context =</span> <span class="fu">list</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">species     =</span> <span class="st">"human"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">biospecimen =</span> <span class="st">"plasma"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">phenotype   =</span> <span class="st">"your disease phenotype"</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">provider    =</span> <span class="st">"openai"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_model   =</span> <span class="st">"gpt-4.1"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">llm_api_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"OPENAI_API_KEY"</span>),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_tokens  =</span> <span class="dv">4000</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">temperature =</span> <span class="dv">0</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>synthesize_modules()</code> requires <strong>advanced mode</strong> output. Fast mode produces one flat annotation per module and no hypothesis-level verdicts, so it cannot be synthesized this way. If <code>study_context</code> is <code>NULL</code>, it is taken from <code>res$study_context</code>.</p>
+<p>If only one module has accepted hypotheses, the LLM call is skipped and <code>res$module_synthesis</code> is returned with the deterministic parts only.</p>
+</div>
+</div>
+<p>The synthesis combines two very different kinds of links:</p>
+<ul>
+<li><strong>Biology links</strong> are proposed by the LLM from hypothesis titles and summaries only, and are deliberately sparse.</li>
+<li><strong>Biochemical links</strong> are computed in R from direct MRN edges between top metabolites and from pathway ID overlap, so they are fully deterministic.</li>
+</ul>
+<p>Results are stored in <code>res$module_synthesis</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res_adv<span class="sc">$</span>module_synthesis)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "nodes" "clusters" "biology_links" "biochemical_links"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     "relationships_sparse" "relationships" "module_relationships"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     "summary" "raw_response"</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>res_adv<span class="sc">$</span>module_synthesis<span class="sc">$</span>clusters</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>res_adv<span class="sc">$</span>module_synthesis<span class="sc">$</span>module_relationships</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(res_adv<span class="sc">$</span>module_synthesis<span class="sc">$</span>summary)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>nodes</code> – one row per accepted hypothesis, with <code>node_id</code> (<code>"&lt;module_id&gt;::&lt;hypothesis_id&gt;"</code>) and its assigned cluster</li>
+<li><code>clusters</code> – thematic clusters (<code>cluster_id</code>, <code>cluster_theme</code>, member <code>node_ids</code>)</li>
+<li><code>biology_links</code> / <code>relationships_sparse</code> – LLM-proposed cross-module relationships with rationales</li>
+<li><code>biochemical_links</code> – MRN-edge and pathway-overlap evidence between hypotheses</li>
+<li><code>relationships</code> – the merged relationship table used to draw the network</li>
+<li><code>module_relationships</code> – module-pair summary, with <code>relation_type</code> being <code>biochemical</code>, <code>biology</code>, <code>both</code> or <code>none</code></li>
+<li><code>summary</code> – the narrative integrating clusters, cross-module links and the phenotype</li>
+<li><code>raw_response</code> – the original LLM response, kept for transparency</li>
+</ul>
+<hr>
+</section>
+<section id="practical-checks-before-running" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="practical-checks-before-running"><span class="header-section-number">6.7</span> Practical Checks Before Running</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>module_score)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(res<span class="sc">$</span>module_score<span class="sc">$</span>fdr <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(res<span class="sc">$</span>module_score<span class="sc">$</span>p <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>If no module passes your threshold, <code>annotate_module()</code> returns an empty <code>module_function</code> and warns you. Either relax the filter (<code>p = "p"</code> instead of <code>"fdr"</code>) or revisit Step 4 before trying module annotation.</p>
+</section>
+<section id="common-issues" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="common-issues"><span class="header-section-number">6.8</span> Common Issues</h2>
+<ul>
+<li><p><strong>No module annotated.</strong> Nothing passed <code>p</code>/<code>pcutoff</code>. Switch to <code>p = "p"</code>, raise <code>pcutoff</code>, or revisit the module identification settings.</p></li>
+<li><p><strong>PubMed retrieval is slow.</strong> Start with a shorter <code>years</code> window, fewer significant modules, or <code>pubmed = FALSE</code> while you validate the workflow.</p></li>
+<li><p><strong>Advanced mode is expensive.</strong> Each module costs several LLM calls. Validate the pipeline in fast mode first, then re-run the modules you care about in advanced mode.</p></li>
+<li><p><strong><code>synthesize = TRUE</code> was ignored.</strong> Synthesis only runs in advanced mode; in fast mode a warning is emitted and the step is skipped.</p></li>
+<li><p><strong>Provider/model mismatch.</strong> Make sure <code>llm_model</code> exists for the selected <code>provider</code>, and remember that <code>provider = "local"</code> requires a non-empty <code>base_url</code>.</p></li>
+</ul>
+</section>
+<section id="next-step" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="next-step"><span class="header-section-number">6.9</span> Next Step</h2>
+<p>Module annotation is the last step of the R-package workflow. <code>res$module_function</code>, <code>res$module_evidence</code> and <code>res$module_synthesis</code>, together with the exported HTML pages, contain everything you need for downstream reporting.</p>
 <p>If you want to continue with the interactive interface, move to <a href="./10_shinyapp_installation.html">Shiny App Installation</a> to start the Shiny tutorial.</p>
 
 

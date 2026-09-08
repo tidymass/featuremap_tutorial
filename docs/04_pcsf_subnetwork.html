@@ -390,7 +390,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -414,13 +414,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -497,9 +497,9 @@ Important
 <p><code>extract_subnetwork()</code> integrates the refined feature annotations from Step 2 with a metabolic reaction network (MRN) and applies repeated PCSF optimization to identify a robust subnetwork.</p>
 <p>At a high level, this step does the following:</p>
 <ol type="1">
-<li><p><strong>Compute feature importance:</strong> Feature-level statistical evidence is summarized from <code>condition</code> and <code>pvalue</code> and used to prioritize annotated metabolites.</p></li>
-<li><p><strong>Build feature–metabolite mappings:</strong> The refined annotation table is converted into feature–metabolite pairs that connect observed LC–MS features to candidate metabolites in the network.</p></li>
-<li><p><strong>Run repeated PCSF optimization:</strong> PCSF is run multiple times with random edge perturbation to reduce sensitivity to a single optimization result.</p></li>
+<li><p><strong>Compute feature importance:</strong> Feature-level statistical evidence is summarized from <code>condition</code> and <code>pvalue</code>. Both are min–max rescaled and combined as <code>importance = sqrt(score_fc * score_p)</code>, and the result is written back into <code>res$feature_table</code>.</p></li>
+<li><p><strong>Build feature–metabolite mappings:</strong> The refined annotation table is projected onto MRN metabolite nodes, using <code>HMDB.ID</code> first and <code>KEGG.ID</code> as fallback, so that observed LC–MS features become terminal nodes attached to candidate metabolites.</p></li>
+<li><p><strong>Run repeated PCSF optimization:</strong> PCSF is run <code>times</code> times with relative Gaussian perturbation of the edge costs, so that the result does not depend on a single optimization run.</p></li>
 <li><p><strong>Aggregate robust network components:</strong> Node and edge frequencies are recorded across repeated runs, and the final subnetwork is constructed as the union of recurrent PCSF solutions.</p></li>
 <li><p><strong>Refine annotation using network support:</strong> Feature–metabolite mappings are updated based on network evidence, producing <code>anno_feature_table2</code>.</p></li>
 </ol>
@@ -539,37 +539,37 @@ Important
 <tr class="even">
 <td><code>mrn</code></td>
 <td style="text-align: right;"><code>NULL</code></td>
-<td>Optional custom metabolic reaction network (<code>igraph</code>); automatically loaded if <code>NULL</code></td>
+<td>Optional custom metabolic reaction network (<code>tidygraph::tbl_graph</code>); automatically loaded if <code>NULL</code></td>
 </tr>
 <tr class="odd">
-<td><code>times</code></td>
-<td style="text-align: right;"><code>100</code></td>
-<td>Number of repeated PCSF runs</td>
-</tr>
-<tr class="even">
 <td><code>workers</code></td>
 <td style="text-align: right;"><code>4</code></td>
 <td>Number of parallel workers</td>
 </tr>
+<tr class="even">
+<td><code>times</code></td>
+<td style="text-align: right;"><code>100</code></td>
+<td>Number of repeated PCSF runs</td>
+</tr>
 <tr class="odd">
 <td><code>b</code></td>
-<td style="text-align: right;"><code>40</code></td>
+<td style="text-align: right;"><code>20</code></td>
 <td>Prize scaling factor in PCSF</td>
 </tr>
 <tr class="even">
 <td><code>mu</code></td>
 <td style="text-align: right;"><code>1e-4</code></td>
-<td>Hub penalty coefficient in PCSF</td>
+<td>Hub penalty coefficient; non-terminal nodes receive a negative prize proportional to their degree</td>
 </tr>
 <tr class="odd">
 <td><code>w</code></td>
-<td style="text-align: right;"><code>30</code></td>
+<td style="text-align: right;"><code>25</code></td>
 <td>Dummy edge cost in PCSF</td>
 </tr>
 <tr class="even">
 <td><code>r</code></td>
-<td style="text-align: right;"><code>0.30</code></td>
-<td>Magnitude of random edge perturbation across repeated runs</td>
+<td style="text-align: right;"><code>0.20</code></td>
+<td>Relative Gaussian edge-cost noise across repeated runs</td>
 </tr>
 <tr class="odd">
 <td><code>grid_tune</code></td>
@@ -577,17 +577,35 @@ Important
 <td>Whether to tune <code>b</code> and <code>w</code> over a parameter grid</td>
 </tr>
 <tr class="even">
-<td><code>b_grid</code>, <code>w_grid</code></td>
-<td style="text-align: right;">sequences</td>
-<td>Candidate values of <code>b</code> and <code>w</code> when grid tuning is enabled</td>
+<td><code>b_grid</code></td>
+<td style="text-align: right;"><code>seq(20, 40, by = 5)</code></td>
+<td>Candidate values of <code>b</code> when grid tuning is enabled</td>
 </tr>
 <tr class="odd">
+<td><code>w_grid</code></td>
+<td style="text-align: right;"><code>seq(20, 40, by = 5)</code></td>
+<td>Candidate values of <code>w</code> when grid tuning is enabled</td>
+</tr>
+<tr class="even">
 <td><code>times_tune</code></td>
 <td style="text-align: right;"><code>10</code></td>
 <td>Number of repeated runs for each <code>(b, w)</code> combination during tuning</td>
 </tr>
 </tbody>
 </table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The MRN is loaded automatically from the cached <code>mrn</code> resource when <code>mrn = NULL</code>, and is stored in <code>res$mrn</code> so that later steps reuse exactly the same network.</p>
+</div>
+</div>
 </section>
 <section id="basic-usage" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">4.3</span> Basic Usage</h2>
@@ -595,17 +613,29 @@ Important
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># res is the output from Step 2 (annotate_feature)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">extract_subnetwork</span>(</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature =</span> <span class="st">"sig"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mrn =</span> <span class="cn">NULL</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">100</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">b =</span> <span class="dv">40</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fl">1e-4</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="dv">30</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">r =</span> <span class="fl">0.30</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_tune =</span> <span class="cn">FALSE</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature =</span> <span class="st">"all"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mrn =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">100</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">b =</span> <span class="dv">20</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fl">1e-4</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="dv">25</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">r =</span> <span class="fl">0.20</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_tune =</span> <span class="cn">FALSE</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use <code>feature = "all"</code> when you want the network to see the full statistical landscape, and <code>feature = "sig"</code> together with <code>pcutoff</code> when you prefer to seed the network only with significantly changed features.</p>
+</div>
 </div>
 </section>
 <section id="optional-grid-tuning-for-b-and-w" class="level2" data-number="4.4">
@@ -614,15 +644,14 @@ Important
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">extract_subnetwork</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res =</span> res,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature =</span> <span class="st">"sig"</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff =</span> <span class="fl">0.05</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">100</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_tune =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">b_grid =</span> <span class="fu">seq</span>(<span class="dv">20</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">w_grid =</span> <span class="fu">seq</span>(<span class="dv">25</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">times_tune =</span> <span class="dv">10</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">feature =</span> <span class="st">"all"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">4</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">100</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_tune =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">b_grid =</span> <span class="fu">seq</span>(<span class="dv">20</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">w_grid =</span> <span class="fu">seq</span>(<span class="dv">20</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">times_tune =</span> <span class="dv">10</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>When <code>grid_tune = TRUE</code>, FeatureMAP records:</p>
 <ul>
@@ -637,56 +666,74 @@ Important
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>stage</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "subnetwork_extracted"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="extracted-pcsf-subnetwork" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="extracted-pcsf-subnetwork"><span class="header-section-number">4.5.1</span> Extracted PCSF subnetwork</h3>
-<p>The extracted metabolic subnetwork is stored as an <code>igraph</code> object:</p>
+<p>The extracted metabolic subnetwork is stored as an <code>igraph</code> object, where metabolite nodes are named by their InChI string and feature nodes by their <code>variable_id</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>pcsf_subnet</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># IGRAPH c444970 UNWB 1931 3811 -- </span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># + attr: name (v/c), prize (v/n), type (v/c), freq (e/n), weight (e/n)</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># + edges from c444970 (vertex names):</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     InChI=1S/C10H15N5O10P2/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(24-10)1-23-27(21,22)25-26(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># [2] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     InChI=1S/C10H16N5O13P3/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(26-10)1-25-30(21,22)28-31(23,24)27-29(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H,23,24)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># [3] InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2--</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     M523T878_POS</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># + ... omitted several edges</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Node attribute <code>type</code> is <code>"Terminal"</code> for LC–MS feature nodes and <code>"Steiner"</code> for metabolite nodes; <code>prize</code> stores the node appearance frequency, and edge attributes <code>freq</code> / <code>weight</code> store how often each edge was recovered across the repeated runs. In <code>res$node_frequency</code>, the <code>type</code> column instead distinguishes <code>"feature"</code> from <code>"metabolite"</code> nodes.</p>
 </section>
 <section id="network-refined-annotation-table" class="level3" data-number="4.5.2">
 <h3 data-number="4.5.2" class="anchored" data-anchor-id="network-refined-annotation-table"><span class="header-section-number">4.5.2</span> Network-refined annotation table</h3>
 <p>After PCSF extraction, FeatureMAP updates the feature–metabolite annotation table by incorporating network evidence:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>anno_feature_table2)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   variable_id           Compound_name KEGG_ID                                               INCHI_ID</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M105T384_POS                 Nitrate  C00244                              InChI=1S/NO3/c2-1(3)4/q-1</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 M105T384_POS            Benzoic acid  C00539     InChI=1S/C7H6O2/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H,8,9)</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 M105T384_POS 2,4,6-Trihydroxytoluene  C16401 InChI=1S/C7H8O3/c1-4-6(9)2-5(8)3-7(4)10/h2-3,8-10H,1H3</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 M105T384_POS   2-Hydroxybenzaldehyde  C06202           InChI=1S/C7H6O2/c8-5-6-3-1-2-4-7(6)9/h1-5,9H</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 M105T384_POS 2,4,5-Trihydroxytoluene  C18317 InChI=1S/C7H8O3/c1-4-2-6(9)7(10)3-5(4)8/h2-3,8-10H,1H3</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 M105T384_POS   3-hydroxybenzaldehyde  C03067           InChI=1S/C7H6O2/c8-5-6-2-1-3-7(9)4-6/h1-5,9H</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   score_norm edge_freq weighted_anno_score confidence_rank</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 0.09090909      0.74           0.2856364               1</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 0.09090909      0.24           0.1356364               2</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 0.09090909      0.24           0.1356364               2</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 0.09090909      0.22           0.1296364               3</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 0.09090909      0.22           0.1296364               3</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 0.09090909      0.20           0.1236364               4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(res<span class="sc">$</span>anno_feature_table2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>anno_feature_table2)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p><code>anno_feature_table2</code> keeps all columns of <code>anno_feature_table1</code> for the surviving rows, and adds:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>INCHI_ID</code></td>
+<td>InChI of the metabolite node in the MRN</td>
+</tr>
+<tr class="even">
+<td><code>edge_freq</code></td>
+<td>How often the feature–metabolite edge appeared across the repeated PCSF runs</td>
+</tr>
+<tr class="odd">
+<td><code>weighted_anno_score</code></td>
+<td>Combination of <code>score_norm</code> and <code>edge_freq</code>, using an adaptive edge weight bounded between 0.1 and 0.3</td>
+</tr>
+<tr class="even">
+<td><code>confidence_rank</code></td>
+<td>Rank of the candidate within each feature, <code>1</code> being the most confident</td>
+</tr>
+<tr class="odd">
+<td><code>importance</code></td>
+<td>Feature-level statistical importance carried over from <code>res$feature_table</code></td>
+</tr>
+</tbody>
+</table>
 <p>Compared with <code>anno_feature_table1</code>, this table incorporates network support from the extracted subnetwork. Metabolite candidates that are more consistently supported by the extracted metabolic network receive higher <code>weighted_anno_score</code> and better <code>confidence_rank</code>.</p>
+<p>A quick way to see how much the network narrowed the candidate space:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(res<span class="sc">$</span>anno_feature_table1<span class="sc">$</span>variable_id))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(res<span class="sc">$</span>anno_feature_table2<span class="sc">$</span>variable_id))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="other-result-components" class="level3" data-number="4.5.3">
 <h3 data-number="4.5.3" class="anchored" data-anchor-id="other-result-components"><span class="header-section-number">4.5.3</span> Other Result Components</h3>
 <ul>
+<li><code>res$feature_table</code>: now contains <code>score_fc</code>, <code>score_p</code> and <code>importance</code></li>
+<li><code>res$mrn</code>: the metabolic reaction network actually used</li>
 <li><code>res$node_frequency</code>: node appearance frequency across repeated runs</li>
 <li><code>res$edge_frequency</code>: edge appearance frequency across repeated runs</li>
 <li><code>res$tuning_grid</code>, <code>res$tuning_best</code>: available when grid tuning is used</li>

@@ -1,6 +1,6 @@
 # Installation {#sec-shinyapp_installation}
 
-**FeatureMAP Shiny** is the interactive web interface for the FeatureMAP workflow. It allows users to complete feature annotation, subnetwork extraction, module identification, and module annotation through a point-and-click interface, without writing the full R pipeline manually.
+**FeatureMAP Shiny** is the interactive web interface for the FeatureMAP workflow. It lets you complete data upload, feature annotation, subnetwork extraction, module identification, function interpretation, and result export through a point-and-click interface, without writing the R pipeline manually.
 
 ![](images/shinyapp_home.png){fig-align="center" width="750"}
 
@@ -42,12 +42,8 @@ if (!requireNamespace("metid", quietly = TRUE)) {
   remotes::install_github("tidymass/metid")
 }
 
-if (!requireNamespace("metpath", quietly = TRUE)) {
-  remotes::install_github("tidymass/metpath")
-}
-
-if (!requireNamespace("PCSF2", quietly = TRUE)) {
-  remotes::install_github("ytwangZero/PCSF2")
+if (!requireNamespace("pcsf2featuremap", quietly = TRUE)) {
+  remotes::install_github("tidymass/pcsf2featuremap")
 }
 ```
 
@@ -63,6 +59,10 @@ remotes::install_github(
   upgrade = "ask"
 )
 ```
+
+::: callout-note
+`featuremapshiny` is self-contained: it carries its own copy of the analysis pipeline and ships the built-in reference resources (the merged MS1 compound database, the metabolic reaction network, the HMDB/KEGG functional and pathway references, and the demo data) inside the package. You therefore do **not** need to install the `featuremap` package separately, and the app does not download anything at runtime.
+:::
 
 ::: callout-tip
 **How to Launch the Shiny App**
@@ -82,4 +82,38 @@ A hosted, browser-based instance of FeatureMAP Shiny is planned for users who pr
 The workflow described in the following Shiny chapters applies to both the local `featuremapshiny` package and the future hosted web deployment.
 :::
 
-Once you install the FeatureMAP shiny successfully, continue to next step.
+## Accounts and Sign In
+
+The app has an optional account layer:
+
+-   **Local installation (default):** authentication is switched off. You can go straight from **Home** to the analysis pages, and the **Sign In** entry in the navigation bar is hidden.
+-   **Hosted deployment:** authentication is switched on, so the six analysis pages are protected. You need to create an account, verify your email address, and sign in before Step 1 becomes available.
+
+Server administrators enable it by setting the environment variables `FEATUREMAP_AUTH_ENABLED=true` and `FEATUREMAP_AUTH_DB` (a persistent SQLite path) before starting the app.
+
+## Upload Limit
+
+Uploads are capped at **500 MB per file** by default, which is enough for most feature tables and for a custom reference database. If you need a larger limit for a local run, set it before launching the app:
+
+```{r}
+#| eval=FALSE
+
+options(featuremap.max_upload_mb = 1000)
+featuremapshiny::run_featuremap()
+```
+
+The environment variable `FEATUREMAP_MAX_UPLOAD_MB` does the same thing for a deployed instance.
+
+## Getting Around the App
+
+The top navigation bar contains:
+
+-   **Home** -- the landing page, with the **Get Started** and **Documentation** buttons
+-   **About** -- scrolls to the workflow overview on the Home page
+-   **Analysis** -- a dropdown with the six workflow steps: 1 Data Upload, 2 Feature Annotation, 3 PCSF Subnetwork, 4 Module Identification, 5 Function Interpretation, 6 Results Download
+-   **Authors** and **Contacts**
+-   **Sign In** / your account menu, when authentication is enabled
+
+Every analysis page shares the same layout: a step rail at the top showing where you are in the six steps, a **parameter sidebar** on the left ending with the **Run** and **Next Step** buttons, and a **result area** on the right. Small ⓘ icons next to the field labels explain each parameter in place.
+
+Once you install the FeatureMAP Shiny successfully, continue to next step.

@@ -390,7 +390,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -414,13 +414,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -443,6 +443,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#r-installation" id="toc-r-installation" class="nav-link active" data-scroll-target="#r-installation"><span class="header-section-number">7.1</span> R Installation</a></li>
   <li><a href="#sec-web" id="toc-sec-web" class="nav-link" data-scroll-target="#sec-web"><span class="header-section-number">7.2</span> Web Access</a></li>
+  <li><a href="#accounts-and-sign-in" id="toc-accounts-and-sign-in" class="nav-link" data-scroll-target="#accounts-and-sign-in"><span class="header-section-number">7.3</span> Accounts and Sign In</a></li>
+  <li><a href="#upload-limit" id="toc-upload-limit" class="nav-link" data-scroll-target="#upload-limit"><span class="header-section-number">7.4</span> Upload Limit</a></li>
+  <li><a href="#getting-around-the-app" id="toc-getting-around-the-app" class="nav-link" data-scroll-target="#getting-around-the-app"><span class="header-section-number">7.5</span> Getting Around the App</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/10_shinyapp_installation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/10_shinyapp_installation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -469,7 +472,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>FeatureMAP Shiny</strong> is the interactive web interface for the FeatureMAP workflow. It allows users to complete feature annotation, subnetwork extraction, module identification, and module annotation through a point-and-click interface, without writing the full R pipeline manually.</p>
+<p><strong>FeatureMAP Shiny</strong> is the interactive web interface for the FeatureMAP workflow. It lets you complete data upload, feature annotation, subnetwork extraction, module identification, function interpretation, and result export through a point-and-click interface, without writing the R pipeline manually.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/shinyapp_home.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
@@ -506,13 +509,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"tidymass/metid"</span>)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"metpath"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"tidymass/metpath"</span>)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"PCSF2"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"ytwangZero/PCSF2"</span>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pcsf2featuremap"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"tidymass/pcsf2featuremap"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then install the Shiny package itself from GitHub:</p>
 <div class="cell">
@@ -522,6 +521,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">repos =</span> BiocManager<span class="sc">::</span><span class="fu">repositories</span>(),</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">upgrade =</span> <span class="st">"ask"</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>featuremapshiny</code> is self-contained: it carries its own copy of the analysis pipeline and ships the built-in reference resources (the merged MS1 compound database, the metabolic reaction network, the HMDB/KEGG functional and pathway references, and the demo data) inside the package. You therefore do <strong>not</strong> need to install the <code>featuremap</code> package separately, and the app does not download anything at runtime.</p>
+</div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -559,7 +571,37 @@ Note
 <p>The workflow described in the following Shiny chapters applies to both the local <code>featuremapshiny</code> package and the future hosted web deployment.</p>
 </div>
 </div>
-<p>Once you install the FeatureMAP shiny successfully, continue to next step.</p>
+</section>
+<section id="accounts-and-sign-in" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="accounts-and-sign-in"><span class="header-section-number">7.3</span> Accounts and Sign In</h2>
+<p>The app has an optional account layer:</p>
+<ul>
+<li><strong>Local installation (default):</strong> authentication is switched off. You can go straight from <strong>Home</strong> to the analysis pages, and the <strong>Sign In</strong> entry in the navigation bar is hidden.</li>
+<li><strong>Hosted deployment:</strong> authentication is switched on, so the six analysis pages are protected. You need to create an account, verify your email address, and sign in before Step 1 becomes available.</li>
+</ul>
+<p>Server administrators enable it by setting the environment variables <code>FEATUREMAP_AUTH_ENABLED=true</code> and <code>FEATUREMAP_AUTH_DB</code> (a persistent SQLite path) before starting the app.</p>
+</section>
+<section id="upload-limit" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="upload-limit"><span class="header-section-number">7.4</span> Upload Limit</h2>
+<p>Uploads are capped at <strong>500 MB per file</strong> by default, which is enough for most feature tables and for a custom reference database. If you need a larger limit for a local run, set it before launching the app:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">featuremap.max_upload_mb =</span> <span class="dv">1000</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>featuremapshiny<span class="sc">::</span><span class="fu">run_featuremap</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The environment variable <code>FEATUREMAP_MAX_UPLOAD_MB</code> does the same thing for a deployed instance.</p>
+</section>
+<section id="getting-around-the-app" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="getting-around-the-app"><span class="header-section-number">7.5</span> Getting Around the App</h2>
+<p>The top navigation bar contains:</p>
+<ul>
+<li><strong>Home</strong> – the landing page, with the <strong>Get Started</strong> and <strong>Documentation</strong> buttons</li>
+<li><strong>About</strong> – scrolls to the workflow overview on the Home page</li>
+<li><strong>Analysis</strong> – a dropdown with the six workflow steps: 1 Data Upload, 2 Feature Annotation, 3 PCSF Subnetwork, 4 Module Identification, 5 Function Interpretation, 6 Results Download</li>
+<li><strong>Authors</strong> and <strong>Contacts</strong></li>
+<li><strong>Sign In</strong> / your account menu, when authentication is enabled</li>
+</ul>
+<p>Every analysis page shares the same layout: a step rail at the top showing where you are in the six steps, a <strong>parameter sidebar</strong> on the left ending with the <strong>Run</strong> and <strong>Next Step</strong> buttons, and a <strong>result area</strong> on the right. Small ⓘ icons next to the field labels explain each parameter in place.</p>
+<p>Once you install the FeatureMAP Shiny successfully, continue to next step.</p>
 
 
 </section>
@@ -985,8 +1027,8 @@ Note
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./11_data_preparation_shiny.html" class="pagination-link" aria-label="Data Preparation">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./11_data_preparation_shiny.html" class="pagination-link" aria-label="Data Upload">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

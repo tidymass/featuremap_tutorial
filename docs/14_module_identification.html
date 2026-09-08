@@ -355,7 +355,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -379,13 +379,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -459,21 +459,73 @@ Important
 </div>
 <section id="enter-the-module-identification-page" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="enter-the-module-identification-page"><span class="header-section-number">11.1</span> Enter the Module Identification Page</h2>
-<p>After finishing <strong>Subnetwork Extraction</strong>, click <strong>Next Step</strong> or select <strong>Module Identification</strong> from the top navigation bar. This page is also divided into two areas:</p>
-<ul>
-<li><strong>Parameter area</strong> on the left: set the module identification options and click <strong>Run</strong></li>
-<li><strong>Result area</strong> on the right: inspect the detected modules from different views</li>
-</ul>
+<p>After finishing <strong>Subnetwork Extraction</strong>, click <strong>Next Step</strong>, or open <strong>Analysis → 4 Module Identification</strong> in the navigation bar.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step3_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s4_modules_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <p>The purpose of this step is to identify functional modules from the extracted PCSF subnetwork.</p>
 </section>
 <section id="parameter-area" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="parameter-area"><span class="header-section-number">11.2</span> Parameter Area</h2>
-<p>The left panel is where you set the module identification parameters before clicking <strong>Run</strong>. Since the detailed meanings of these parameters have already been introduced in <a href="./05_module_identification.html">R package-Module Identification</a>, we do not repeat them here.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Field</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Algorithm</strong></td>
+<td>Community detection method (Louvain / Walktrap / Fast greedy / Leading eigen)</td>
+<td><code>Louvain</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Resolution, shown for <em>Louvain</em></td>
+<td><code>1</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Number of steps, shown for <em>Walktrap</em></td>
+<td><code>4</code></td>
+</tr>
+<tr class="even">
+<td><strong>Filtering</strong></td>
+<td>Node frequency threshold</td>
+<td><code>0.05</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Minimum module size</td>
+<td><code>3</code></td>
+</tr>
+<tr class="even">
+<td><strong>Computation</strong></td>
+<td>Permutations</td>
+<td><code>100</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Random seed</td>
+<td><code>123</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Threads</td>
+<td><code>4</code></td>
+</tr>
+</tbody>
+</table>
+<p>The four algorithms and the effect of each threshold are described in <a href="./05_module_identification.html">R package-Module Identification</a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -484,46 +536,50 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you are running the demo data for the first time, it is usually best to keep the default settings and run the step once before tuning the algorithm or filtering thresholds.</p>
+<p>If you are running the demo data for the first time, it is usually best to keep the default settings and run the step once before tuning the algorithm or the filtering thresholds.</p>
 </div>
 </div>
 </section>
 <section id="run-module-identification" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="run-module-identification"><span class="header-section-number">11.3</span> Run Module Identification</h2>
 <p>Once the parameters are ready, click <strong>Run</strong>.</p>
-<p>The app will start module identification and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the <strong>Next Step</strong> button will become available.</p>
+<p>Module detection is followed by the permutation test, so this step takes a while with the default 100 permutations. When it finishes, the result panel is updated automatically and the <strong>Next Step</strong> button becomes available.</p>
 </section>
 <section id="result-area" class="level2" data-number="11.4">
 <h2 data-number="11.4" class="anchored" data-anchor-id="result-area"><span class="header-section-number">11.4</span> Result Area</h2>
 <section id="visualization" class="level3" data-number="11.4.1">
 <h3 data-number="11.4.1" class="anchored" data-anchor-id="visualization"><span class="header-section-number">11.4.1</span> Visualization</h3>
-<p>The <strong>Visualization</strong> tab is used to inspect the detected modules as subnetworks.</p>
+<p>The <strong>Visualization</strong> tab shows one detected module at a time as a network.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step3_moduleplot.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s4_modules_visualization.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
-<p>After the run finishes, you can choose a module and view its network directly in the app. This is usually the most intuitive place to start, because it lets you quickly see how the selected module is organized.</p>
+<p>Two selectors sit above the plot:</p>
+<ul>
+<li>the <strong>Module</strong> selector chooses which module (<code>M1</code>, <code>M2</code>, …) to display</li>
+<li>the <strong>Metabolite</strong> selector highlights one metabolite and its directly connected neighbours inside that module</li>
+</ul>
+<p>The legend distinguishes <strong>Annotated</strong> metabolites (green), which are linked to observed LC–MS features, from <strong>Hidden</strong> metabolites (red), which are Steiner nodes added during PCSF optimization to keep the module connected.</p>
 </section>
 <section id="module-score" class="level3" data-number="11.4.2">
 <h3 data-number="11.4.2" class="anchored" data-anchor-id="module-score"><span class="header-section-number">11.4.2</span> Module Score</h3>
-<p>The <strong>Module Score</strong> tab shows the quantitative summary for identified modules. This table is useful for checking which modules are stronger or more statistically convincing before moving on to interpretation.</p>
+<p>The <strong>Module Score</strong> tab shows the quantitative summary for every detected module: size, number of annotated nodes, module score, permutation p-value and FDR. This table tells you which modules are worth interpreting in the next step.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step3_modulescore.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s4_modules_score.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
-<p>For a full explanation of the score-related columns, see <a href="./05_module_identification.html">R package-Module Identification</a>.</p>
 </section>
 <section id="module-table" class="level3" data-number="11.4.3">
 <h3 data-number="11.4.3" class="anchored" data-anchor-id="module-table"><span class="header-section-number">11.4.3</span> Module Table</h3>
-<p>The <strong>Module Table</strong> tab shows the detailed module membership results. This table is the main reference when you want to inspect which metabolites were assigned to each module and what information will be passed to the next step.</p>
+<p>The <strong>Module Table</strong> tab shows the detailed module membership: which metabolite belongs to which module, its HMDB and KEGG identifiers, node frequency, type and importance.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step3_moduletable.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s4_modules_table.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
-<p>For a full explanation of the result columns, see <a href="./05_module_identification.html">R package-Module Identification</a>.</p>
+<p>For a full explanation of the columns in both tables, see <a href="./05_module_identification.html">R package-Module Identification</a>.</p>
 </section>
 </section>
 <section id="recommended-run-the-demo-data-first" class="level2" data-number="11.5">
@@ -532,9 +588,9 @@ Note
 <ol type="1">
 <li>keep the default parameter settings</li>
 <li>click <strong>Run</strong></li>
-<li>wait for module identification to finish</li>
+<li>wait for module identification and the permutation test to finish</li>
 <li>open <strong>Visualization</strong> first to inspect the detected modules</li>
-<li>then review <strong>Module Score</strong></li>
+<li>then review <strong>Module Score</strong> to see which modules are significant</li>
 <li>finally check <strong>Module Table</strong> for the detailed module membership results</li>
 </ol>
 <p>This is the easiest way to understand what this step produces before tuning parameters on your own dataset.</p>
@@ -548,13 +604,13 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If no module appears, first check whether <strong>Subnetwork Extraction</strong> finished successfully in the previous step and whether the extracted subnetwork contains enough structure for module detection.</p>
+<p>If no module appears, first check whether <strong>Subnetwork Extraction</strong> finished successfully and whether the extracted subnetwork contains enough structure for community detection. Lowering <strong>Minimum module size</strong> or the <strong>Node frequency threshold</strong> keeps more of the network in play.</p>
 </div>
 </div>
 </section>
 <section id="next-step" class="level2" data-number="11.6">
 <h2 data-number="11.6" class="anchored" data-anchor-id="next-step"><span class="header-section-number">11.6</span> Next Step</h2>
-<p>Once module identification is complete, click <strong>Next Step</strong> to continue to <strong>AI-Powered Function Annotation</strong>.</p>
+<p>Once module identification is complete, click <strong>Next Step</strong> to continue to <strong>Function Interpretation</strong>.</p>
 
 
 </section>
@@ -980,8 +1036,8 @@ Tip
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./15_function_annotation.html" class="pagination-link" aria-label="Function Annotation">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./15_function_annotation.html" class="pagination-link" aria-label="Function Interpretation">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

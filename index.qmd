@@ -10,7 +10,7 @@ The package provides a five-step workflow:
 2.  **Feature annotation**: annotate raw LC-MS features to metabolite candidates using MS1 (and optional MS2) information.
 3.  **Subnetwork extraction**: construct a robust prize-collecting Steiner forest (PCSF)-based metabolic subnetwork.
 4.  **Module identification**: detect functional modules by community detection and evaluate module significance.
-5.  **Module annotation**: interpret significant modules with database knowledge, optional PubMed evidence, and optional LLM summarization.
+5.  **Module annotation**: interpret significant modules with database knowledge, optional PubMed evidence, and LLM reasoning, either in a fast two-call mode or in an advanced multi-agent debate mode that can also synthesize the annotated modules into one study-level picture.
 
 This workflow helps convert feature-level metabolomics signals into interpretable biological modules in a reproducible and analysis-ready format.
 
@@ -22,6 +22,7 @@ This guide walks you through the two faces of FeatureMAP: the R package for **co
 2.  Run the complete five-step FeatureMAP workflow with R code.
 3.  Complete the same analysis with the FeatureMAP Shiny App/Web interface.
 4.  Understand and inspect key result objects and module-level interpretations.
+5.  Export interactive HTML reports for the module debate traces and the cross-module synthesis network.
 
 Whether you favour the command line or a browser, this tutorial gives you everything you need to apply FeatureMAP confidently in your metabolomics projects.
 

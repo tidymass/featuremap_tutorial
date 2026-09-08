@@ -12,15 +12,17 @@ This chapter describes **Step 4** of the FeatureMAP pipeline: identifying functi
 
 At a high level, this step performs the following operations:
 
-1.  **Construct a module detection graph:** A metabolite-only subgraph is derived from the PCSF subnetwork. Steiner nodes with low occurrence frequency can be filtered using `node_freq`.
+1.  **Construct a module detection graph:** A metabolite-only subgraph is derived from the PCSF subnetwork. Metabolite nodes with low occurrence frequency across repeated PCSF runs are filtered out using `node_freq`. Nodes directly linked to observed features are labelled `annotated`; the remaining ones are labelled `hidden`.
 
-2.  **Detect network communities:** Community detection algorithms are applied to partition the network into candidate modules.
+2.  **Adjust edge weights:** Edge weights are taken from the PCSF edge frequency and divided by the square root of the product of the two endpoint degrees in the full MRN, so that highly connected hub metabolites do not dominate the partition.
 
-3.  **Build module membership table:** Node-to-module assignments are recorded in `module_table`.
+3.  **Detect network communities:** One of four community detection algorithms partitions the network into candidate modules, which are then relabelled as compact IDs `"M1"`, `"M2"`, ...
 
-4.  **Compute module activity scores:** Module scores summarize the statistical signal from features mapped to metabolites within the module.
+4.  **Prune module boundaries:** Within each module, non-annotated terminal nodes are iteratively removed. Nodes dropped this way are kept in the table but flagged with `Use_for_annotation = FALSE`, so they no longer influence Step 5.
 
-5.  **Assess statistical significance:** A permutation procedure is used to estimate empirical significance and control false discovery rate.
+5.  **Compute module activity scores:** Module scores summarize the statistical signal from features mapped to metabolites within the module.
+
+6.  **Assess statistical significance:** A permutation procedure with a gamma null model estimates empirical significance and controls the false discovery rate.
 
 This step converts the extracted metabolic network into **functional modules** supported by both network topology and feature-level statistical evidence.
 
@@ -37,7 +39,7 @@ This step converts the extracted metabolic network into **functional modules** s
 | `n_perm` | `100` | Number of permutations for significance testing |
 | `seed` | `123` | Random seed for reproducibility |
 | `workers` | `4` | Parallel workers for permutation testing |
-| `node_freq` | `0.05` | Frequency threshold for retaining Steiner nodes |
+| `node_freq` | `0.05` | Frequency threshold for retaining metabolite nodes |
 | `louvain_resolution` | `1` | Resolution parameter for Louvain clustering |
 | `walktrap_steps` | `4` | Number of steps used in walktrap clustering |
 
@@ -153,29 +155,25 @@ res$stage
 #| eval: false
 
 head(res$module_table)
-
-#                                                                                                        INCHI_ID Module KEGG_ID
-# 1                                                                      InChI=1S/2H2O.2O.W/h2*1H2;;;/q;;;;+2/p-2      1  C20679
-# 2 InChI=1S/C10H11NO5/c1-5(9(12)13)16-7-4-2-3-6(8(7)11)10(14)15/h2-4,7-8H,1,11H2,(H,12,13)(H,14,15)/t7-,8-/m0/s1      1  C18054
-# 3 InChI=1S/C10H11NO5/c1-5(9(12)13)16-8-4-6(10(14)15)2-3-7(8)11/h2-4,7-8H,1,11H2,(H,12,13)(H,14,15)/t7-,8-/m1/s1      1  C11355
-# 4                        InChI=1S/C10H12N2O3/c11-7-4-2-1-3-6(7)9(13)5-8(12)10(14)15/h1-4,8H,5,11-12H2,(H,14,15)      1  C01718
-# 5              InChI=1S/C10H12N2O3/c11-7-4-2-1-3-6(7)9(13)5-8(12)10(14)15/h1-4,8H,5,11-12H2,(H,14,15)/t8-/m0/s1      1  C00328
-# 6                  InChI=1S/C10H12N2O4/c11-6(10(15)16)4-8(14)5-2-1-3-7(13)9(5)12/h1-3,6,13H,4,11-12H2,(H,15,16)      1  C02794
-#
-#                  Compound_name Node_freq      Type Importance
-# 1                Tungstic acid      1.00 annotated  0.9447378
-# 2 2-Amino-2-deoxyisochorismate      0.47 annotated  0.1575416
-# 3    4-amino-4-deoxychorismate      0.53 annotated  0.1575416
-# 4                 D-Kynurenine      0.47 annotated  0.2670680
-# 5                 L-Kynurenine      1.00 annotated  0.2121862
-# 6            Hydroxykynurenine      0.31 annotated  0.3593576
-
+# [output placeholder - paste your console output here]
 ```
 
-Each row represents a **metabolite node belonging to a identified module**. Nodes with higher `Node_freq` and `Importance` values tend to represent more stable and feature-supported metabolites within the network.
+Each row represents a **metabolite node belonging to an identified module**:
+
+| Column | Description |
+|-------------------------|-----------------------------------------------|
+| `Module` | Module identifier (`"M1"`, `"M2"`, ...) |
+| `INCHI_ID` | InChI of the metabolite node, used as the primary key of the network |
+| `HMDB_ID`, `KEGG_ID`, `Compound_name` | Metabolite identity carried over from the MRN |
+| `Node_freq` | Frequency of the node across repeated PCSF runs (robustness) |
+| `Type` | `"annotated"` if linked to an observed feature, `"hidden"` otherwise |
+| `Importance` | Feature-derived importance, averaged with `weighted_anno_score` as weights |
+| `Use_for_annotation` | `FALSE` for non-annotated terminal nodes pruned from the module boundary; those nodes are excluded from Step 5 |
+
+Nodes with higher `Node_freq` and `Importance` values tend to represent more stable and feature-supported metabolites within the network.
 
 ::: callout-note
-Here, **annotated** metabolites are nodes directly linked to observed LC–MS features through the feature annotation step, whereas **hidden** metabolites are Steiner nodes introduced during PCSF optimization to connect annotated metabolites within the metabolic reaction network. Hidden metabolites are not directly supported by measured features, but may provide important network context.
+Here, **annotated** metabolites are nodes directly linked to observed LC--MS features through the feature annotation step, whereas **hidden** metabolites are Steiner nodes introduced during PCSF optimization to connect annotated metabolites within the metabolic reaction network. Hidden metabolites are not directly supported by measured features, but may provide important network context.
 :::
 
 ### Module significance table
@@ -186,30 +184,26 @@ Here, **annotated** metabolites are nodes directly linked to observed LC–MS fe
 #| eval: false
 
 head(res$module_score)
+# [output placeholder - paste your console output here]
 
-#   Module Module_size Annotated_nodes Module_score           p       fdr
-# 1      1         148             130    1.3944882 0.004536258 0.2177404
-# 2     15          80              66    0.8717769 0.058164843 0.9960879
-# 3     19          37              33    0.7624376 0.095688593 0.9960879
-# 4     17          21              20    0.6974986 0.127492917 0.9960879
-# 5     14          51              47    0.6885808 0.132541184 0.9960879
-# 6      3          50              48    0.5985351 0.194456787 0.9960879
-
+sum(res$module_score$p < 0.05, na.rm = TRUE)
+sum(res$module_score$fdr < 0.05, na.rm = TRUE)
+# [output placeholder - paste your console output here]
 ```
 
 Important columns include:
 
--   `Module` – module identifier
--   `Module_size` – number of metabolite nodes in the module
--   `Annotated_nodes` – number of nodes supported by feature annotations
--   `Module_score` – aggregated activity score of the module
--   `p` – permutation-based p-value
--   `fdr` – multiple-testing corrected p-value
+-   `Module` -- module identifier, matching `module_table`
+-   `Module_size` -- number of metabolite nodes in the module
+-   `Annotated_nodes` -- number of nodes supported by feature annotations
+-   `Module_score` -- aggregated activity score of the module
+-   `p` -- permutation-based p-value
+-   `fdr` -- multiple-testing corrected p-value
 
 Modules with lower `p` or `fdr` values indicate stronger statistical support and are typically prioritized for downstream biological interpretation.
 
 ::: callout-tip
-If too many tiny modules appear, increase `min_size` or tighten `node_freq`. If modules are too coarse, try alternative methods or relax these cutoffs.
+If too many tiny modules appear, increase `min_size` or tighten `node_freq`. If modules are too coarse, try alternative methods, or lower `louvain_resolution` for broader and raise it for finer communities.
 :::
 
 ## Next Step

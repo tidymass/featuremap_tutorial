@@ -390,7 +390,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -414,13 +414,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -441,7 +441,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#next-step" id="toc-next-step" class="nav-link active" data-scroll-target="#next-step"><span class="header-section-number">1.1</span> Next Step</a></li>
+  <li><a href="#reference-resources" id="toc-reference-resources" class="nav-link active" data-scroll-target="#reference-resources"><span class="header-section-number">1.1</span> Reference Resources</a></li>
+  <li><a href="#optional-api-keys-for-module-annotation" id="toc-optional-api-keys-for-module-annotation" class="nav-link" data-scroll-target="#optional-api-keys-for-module-annotation"><span class="header-section-number">1.2</span> Optional: API Keys for Module Annotation</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">1.3</span> Next Step</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/01_package_installation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/01_package_installation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -508,8 +510,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"featuremap"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="next-step" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="next-step"><span class="header-section-number">1.1</span> Next Step</h2>
+<section id="reference-resources" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="reference-resources"><span class="header-section-number">1.1</span> Reference Resources</h2>
+<p>FeatureMAP does not ship its large reference resources inside the package. The following resources are downloaded <strong>on demand</strong> from the <a href="https://github.com/tidymass/featuremap_resources">featuremap_resources</a> repository and then cached locally:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Resource</th>
+<th>Used by</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>featuremap_compound</code></td>
+<td><code>annotate_feature()</code></td>
+<td>Merged HMDB + KEGG MS1 compound database</td>
+</tr>
+<tr class="even">
+<td><code>mrn</code></td>
+<td><code>extract_subnetwork()</code></td>
+<td>Metabolic reaction network (MRN)</td>
+</tr>
+<tr class="odd">
+<td><code>functional_reference_hmdb</code>, <code>functional_reference_kegg</code></td>
+<td><code>annotate_module()</code></td>
+<td>Compound class / functional metadata</td>
+</tr>
+<tr class="even">
+<td><code>pathway_hmdb</code>, <code>pathway_kegg</code></td>
+<td><code>annotate_module()</code></td>
+<td>Pathway membership used for coverage statistics</td>
+</tr>
+</tbody>
+</table>
+<p>The first run of each step therefore needs an internet connection. Downloaded files are reused afterwards, so later runs work offline.</p>
+<p>By default the cache lives in <code>tools::R_user_dir("featuremap", which = "cache")</code>. You can point it somewhere else, for example to a shared project folder:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">featuremap.resources.cache_dir =</span> <span class="st">"~/featuremap_cache"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If your machine cannot reach GitHub, you can also download the resources manually and pass them directly through the corresponding arguments (<code>metabolite_database</code>, <code>mrn</code>, <code>ref_data</code>).</p>
+</div>
+</div>
+</section>
+<section id="optional-api-keys-for-module-annotation" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="optional-api-keys-for-module-annotation"><span class="header-section-number">1.2</span> Optional: API Keys for Module Annotation</h2>
+<p>The last step of the workflow (<a href="./06_function_annotation.html">Function Annotation</a>) calls a large language model (LLM) and, optionally, PubMed. These services need API keys, which are <strong>not</strong> required for Steps 1–4.</p>
+<p>Store them as environment variables instead of hard-coding them in your scripts. Add the following lines to your <code>.Renviron</code> file (open it with <code>usethis::edit_r_environ()</code>), then restart R:</p>
+<pre><code>OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
+NCBI_API_KEY=xxxxxxxxxxxxxxxx</code></pre>
+<p>And use them like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"OPENAI_API_KEY"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"NCBI_API_KEY"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Supported LLM providers and where to apply for a key:</p>
+<ul>
+<li>OpenAI: <a href="https://platform.openai.com/" class="uri">https://platform.openai.com/</a></li>
+<li>Gemini (Google AI Studio): <a href="https://ai.google.dev/aistudio" class="uri">https://ai.google.dev/aistudio</a></li>
+<li>SiliconFlow: <a href="https://siliconflow.cn/" class="uri">https://siliconflow.cn/</a></li>
+<li>A local / self-hosted OpenAI-compatible endpoint (<code>provider = "local"</code>), which needs no key but requires a <code>base_url</code></li>
+<li>PubMed / NCBI Entrez key: <a href="https://account.ncbi.nlm.nih.gov/settings/" class="uri">https://account.ncbi.nlm.nih.gov/settings/</a></li>
+</ul>
+</section>
+<section id="next-step" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="next-step"><span class="header-section-number">1.3</span> Next Step</h2>
 <p>If all checks pass, continue to <a href="./02_data_preparation.html">Data Preparation</a> to prepare the input tables for the FeatureMAP workflow.</p>
 
 

@@ -1,24 +1,46 @@
 # Function Annotation {#sec-get_functional_modules}
 
-This chapter describes **Step 5** of the FeatureMAP pipeline: annotating statistically supported modules with `annotate_module()`.
+This chapter describes **Step 5** of the FeatureMAP pipeline: annotating statistically supported modules with `annotate_module()`, and, optionally, integrating the annotated modules into a study-level picture with `synthesize_modules()`.
 
 ::: callout-important
-**Prerequisites:** Complete module identification with `identify_module()`and Make sure your `res` object is already at stage `"module_identified"`.
+**Prerequisites:** Complete module identification with `identify_module()` and make sure your `res` object is already at stage `"module_identified"`.
 :::
 
 ## What `annotate_module()` Does
 
-`annotate_module()` performs **module-level biological interpretation** for statistically supported modules in Step 4.
+`annotate_module()` performs **module-level biological interpretation** for the modules that passed the significance filter in Step 4.
 
-This step integrates three sources of information:
+Regardless of the mode you choose, the function always starts from the same deterministic evidence, computed in R rather than by the language model:
 
-1.  **Metabolite annotation summary:** Metabolites contained in each significant module are summarized using the selected reference namespace (`kegg` or `hmdb`).
+1.  **Metabolite annotation:** Metabolites of each significant module are annotated with class and pathway metadata from both HMDB and KEGG references.
+2.  **Top and anchor metabolite selection:** Module members are ranked by `0.7 * Importance + 0.3 * Node_freq`, and a Gaussian mixture model selects the leading metabolites that represent the module.
+3.  **Module-level statistics:** Signal concentration, KEGG and HMDB pathway coverage, global direction of change, and the endogenous/exogenous origin profile are computed.
 
-2.  **Optional literature retrieval:** Relevant PubMed articles are retrieved and ranked for the top metabolites in each module.
+The interpretation itself is then produced by an LLM, in one of **two modes**.
 
-3.  **LLM-based interpretation:** A language model synthesizes module-level interpretations including title, summary, confidence label, and reasoning.
+### Fast mode (`mode = "fast"`)
 
-Only modules passing the significance cutoff (`p` or `fdr`) are annotated. This step converts statistically identified network modules into **interpretable biological hypotheses**.
+A two-call pipeline, and the recommended default:
+
+1.  **LLM call 1** -- from metabolite evidence only (no phenotype), the model returns `hypothesis_type`, `title` and `functional_summary`.
+2.  **Optional PubMed retrieval** -- the module title and each top metabolite are searched separately; the retained articles are deduplicated by PMID.
+3.  **LLM call 2** -- with the study context and the literature, the model returns `phenotype_relationship`, `confidence_label` and `rationale`.
+
+### Advanced mode (`mode = "advanced"`)
+
+A multi-agent debate pipeline that produces one row per surviving hypothesis instead of one row per module:
+
+1.  **P0 Proposer** -- generates 1--3 candidate biochemical hypotheses from the metabolite evidence only.
+2.  **S1 Skeptic** -- challenges each hypothesis on biochemical, origin, species and biospecimen grounds, without seeing the phenotype or the literature.
+3.  **P1 Proposer revision** -- keeps, modifies or drops each hypothesis.
+4.  **S2 / P2** -- a second debate round runs only if revisions were made or major challenges remained unanswered.
+5.  **Optional PubMed** -- anchor-metabolite and per-hypothesis title searches, retained for the arbiter only.
+6.  **A0 Arbiter** -- delivers a final `accepted` / `rejected` verdict per hypothesis, with a confidence score and a residual-ambiguity note.
+7.  **Optional synthesis** -- with `synthesize = TRUE`, accepted hypotheses from all modules are integrated across modules (see @sec-cross_module_synthesis).
+
+::: callout-tip
+Use **fast mode** for routine analyses and for a first look at your data: it is markedly cheaper and faster. Use **advanced mode** when a module is ambiguous, when you want to see the reasoning that supports or rejects an interpretation, or when you want a study-level synthesis across modules.
+:::
 
 ------------------------------------------------------------------------
 
@@ -27,41 +49,43 @@ Only modules passing the significance cutoff (`p` or `fdr`) are annotated. This 
 | Parameter | Default | Description |
 |----------------------|----------------------------:|----------------------|
 | `res` | required | `featuremap_result` returned by `identify_module()` |
-| `p` | `"fdr"` | Column in `res$module_score` used for filtering |
+| `p` | `"fdr"` | Column in `res$module_score` used for filtering (`"p"` or `"fdr"`) |
 | `pcutoff` | `0.05` | Threshold applied to the selected significance column |
-| `ref_data` | `NULL` | Optional functional reference annotation table |
+| `ref_data` | `NULL` | Optional functional reference; a data frame with an `id` column, or a list with `hmdb` and `kegg` components |
+| `mode` | `"fast"` | `"fast"` (two-call pipeline) or `"advanced"` (multi-agent debate) |
 | `species` | `"human"` | Species context used in module interpretation |
-| `biospecimen` | `NULL` | Biospecimen context (e.g. plasma, serum, tissue) |
+| `biospecimen` | `NULL` | Biospecimen context (e.g. plasma, serum, CSF, tissue) |
 | `phenotype` | `NULL` | Disease or phenotype context |
 | `pubmed` | `TRUE` | Whether to retrieve PubMed evidence |
-| `years` | `5` | Time window for literature search |
-| `top_paper` | `3` | Number of retained papers per metabolite |
-| `min_similarity` | `0.6` | Embedding similarity cutoff used to filter literature |
-| `provider` | `"openai"` | LLM and embedding provider. Currently supported options include `"openai"`, `"gemini"`, and `"siliconflow"` |
-| `embed_model` | `"text-embedding-3-small"` | Embedding model used for literature ranking (model availability depends on the selected provider) |
-| `llm_model` | `"gpt-4.1-mini"` | Language model used for module interpretation (model availability depends on the selected provider) |
-| `NCBI_api_key` | `""` | NCBI Entrez API key for PubMed |
+| `years` | `5` | Time window for the literature search |
+| `provider` | `"openai"` | LLM provider: `"openai"`, `"gemini"`, `"siliconflow"` or `"local"` |
+| `llm_model` | `"gpt-4.1-mini"` | Language model used for module interpretation |
+| `NCBI_api_key` | `""` | NCBI Entrez API key, used when `pubmed = TRUE` |
 | `llm_api_key` | `""` | API key for the selected LLM provider |
+| `base_url` | `NULL` | Custom API base URL; **required** when `provider = "local"` |
+| `synthesize` | `FALSE` | Advanced mode only: run the cross-module synthesis agent after annotation |
+| `synthesis_model` | `llm_model` | Model used by the synthesis agent |
+| `debate_html` | `FALSE` | Advanced mode only: export one chat-style debate trace per module |
+| `html_dir` | `getwd()` | Directory for the advanced-mode HTML outputs |
 
 ::: callout-note
-If `ref_data = NULL`, FeatureMAP automatically loads the functional reference resource corresponding to the metabolite namespace used in earlier steps.
+If `ref_data = NULL`, FeatureMAP automatically loads the cached HMDB and KEGG functional and pathway references.
 :::
 
 ::: callout-tip
 **How to obtain an LLM API key**
 
-FeatureMAP currently supports `"openai"`, `"gemini"`, and `"siliconflow"` as LLM providers.\
-You can apply for an API key from the corresponding official platform:
-
 -   OpenAI: <https://platform.openai.com/>
 -   Gemini (Google AI Studio): <https://ai.google.dev/aistudio>
 -   SiliconFlow: <https://siliconflow.cn/>
+
+`provider = "local"` targets any OpenAI-compatible endpoint (for example a self-hosted vLLM server) and needs no key, only a `base_url`.
 :::
 
 ::: callout-tip
 **How to obtain a PubMed / NCBI API key**
 
-If you enable PubMed retrieval, you need to apply for an NCBI API key for higher request limits: <https://account.ncbi.nlm.nih.gov/settings/>
+If you enable PubMed retrieval, apply for an NCBI API key for higher request limits: <https://account.ncbi.nlm.nih.gov/settings/>
 :::
 
 ------------------------------------------------------------------------
@@ -69,56 +93,104 @@ If you enable PubMed retrieval, you need to apply for an NCBI API key for higher
 ## Basic Usage
 
 ::: panel-tabset
-##### Database + LLM only
+##### Fast mode
 
 ```{r}
 #| eval: false
 
-res <- annotate_module(
-  res = res,
-  p = "fdr",
-  pcutoff = 0.05,
-  ref_data = NULL,
-  species = "human",
+res_fast <- annotate_module(
+  res         = res,
+  p           = "fdr",
+  pcutoff     = 0.05,
+  ref_data    = NULL,
+  mode        = "fast",
+  species     = "human",
   biospecimen = "plasma",
-  phenotype = "disease phenotype",
-  pubmed = FALSE,
-  provider = "openai",
-  llm_model = "gpt-4.1-mini",
-  llm_api_key = "your llm api key"
+  phenotype   = "your disease phenotype",
+  pubmed      = TRUE,
+  years       = 5,
+  provider    = "openai",
+  llm_model   = "gpt-4.1-mini",
+  NCBI_api_key = Sys.getenv("NCBI_API_KEY"),
+  llm_api_key  = Sys.getenv("OPENAI_API_KEY")
 )
 ```
 
-##### Database + PubMed + LLM
+##### Fast mode, no literature
 
 ```{r}
 #| eval: false
 
-res <- annotate_module(
-  res = res,
-  p = "fdr",
-  pcutoff = 0.05,
-  ref_data = NULL,
-  species = "human",
+res_fast <- annotate_module(
+  res         = res,
+  p           = "fdr",
+  pcutoff     = 0.05,
+  mode        = "fast",
+  species     = "human",
   biospecimen = "plasma",
-  phenotype = "disease phenotype",
-  pubmed = TRUE,
-  years = 5,
-  top_paper = 3,
-  min_similarity = 0.6,
-  provider = "openai",
-  embed_model = "text-embedding-3-small",
-  llm_model = "gpt-4.1-mini",
-  NCBI_api_key = "your ncbi api key",
-  llm_api_key = "your llm api key"
+  phenotype   = "your disease phenotype",
+  pubmed      = FALSE,
+  provider    = "openai",
+  llm_model   = "gpt-4.1-mini",
+  llm_api_key = Sys.getenv("OPENAI_API_KEY")
+)
+```
+
+##### Advanced mode
+
+```{r}
+#| eval: false
+
+res_adv <- annotate_module(
+  res         = res,
+  p           = "fdr",
+  pcutoff     = 0.05,
+  mode        = "advanced",
+  species     = "human",
+  biospecimen = "plasma",
+  phenotype   = "your disease phenotype",
+  pubmed      = TRUE,
+  years       = 5,
+  debate_html = TRUE,
+  synthesize  = TRUE,
+  synthesis_model = "gpt-4.1",
+  html_dir    = "featuremap_html",
+  provider    = "openai",
+  llm_model   = "gpt-4.1",
+  NCBI_api_key = Sys.getenv("NCBI_API_KEY"),
+  llm_api_key  = Sys.getenv("OPENAI_API_KEY")
+)
+```
+
+##### Local / self-hosted model
+
+```{r}
+#| eval: false
+
+res_fast <- annotate_module(
+  res         = res,
+  p           = "fdr",
+  pcutoff     = 0.05,
+  mode        = "fast",
+  species     = "human",
+  biospecimen = "plasma",
+  phenotype   = "your disease phenotype",
+  pubmed      = TRUE,
+  provider    = "local",
+  llm_model   = "your-local-model-name",
+  base_url    = "http://127.0.0.1:8000",
+  NCBI_api_key = Sys.getenv("NCBI_API_KEY")
 )
 ```
 :::
 
 ::: callout-note
--   Provide `species`, `biospecimen`, and `phenotype` whenever possible
--   Use API keys from environment variables rather than hard-coding them
+-   Provide `species`, `biospecimen` and `phenotype` whenever possible: they are what turns a biochemical description into a study-specific interpretation.
+-   Keep API keys in environment variables rather than hard-coding them.
+-   Assign the result to a **new object** (`res_fast`, `res_adv`) if you want to compare both modes on the same `res`.
 :::
+
+------------------------------------------------------------------------
 
 ## Result Interpretation
 
@@ -127,97 +199,220 @@ After successful annotation:
 ```{r}
 #| eval: false
 
-res$stage
+res_fast$stage
 # [1] "module_annotated"
 
-res$module_function$title
-# [1] "Nucleotide Metabolism and Cofactor-Linked Energy Transfer"
-
-res$module_function$summary
-# [1] "This module primarily represents biochemical processes centered on 
-# nucleotide metabolism, including purine nucleotide synthesis and turnover, 
-# as indicated by the high importance and robustness of purine nucleotides such 
-# as phosphoribosyl-ATP, ADP, and ATP. The presence of ribose phosphate derivatives 
-# and organooxygen compounds supports active ribose phosphate metabolism, which 
-# is essential for nucleotide biosynthesis. Additionally, the module includes 
-# pyridines and derivatives like pyridoxamine 5'-phosphate, highlighting involvement 
-# in coenzyme-dependent amino acid metabolism and transamination reactions. The 
-# medium structural stability and low signal concentration suggest a coordinated 
-# pathway-level shift rather than a hub-driven signal. Fatty acyls with high 
-# importance also suggest ancillary roles in acyl-CoA metabolism linked to energy 
-# homeostasis. The presence of tetrapyrroles and molybdenum cofactors further 
-# indicates involvement in redox and enzymatic cofactor functions. Overall, this 
-# module reflects integrated nucleotide biosynthesis and cofactor-mediated metabolic 
-# energy processes."
-
-res$module_function$confidence_label
-# [1] "high"
-
-res$module_function$rationale
-# [1] "The inferred function is biologically plausible in humans and detectable 
-# in plasma, where nucleotide metabolites and cofactors circulate. These pathways 
-# are relevant to systemic metabolic regulation and could be linked to age-related 
-# metabolic changes, supporting high confidence."
-
-head(res$module_top_metabolite_pmids %>% 
-       arrange(PMID_rank))
-#   Module Module_label Compound_ID                                    Compound_name PMID_rank     PMID
-# 1      1      module1      C20978                                    Glucoselysine         1 38879006
-# 2      1      module1      C00647                           Pyridoxamine phosphate         1 38846080
-# 3      1      module1      C02739                      1-(5-Phospho-D-ribosyl)-ATP        NA     <NA>
-# 4      1      module1      C11039 2'-Deoxy-5-hydroxymethylcytidine-5'-triphosphate        NA     <NA>
-# 5      1      module1      C01244               3,5-Diiodo-4-hydroxyphenylpyruvate        NA     <NA>
-# 6      1      module1      C15761                                   Concanamycin A        NA     <NA>
-#                                                                                                                                             title
-# 1 Glucoselysine, a unique advanced glycation end-product of the polyol pathway and its association with vascular complications in type 2 diabetes.
-# 2                 Why pyridoxal phosphate could be a functional predecessor of thiamine pyrophosphate and speculations on a primordial metabolism.
-# 3                                                                                                                                             <NA>
-# 4                                                                                                                                             <NA>
-# 5                                                                                                                                             <NA>
-# 6                                                                                                                                             <NA>
-#   score_embed
-# 1   0.6432722
-# 2   0.6080499
-# 3          NA
-# 4          NA
-# 5          NA
-# 6          NA
-
+names(res_fast)
+# [output placeholder - paste your console output here]
 ```
 
 ### Module interpretation table
 
-`module_function` contains the final module-level interpretation generated by the LLM. Important fields include:
+`module_function` contains the final module-level interpretation. In fast mode it has one row per annotated module; in advanced mode one row per accepted hypothesis (or a single summary row when all hypotheses of a module were rejected).
 
--   `module_id` – the module ID identified by previous step
--   `title` – a concise functional label summarizing the dominant biological theme of the module
--   `summary` – a paragraph-level interpretation of the module based on metabolite composition, network context, and optional literature evidence
--   `confidence_label` – a qualitative confidence level for the interpretation
--   `rationale` – a short explanation of why the inferred function is biologically plausible in the specified study context
--   `raw_response` – the original LLM response retained for transparency
+```{r}
+#| eval: false
 
-This table provides a concise interpretation of each statistically supported module.
+res_fast$module_function$title
+# [output placeholder - paste your console output here]
 
-### Literature evidence table
+res_fast$module_function %>%
+  dplyr::select(module_id, hypothesis_type, title, confidence_label) %>%
+  as.data.frame()
+# [output placeholder - paste your console output here]
 
-When `pubmed = TRUE`, FeatureMAP also returns ranked PubMed evidence (`module_top_metabolite_pmids`) for top metabolites in each module.
+res_fast$module_function$functional_summary[1]
+# [output placeholder - paste your console output here]
 
--   `Module` and `Module_label` – the module being annotated
--   `Compound_ID` and `Compound_name` – the metabolite used for literature retrieval
--   `PMID_rank` – the rank of the selected paper for that metabolite
--   `PMID` – PubMed identifier
--   `title` – article title
--   `score_embed` – semantic relevance score used for literature ranking
+res_fast$module_function$phenotype_relationship[1]
+# [output placeholder - paste your console output here]
+```
 
-Higher `score_embed` values indicate stronger semantic relevance between the literature and the module context.
+| Column | Description |
+|-------------------------|-----------------------------------------------|
+| `module_id` | Module ID from Step 4 (`"M1"`, `"M2"`, ...) |
+| `annotation_mode` | `"fast"` or `"advanced"` |
+| `hypothesis_id`, `verdict_status` | Advanced mode only: hypothesis ID (`"H1"`, ...) and `accepted` / `rejected` |
+| `hypothesis_type` | `Host-Endogenous`, `Microbiome-Derived`, `Diet-Derived`, `Xenobiotic / Exogenous` or `Host–Microbiome` |
+| `title` | Concise functional label for the module |
+| `functional_summary` | Paragraph-level biochemical interpretation, written without the phenotype |
+| `anchor_metabolites`, `anchor_metabolite_ids` | Metabolites the interpretation is anchored on |
+| `top_metabolites`, `top_metabolite_ids` | Leading metabolites of the module |
+| `class_names` | Dominant compound classes |
+| `phenotype_relationship` | How the module relates to the study phenotype |
+| `confidence_label` | `high`, `medium` or `low` |
+| `rationale` | Why the inferred function is plausible in the study context |
+| `global_direction` | Overall direction of change across the module |
+| `origin_endogenous_frac`, `origin_exogenous_frac` | Endogenous / exogenous origin profile |
+| `top_kegg_pathways`, `top_hmdb_pathways` | Best-covered pathways |
+| `pubmed_pmids` | PMIDs of the retained articles |
 
-## Common Issues
+A common reporting pattern is to join the interpretation with the module statistics:
 
--   **PubMed retrieval is slow** Start with fewer modules, a shorter `years` window, or `pubmed = FALSE` for validation.
+```{r}
+#| eval: false
 
--   **No useful literature retained** Relax `min_similarity`, increase `years`, or provide a more specific `phenotype`.
+library(dplyr)
 
--   **Provider/model mismatch** Make sure the selected `provider`, `embed_model`, and `llm_model` are compatible.
+res_fast$module_function %>%
+  as.data.frame() %>%
+  left_join(res_fast$module_score, by = c("module_id" = "Module")) -> module_report
+
+write.csv(module_report, "module_function_report.csv", row.names = FALSE)
+```
+
+### Supporting evidence
+
+All evidence used for the annotation is kept in `res$module_evidence`:
+
+```{r}
+#| eval: false
+
+names(res_fast$module_evidence)
+# [1] "class_coverage" "pathway_coverage" "pubmed_evidence" "top_metabolites"
+#     "anchor_metabolites" "debate_trace" "debate_html_payload"
+
+head(res_fast$module_evidence$class_coverage)
+head(res_fast$module_evidence$pathway_coverage$kegg)
+head(res_fast$module_evidence$pathway_coverage$hmdb)
+head(res_fast$module_evidence$top_metabolites)
+head(res_fast$module_evidence$pubmed_evidence)
+# [output placeholder - paste your console output here]
+```
+
+-   `class_coverage` -- compound class composition per module
+-   `pathway_coverage$hmdb` / `pathway_coverage$kegg` -- pathway ID, name, coverage and number of hits per module
+-   `top_metabolites` / `anchor_metabolites` -- the metabolites shown to the model, with their ranks
+-   `pubmed_evidence` -- retained PMIDs, the evidence JSON and the phenotype-literature support per module (and per hypothesis in advanced mode)
+-   `debate_trace` -- advanced mode only: raw responses of every agent (`raw_response_p0`, `raw_response_s1`, `raw_response_arbiter`, ...), the debate digest, and the counts of proposed, surviving, accepted and rejected hypotheses
+-   `debate_html_payload` -- advanced mode only: the data needed to re-export the debate pages
+
+### Advanced-mode verdicts
+
+```{r}
+#| eval: false
+
+res_adv$module_function %>%
+  dplyr::count(module_id, verdict_status)
+# [output placeholder - paste your console output here]
+
+res_adv$module_evidence$debate_trace %>%
+  dplyr::select(module_id, n_proposed, n_survived_debate, n_accepted, n_rejected, residual_ambiguity)
+# [output placeholder - paste your console output here]
+```
+
+------------------------------------------------------------------------
+
+## Interactive HTML Reports
+
+### Debate traces
+
+With `debate_html = TRUE`, advanced mode writes one chat-style page per module to `html_dir`, named `debate_<module_id>.html`. You can also re-export them later from a saved result, without calling the LLM again:
+
+```{r}
+#| eval: false
+
+# all modules
+export_debate_html(res = res_adv, html_dir = "featuremap_html")
+
+# a single module
+export_debate_html(res = res_adv, module_id = "M1", html_dir = "featuremap_html")
+```
+
+Each page shows the Proposer, Skeptic and Arbiter turns in order, so you can follow exactly why a hypothesis was kept, revised or rejected.
+
+### Synthesis network
+
+When `synthesize = TRUE`, an interactive network page `synthesis_network.html` is written to `html_dir` automatically. To re-export it from a saved result:
+
+```{r}
+#| eval: false
+
+export_synthesis_network_html(
+  res         = res_adv,
+  html_dir    = "featuremap_html",
+  output_file = "synthesis_network.html"
+)
+```
+
+`generate_synthesis_network_html()` does the same from a bare `res$module_synthesis` list, which is useful when you keep only the synthesis object:
+
+```{r}
+#| eval: false
+
+generate_synthesis_network_html(
+  synthesis     = res_adv$module_synthesis,
+  study_context = res_adv$study_context,
+  output_dir    = "featuremap_html",
+  output_file   = "synthesis_network.html"
+)
+```
+
+------------------------------------------------------------------------
+
+## Cross-Module Synthesis {#sec-cross_module_synthesis}
+
+`synthesize_modules()` takes the accepted hypotheses of **all** annotated modules and integrates them into one picture of the study. It is run automatically by `annotate_module(mode = "advanced", synthesize = TRUE)`, and can also be called on its own, for example to re-run the synthesis with a stronger model:
+
+```{r}
+#| eval: false
+
+res_adv <- synthesize_modules(
+  res           = res_adv,
+  study_context = list(
+    species     = "human",
+    biospecimen = "plasma",
+    phenotype   = "your disease phenotype"
+  ),
+  provider    = "openai",
+  llm_model   = "gpt-4.1",
+  llm_api_key = Sys.getenv("OPENAI_API_KEY"),
+  max_tokens  = 4000,
+  temperature = 0
+)
+```
+
+::: callout-important
+`synthesize_modules()` requires **advanced mode** output. Fast mode produces one flat annotation per module and no hypothesis-level verdicts, so it cannot be synthesized this way. If `study_context` is `NULL`, it is taken from `res$study_context`.
+
+If only one module has accepted hypotheses, the LLM call is skipped and `res$module_synthesis` is returned with the deterministic parts only.
+:::
+
+The synthesis combines two very different kinds of links:
+
+-   **Biology links** are proposed by the LLM from hypothesis titles and summaries only, and are deliberately sparse.
+-   **Biochemical links** are computed in R from direct MRN edges between top metabolites and from pathway ID overlap, so they are fully deterministic.
+
+Results are stored in `res$module_synthesis`:
+
+```{r}
+#| eval: false
+
+names(res_adv$module_synthesis)
+# [1] "nodes" "clusters" "biology_links" "biochemical_links"
+#     "relationships_sparse" "relationships" "module_relationships"
+#     "summary" "raw_response"
+
+res_adv$module_synthesis$clusters
+# [output placeholder - paste your console output here]
+
+res_adv$module_synthesis$module_relationships
+# [output placeholder - paste your console output here]
+
+cat(res_adv$module_synthesis$summary)
+# [output placeholder - paste your console output here]
+```
+
+-   `nodes` -- one row per accepted hypothesis, with `node_id` (`"<module_id>::<hypothesis_id>"`) and its assigned cluster
+-   `clusters` -- thematic clusters (`cluster_id`, `cluster_theme`, member `node_ids`)
+-   `biology_links` / `relationships_sparse` -- LLM-proposed cross-module relationships with rationales
+-   `biochemical_links` -- MRN-edge and pathway-overlap evidence between hypotheses
+-   `relationships` -- the merged relationship table used to draw the network
+-   `module_relationships` -- module-pair summary, with `relation_type` being `biochemical`, `biology`, `both` or `none`
+-   `summary` -- the narrative integrating clusters, cross-module links and the phenotype
+-   `raw_response` -- the original LLM response, kept for transparency
+
+------------------------------------------------------------------------
 
 ## Practical Checks Before Running
 
@@ -226,12 +421,25 @@ Higher `score_embed` values indicate stronger semantic relevance between the lit
 
 head(res$module_score)
 sum(res$module_score$fdr < 0.05, na.rm = TRUE)
+sum(res$module_score$p < 0.05, na.rm = TRUE)
 ```
 
-If this count is zero, it is better to revisit Step 4 before trying module annotation.
+If no module passes your threshold, `annotate_module()` returns an empty `module_function` and warns you. Either relax the filter (`p = "p"` instead of `"fdr"`) or revisit Step 4 before trying module annotation.
+
+## Common Issues
+
+-   **No module annotated.** Nothing passed `p`/`pcutoff`. Switch to `p = "p"`, raise `pcutoff`, or revisit the module identification settings.
+
+-   **PubMed retrieval is slow.** Start with a shorter `years` window, fewer significant modules, or `pubmed = FALSE` while you validate the workflow.
+
+-   **Advanced mode is expensive.** Each module costs several LLM calls. Validate the pipeline in fast mode first, then re-run the modules you care about in advanced mode.
+
+-   **`synthesize = TRUE` was ignored.** Synthesis only runs in advanced mode; in fast mode a warning is emitted and the step is skipped.
+
+-   **Provider/model mismatch.** Make sure `llm_model` exists for the selected `provider`, and remember that `provider = "local"` requires a non-empty `base_url`.
 
 ## Next Step
 
-Module annotation is the last step of the current R-package tutorial workflow. If needed, you can next inspect `res$module_function` and the PubMed evidence tables for downstream reporting or visualization.
+Module annotation is the last step of the R-package workflow. `res$module_function`, `res$module_evidence` and `res$module_synthesis`, together with the exported HTML pages, contain everything you need for downstream reporting.
 
 If you want to continue with the interactive interface, move to [Shiny App Installation](10_shinyapp_installation.qmd) to start the Shiny tutorial.

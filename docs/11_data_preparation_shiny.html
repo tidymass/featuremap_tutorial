@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Data Preparation – FeatureMAP Tutorial</title>
+<title>8&nbsp; Data Upload – FeatureMAP Tutorial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./11_data_preparation_shiny.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./11_data_preparation_shiny.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -390,7 +390,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -414,13 +414,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -442,10 +442,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#start-from-home-page" id="toc-start-from-home-page" class="nav-link active" data-scroll-target="#start-from-home-page"><span class="header-section-number">8.1</span> Start From Home Page</a></li>
-  <li><a href="#data-upload-page" id="toc-data-upload-page" class="nav-link" data-scroll-target="#data-upload-page"><span class="header-section-number">8.2</span> Data Upload Page</a></li>
-  <li><a href="#what-you-need-to-provide" id="toc-what-you-need-to-provide" class="nav-link" data-scroll-target="#what-you-need-to-provide"><span class="header-section-number">8.3</span> What You Need to Provide</a></li>
-  <li><a href="#recommended-start-with-demo-data" id="toc-recommended-start-with-demo-data" class="nav-link" data-scroll-target="#recommended-start-with-demo-data"><span class="header-section-number">8.4</span> Recommended: Start with Demo Data</a></li>
-  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">8.5</span> Next Step</a></li>
+  <li><a href="#quick-guide" id="toc-quick-guide" class="nav-link" data-scroll-target="#quick-guide"><span class="header-section-number">8.2</span> Quick Guide</a></li>
+  <li><a href="#data-upload-page" id="toc-data-upload-page" class="nav-link" data-scroll-target="#data-upload-page"><span class="header-section-number">8.3</span> Data Upload Page</a></li>
+  <li><a href="#what-you-need-to-provide" id="toc-what-you-need-to-provide" class="nav-link" data-scroll-target="#what-you-need-to-provide"><span class="header-section-number">8.4</span> What You Need to Provide</a>
+  <ul class="collapse">
+  <li><a href="#reference-source" id="toc-reference-source" class="nav-link" data-scroll-target="#reference-source"><span class="header-section-number">8.4.1</span> Reference Source</a></li>
+  </ul></li>
+  <li><a href="#recommended-start-with-demo-data" id="toc-recommended-start-with-demo-data" class="nav-link" data-scroll-target="#recommended-start-with-demo-data"><span class="header-section-number">8.5</span> Recommended: Start with Demo Data</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">8.6</span> Next Step</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/11_data_preparation_shiny.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/11_data_preparation_shiny.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -453,9 +457,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./11_data_preparation_shiny.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./11_data_preparation_shiny.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></h1>
 </div>
 
 
@@ -472,7 +476,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter focuses on how to <strong>use</strong> the first part of <strong>FeatureMAP Shiny</strong> rather than repeating all data-format details from the R package tutorial. If you need the full input specification, please refer to <a href="./02_data_preparation.html">R package-Data Preparation</a>, especially <a href="02_data_preparation.html#sec-input_data_requirement" class="quarto-xref"><span>Section 2.1</span></a>.</p>
+<p>This chapter focuses on how to <strong>use</strong> the first step of <strong>FeatureMAP Shiny</strong> rather than repeating all data-format details from the R package tutorial. If you need the full input specification, please refer to <a href="./02_data_preparation.html">R package-Data Preparation</a>, especially <a href="02_data_preparation.html#sec-input_data_requirement" class="quarto-xref"><span>Section 2.1</span></a>.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -494,55 +498,105 @@ Important
 </div>
 <p>When the app opens, you will first see the <strong>Home</strong> page. In the center of the page, there are two main buttons:</p>
 <ul>
-<li><strong>Get Started</strong>: jump directly to <strong>Data Upload</strong>, which is the first analysis step</li>
-<li><strong>Documentation</strong>: open the FeatureMAP Shiny documentation repository in your browser</li>
+<li><strong>Get Started</strong>: jump directly to <strong>Data Upload</strong>, which is Step 1 of the workflow</li>
+<li><strong>Documentation</strong>: open this tutorial in your browser</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_get_started.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_home_get_started.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <p>Here we click the button <code>Get Started</code> to start the analysis pipeline.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>On the hosted deployment the analysis pages are protected. If authentication is enabled, clicking <strong>Get Started</strong> takes you to the <strong>Sign In</strong> page first; after signing in, the app returns to the page you were heading for.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_signin.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="600"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="data-upload-page" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="data-upload-page"><span class="header-section-number">8.2</span> Data Upload Page</h2>
-<p><strong>Data Upload</strong> is <strong>Step 1</strong> of the workflow. This page is mainly divided into two areas:</p>
+<section id="quick-guide" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="quick-guide"><span class="header-section-number">8.2</span> Quick Guide</h2>
+<p>The first time you reach <strong>Data Upload</strong>, the app offers a short guided tour:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_quickstart.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="500"></p>
+</figure>
+</div>
 <ul>
-<li><strong>Parameter area</strong> on the left: choose the reference database, upload files, and click <strong>Load</strong></li>
-<li><strong>Result area</strong> on the right: preview the loaded feature table and check the loading status</li>
+<li><strong>Start Quick Guide</strong> highlights three spots on every step page in turn – the parameter sidebar, the <strong>Run</strong> button, and the result panel – and follows you from Step 1 to Step 6.</li>
+<li><strong>Not now</strong> dismisses it; you can still read every parameter’s explanation from the ⓘ icons next to the field labels.</li>
+<li>While the guide is running, use <strong>Next</strong> to move to the next hint and <strong>Exit Guide</strong> to leave it at any time.</li>
+</ul>
+</section>
+<section id="data-upload-page" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="data-upload-page"><span class="header-section-number">8.3</span> Data Upload Page</h2>
+<p><strong>Data Upload</strong> is <strong>Step 1 of 6</strong>. Like every analysis page, it is divided into two areas:</p>
+<ul>
+<li><strong>Parameter area</strong> on the left: upload your files, choose the reference source, and click <strong>Load</strong></li>
+<li><strong>Result area</strong> on the right: preview the loaded tables in the <strong>Feature Table</strong> and <strong>MS2 Table</strong> tabs, and check the loading message</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_data_upload.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s1_upload_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 </section>
-<section id="what-you-need-to-provide" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="what-you-need-to-provide"><span class="header-section-number">8.3</span> What You Need to Provide</h2>
+<section id="what-you-need-to-provide" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="what-you-need-to-provide"><span class="header-section-number">8.4</span> What You Need to Provide</h2>
 <p>Compared with the R package tutorial, the main points to remember here are:</p>
 <ul>
 <li>a <strong>feature table</strong> is required</li>
 <li>an <strong>MS2 annotation table</strong> is optional</li>
-<li>you need to choose either <strong>HMDB</strong> or <strong>KEGG</strong> as the reference database</li>
-<li>you can use either the built-in reference data or upload your own reference datasets</li>
+<li>you can keep the <strong>built-in reference resources</strong> or upload your own</li>
 </ul>
-<p>The current Shiny app accepts uploaded data tables in:<code>.csv</code>, <code>.rda</code>, and <code>.RData</code>.</p>
+<p>The app accepts <code>.csv</code>, <code>.rda</code> and <code>.RData</code> files, up to 500 MB per file by default.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Choosing between an HMDB and a KEGG namespace is no longer needed. FeatureMAP now uses one <strong>built-in merged database</strong> that keeps both HMDB and KEGG identifiers, exactly as described in <a href="./03_feature_annotation.html">R package-Feature Annotation</a>.</p>
+</div>
+</div>
+<section id="reference-source" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="reference-source"><span class="header-section-number">8.4.1</span> Reference Source</h3>
+<ul>
+<li><strong>Default reference (recommended)</strong>: use the MS1 annotation database and the metabolic reaction network that ship with the app.</li>
+<li><strong>Upload reference datasets</strong>: two extra upload fields appear, for your own <strong>MS1 Annotation Database</strong> (<code>.rda</code>, a <code>metid</code>-compatible database whose <code>spectra.info</code> contains <code>Lab.ID</code>, <code>Compound.name</code>, <code>Formula</code>, <code>HMDB.ID</code>, <code>KEGG.ID</code>, <code>CAS.ID</code>, <code>mz</code>, <code>RT</code> and <code>Submitter</code>) and your own <strong>Metabolic Reaction Network</strong> (<code>.rda</code>, an <code>igraph</code> object). Format examples can be downloaded from <a href="https://github.com/tidymass/featuremap_resources">featuremap_resources</a>.</li>
+</ul>
 <p>For detailed column definitions of <code>feature_table</code> and <code>ms2_table</code>, see <a href="./02_data_preparation.html">R package-Data Preparation</a>.</p>
 </section>
-<section id="recommended-start-with-demo-data" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="recommended-start-with-demo-data"><span class="header-section-number">8.4</span> Recommended: Start with Demo Data</h2>
+</section>
+<section id="recommended-start-with-demo-data" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="recommended-start-with-demo-data"><span class="header-section-number">8.5</span> Recommended: Start with Demo Data</h2>
 <p>For most users, the best way to learn the app is to start with the built-in demo data.</p>
 <p>The recommended sequence is:</p>
 <ol type="1">
-<li>choose <strong>HMDB</strong> or <strong>KEGG</strong></li>
-<li>click <strong>Use Demo Data</strong></li>
-<li>keep <strong>Default reference (recommended)</strong> unless you specifically want to test custom references</li>
+<li>click <strong>Use Demo Data</strong> – the two upload fields are filled with <code>demo_feature_table.rda</code> and <code>demo_ms2.rda</code></li>
+<li>keep <strong>Default reference (recommended)</strong></li>
 <li>click <strong>Load</strong></li>
-<li>confirm that the preview table and status message appear on the right</li>
+<li>confirm that the preview tables and the success message appear on the right</li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_demo_data.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s1_upload_demo.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
 <p>This lets you move through the full Shiny workflow first, before switching to your own dataset.</p>
@@ -556,13 +610,13 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>After clicking <strong>Use Demo Data</strong>, the app only stages the demo files. You still need to click <strong>Load</strong> to actually place them into the current session.</p>
+<p><strong>Use Demo Data</strong> only stages the demo files; you still need to click <strong>Load</strong> to place them into the current session. <strong>Download Demo</strong> saves the same two tables as a zip file, which is handy as a template for formatting your own data.</p>
 </div>
 </div>
 </section>
-<section id="next-step" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="next-step"><span class="header-section-number">8.5</span> Next Step</h2>
-<p>Once the data are loaded successfully, click <strong>Next Step</strong> to continue to <strong>Feature Annotation</strong>.</p>
+<section id="next-step" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="next-step"><span class="header-section-number">8.6</span> Next Step</h2>
+<p>Once the data are loaded successfully, the <strong>Next Step</strong> button becomes available. Click it to continue to <strong>Feature Annotation</strong>.</p>
 
 
 </section>

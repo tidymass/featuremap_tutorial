@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Function Annotation – FeatureMAP Tutorial</title>
+<title>12&nbsp; Function Interpretation – FeatureMAP Tutorial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -251,7 +251,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./15_function_annotation.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./15_function_annotation.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -355,7 +355,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./11_data_preparation_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Preparation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Upload</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -379,13 +379,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./15_function_annotation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./16_results_export_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span></a>
   </div>
 </li>
       </ul>
@@ -406,12 +406,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#enter-the-function-annotation-page" id="toc-enter-the-function-annotation-page" class="nav-link active" data-scroll-target="#enter-the-function-annotation-page"><span class="header-section-number">12.1</span> Enter the Function Annotation Page</a></li>
+  <li><a href="#enter-the-function-interpretation-page" id="toc-enter-the-function-interpretation-page" class="nav-link active" data-scroll-target="#enter-the-function-interpretation-page"><span class="header-section-number">12.1</span> Enter the Function Interpretation Page</a></li>
   <li><a href="#parameter-area" id="toc-parameter-area" class="nav-link" data-scroll-target="#parameter-area"><span class="header-section-number">12.2</span> Parameter Area</a></li>
-  <li><a href="#run-function-annotation" id="toc-run-function-annotation" class="nav-link" data-scroll-target="#run-function-annotation"><span class="header-section-number">12.3</span> Run Function Annotation</a></li>
-  <li><a href="#result-area" id="toc-result-area" class="nav-link" data-scroll-target="#result-area"><span class="header-section-number">12.4</span> Result Area</a></li>
-  <li><a href="#recommended-run-the-demo-data-first" id="toc-recommended-run-the-demo-data-first" class="nav-link" data-scroll-target="#recommended-run-the-demo-data-first"><span class="header-section-number">12.5</span> Recommended: Run the Demo Data First</a></li>
-  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">12.6</span> Next Step</a></li>
+  <li><a href="#fast-mode-and-advanced-mode" id="toc-fast-mode-and-advanced-mode" class="nav-link" data-scroll-target="#fast-mode-and-advanced-mode"><span class="header-section-number">12.3</span> Fast Mode and Advanced Mode</a></li>
+  <li><a href="#run-function-interpretation" id="toc-run-function-interpretation" class="nav-link" data-scroll-target="#run-function-interpretation"><span class="header-section-number">12.4</span> Run Function Interpretation</a></li>
+  <li><a href="#result-area-fast-mode" id="toc-result-area-fast-mode" class="nav-link" data-scroll-target="#result-area-fast-mode"><span class="header-section-number">12.5</span> Result Area (Fast Mode)</a></li>
+  <li><a href="#result-area-advanced-mode" id="toc-result-area-advanced-mode" class="nav-link" data-scroll-target="#result-area-advanced-mode"><span class="header-section-number">12.6</span> Result Area (Advanced Mode)</a>
+  <ul class="collapse">
+  <li><a href="#accepted-interpretations" id="toc-accepted-interpretations" class="nav-link" data-scroll-target="#accepted-interpretations"><span class="header-section-number">12.6.1</span> Accepted Interpretations</a></li>
+  <li><a href="#debate-history" id="toc-debate-history" class="nav-link" data-scroll-target="#debate-history"><span class="header-section-number">12.6.2</span> Debate History</a></li>
+  <li><a href="#cross-module-synthesis" id="toc-cross-module-synthesis" class="nav-link" data-scroll-target="#cross-module-synthesis"><span class="header-section-number">12.6.3</span> Cross-Module Synthesis</a></li>
+  </ul></li>
+  <li><a href="#recommended-run-the-demo-data-first" id="toc-recommended-run-the-demo-data-first" class="nav-link" data-scroll-target="#recommended-run-the-demo-data-first"><span class="header-section-number">12.7</span> Recommended: Run the Demo Data First</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step"><span class="header-section-number">12.8</span> Next Step</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/tidymass/featuremap_tutorial/edit/main/15_function_annotation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/tidymass/featuremap_tutorial/blob/main/15_function_annotation.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
@@ -419,9 +426,9 @@ ul.task-list li input[type="checkbox"] {
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./15_function_annotation.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10_shinyapp_installation.html">Shiny App</a></li><li class="breadcrumb-item"><a href="./15_function_annotation.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Annotation</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Function Interpretation</span></h1>
 </div>
 
 
@@ -438,7 +445,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This chapter focuses on how to use <strong>Step 5: AI-Powered Function Annotation</strong> in <strong>FeatureMAP Shiny</strong>. The detailed method, parameter definitions, and result structure have already been introduced in <a href="./06_function_annotation.html">R package-Function Annotation</a>, so here we focus on the Shiny workflow itself.</p>
+<p>This chapter focuses on how to use <strong>Step 5: Function Interpretation</strong> in <strong>FeatureMAP Shiny</strong>. The detailed method, parameter definitions, and result structure have already been introduced in <a href="./06_function_annotation.html">R package-Function Annotation</a>, so here we focus on the Shiny workflow itself.</p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -452,30 +459,97 @@ Important
 <p><strong>Prerequisites:</strong> Make sure <strong>Module Identification</strong> has finished successfully before starting this step.</p>
 </div>
 </div>
-<section id="enter-the-function-annotation-page" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="enter-the-function-annotation-page"><span class="header-section-number">12.1</span> Enter the Function Annotation Page</h2>
-<p>After finishing <strong>Module Identification</strong>, click <strong>Next Step</strong> or select <strong>Function Annotation</strong> from the top navigation bar. This page is also divided into two areas:</p>
-<ul>
-<li><strong>Parameter area</strong> on the left: set the module filtering and annotation options, then click <strong>Run</strong></li>
-<li><strong>Result area</strong> on the right: inspect the module-level biological interpretation results</li>
-</ul>
+<section id="enter-the-function-interpretation-page" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="enter-the-function-interpretation-page"><span class="header-section-number">12.1</span> Enter the Function Interpretation Page</h2>
+<p>After finishing <strong>Module Identification</strong>, click <strong>Next Step</strong>, or open <strong>Analysis → 5 Function Interpretation</strong> in the navigation bar.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/shinyapp_step4_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+<p><img src="images/shinyapp_s5_function_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
 </figure>
 </div>
-<p>The purpose of this step is to generate interpretable biological summaries for significant modules using database knowledge, optional PubMed evidence, and a large language model.</p>
+<p>The purpose of this step is to turn statistically supported modules into interpretable biology, using the module’s own metabolite evidence, optional PubMed literature, and a large language model.</p>
 </section>
 <section id="parameter-area" class="level2" data-number="12.2">
 <h2 data-number="12.2" class="anchored" data-anchor-id="parameter-area"><span class="header-section-number">12.2</span> Parameter Area</h2>
-<p>The left panel is where you set the function annotation parameters before clicking <strong>Run</strong>. Since the detailed meanings of these parameters have already been introduced in <a href="./06_function_annotation.html">R package-Function Annotation</a>, we do not repeat them here.</p>
-<p>The main point to remember is:</p>
-<ul>
-<li>you can run this step with database information plus LLM interpretation</li>
-<li>you can optionally enable <strong>PubMed literature</strong> for additional evidence</li>
-<li>you must provide a valid <strong>LLM API key</strong></li>
-<li>if PubMed is enabled, you should also provide an <strong>NCBI API key</strong></li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Field</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Module Selection</strong></td>
+<td>Significance metric (p-value / FDR)</td>
+<td><code>FDR</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Significance cutoff</td>
+<td><code>0.05</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Annotation Mode</strong></td>
+<td>Fast / Advanced</td>
+<td><code>Fast</code></td>
+</tr>
+<tr class="even">
+<td><strong>Study Context</strong></td>
+<td>Species, Biospecimen, Phenotype</td>
+<td>empty</td>
+</tr>
+<tr class="odd">
+<td><strong>Literature</strong></td>
+<td>Use PubMed literature</td>
+<td>off</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Years to search, NCBI API key</td>
+<td><code>5</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Large Language Model</strong></td>
+<td>Provider (OpenAI / Google Gemini / SiliconFlow / Local)</td>
+<td><code>OpenAI</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Model ID</td>
+<td>empty</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Local base URL, shown for <em>Local</em></td>
+<td>empty</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>API key</td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Model ID</strong> must be a chat model name that the selected provider actually offers, for example <code>gpt-4.1-mini</code> for OpenAI. The ⓘ icon next to the section title links to each provider’s model list. <code>Local</code> targets any OpenAI-compatible endpoint (such as a self-hosted server), needs a <strong>Local base URL</strong>, and works without an API key.</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -486,38 +560,17 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you are running the demo data for the first time, it is usually best to start with a simple configuration first, then enable PubMed-based annotation later if needed.</p>
+<p><strong>Study Context</strong> is optional but strongly recommended: species, biospecimen and phenotype are what turn a generic biochemical description into an interpretation of <em>your</em> study. The phenotype is also used as the query context when PubMed retrieval is enabled.</p>
 </div>
 </div>
 </section>
-<section id="run-function-annotation" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="run-function-annotation"><span class="header-section-number">12.3</span> Run Function Annotation</h2>
-<p>Once the parameters are ready, click <strong>Run</strong>.</p>
-<p>The app will start module function annotation and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically.</p>
-<p>If no significant modules pass the selected cutoff, the app will finish normally but return an empty result for this step.</p>
-</section>
-<section id="result-area" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="result-area"><span class="header-section-number">12.4</span> Result Area</h2>
-<p>After the run finishes, the right panel shows the annotation result for one selected module at a time.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/shinyapp_step4_function.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
-</figure>
-</div>
-<p>If literature-based annotation was enabled, the page also shows a <strong>Literature Evidence (PMID)</strong> section for the selected module. This section helps you inspect which literature evidence was retained and gives you a quick way to open the corresponding PubMed records.</p>
-</section>
-<section id="recommended-run-the-demo-data-first" class="level2" data-number="12.5">
-<h2 data-number="12.5" class="anchored" data-anchor-id="recommended-run-the-demo-data-first"><span class="header-section-number">12.5</span> Recommended: Run the Demo Data First</h2>
-<p>If you followed the previous chapters and loaded the built-in demo data, the recommended workflow here is:</p>
-<ol type="1">
-<li>keep the default significance settings</li>
-<li>start with the default reference database</li>
-<li>provide the required LLM settings and API key</li>
-<li>leave <strong>Use PubMed literature</strong> off for the first test run if you want a simpler setup</li>
-<li>click <strong>Run</strong></li>
-<li>review the generated title, summary, confidence, and rationale for each module</li>
-</ol>
-<p>This is the easiest way to understand what this step produces before running a more complete literature-supported annotation on your own dataset.</p>
+<section id="fast-mode-and-advanced-mode" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="fast-mode-and-advanced-mode"><span class="header-section-number">12.3</span> Fast Mode and Advanced Mode</h2>
+<p>The <strong>Annotation Mode</strong> switch chooses between the two pipelines described in <a href="./06_function_annotation.html">R package-Function Annotation</a>:</p>
+<ul>
+<li><strong>Fast</strong> – a two-call pipeline producing one interpretation per module. This is the cheaper and faster option, and the right one for a first pass.</li>
+<li><strong>Advanced</strong> – a multi-agent debate: a Proposer drafts 1–3 candidate hypotheses, a Skeptic challenges them over up to two rounds, and an Arbiter accepts or rejects each one.</li>
+</ul>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -528,13 +581,132 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If this step returns no results, first check whether any significant modules were detected in <strong>Module Identification</strong> under your current cutoff.</p>
+<p>In the app, Advanced mode is not a set of separate options: the per-module <strong>debate transcript</strong> and the <strong>cross-module synthesis</strong> are always produced as part of an Advanced run, and appear as their own result tabs.</p>
 </div>
 </div>
 </section>
-<section id="next-step" class="level2" data-number="12.6">
-<h2 data-number="12.6" class="anchored" data-anchor-id="next-step"><span class="header-section-number">12.6</span> Next Step</h2>
-<p>Once function annotation is complete, go to <strong>Results</strong> to download the generated tables and networks.</p>
+<section id="run-function-interpretation" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="run-function-interpretation"><span class="header-section-number">12.4</span> Run Function Interpretation</h2>
+<p>Once the parameters are ready, click <strong>Run</strong>.</p>
+<p>The app calls the model module by module, so this step is the slowest one and its runtime grows with the number of significant modules, with Advanced mode, and with PubMed enabled. If no module passes the selected cutoff, the run finishes normally and the result panel reports that nothing passed.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>API keys are entered per session and are used only for the current run; they are not stored in your results.</p>
+</div>
+</div>
+</section>
+<section id="result-area-fast-mode" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="result-area-fast-mode"><span class="header-section-number">12.5</span> Result Area (Fast Mode)</h2>
+<p>In Fast mode the right panel shows one module at a time, chosen with the module selector in the toolbar.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_s5_function_fast.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>Each report opens with the module title and a row of pills – module ID, hypothesis type, and confidence – followed by five sections:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Function Interpretation</strong></td>
+<td>The functional summary, plus the core driver (anchor) metabolites behind it</td>
+</tr>
+<tr class="even">
+<td><strong>Biochemical Context</strong></td>
+<td>Chemical-class profile, KEGG and HMDB pathway coverage, and the endogenous/exogenous origin profile</td>
+</tr>
+<tr class="odd">
+<td><strong>Module Statistics</strong></td>
+<td>The supporting metabolites of the module and the global direction of change</td>
+</tr>
+<tr class="even">
+<td><strong>Phenotype &amp; Literature</strong></td>
+<td>The phenotype relationship, plus clickable PMID links when PubMed was enabled</td>
+</tr>
+<tr class="odd">
+<td><strong>Evidence Strength</strong></td>
+<td>The confidence label and the rationale behind it</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="result-area-advanced-mode" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="result-area-advanced-mode"><span class="header-section-number">12.6</span> Result Area (Advanced Mode)</h2>
+<p>In Advanced mode the right panel has three tabs.</p>
+<section id="accepted-interpretations" class="level3" data-number="12.6.1">
+<h3 data-number="12.6.1" class="anchored" data-anchor-id="accepted-interpretations"><span class="header-section-number">12.6.1</span> Accepted Interpretations</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_s5_function_advanced.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>The same report layout as Fast mode, but with two selectors: one for the module and one for the <strong>accepted hypothesis</strong> within that module. A module can therefore carry more than one accepted interpretation.</p>
+</section>
+<section id="debate-history" class="level3" data-number="12.6.2">
+<h3 data-number="12.6.2" class="anchored" data-anchor-id="debate-history"><span class="header-section-number">12.6.2</span> Debate History</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_s5_function_debate.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>An embedded chat-style transcript of the debate for the selected module, showing the Proposer, Skeptic and Arbiter turns in order. This is where you see <em>why</em> a hypothesis survived or was rejected. It is the same page that <code>export_debate_html()</code> writes in the R package.</p>
+</section>
+<section id="cross-module-synthesis" class="level3" data-number="12.6.3">
+<h3 data-number="12.6.3" class="anchored" data-anchor-id="cross-module-synthesis"><span class="header-section-number">12.6.3</span> Cross-Module Synthesis</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/shinyapp_s5_function_synthesis.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
+</figure>
+</div>
+<p>An interactive network integrating the accepted hypotheses from all modules into thematic clusters, with links that are either proposed by the model from the hypothesis summaries or computed deterministically from metabolic-network edges and pathway overlap. It corresponds to <code>res$module_synthesis</code> and to <code>export_synthesis_network_html()</code> in the R package.</p>
+<p>Both HTML reports can be exported on the <strong>Results Download</strong> page.</p>
+</section>
+</section>
+<section id="recommended-run-the-demo-data-first" class="level2" data-number="12.7">
+<h2 data-number="12.7" class="anchored" data-anchor-id="recommended-run-the-demo-data-first"><span class="header-section-number">12.7</span> Recommended: Run the Demo Data First</h2>
+<p>If you followed the previous chapters and loaded the built-in demo data, the recommended workflow here is:</p>
+<ol type="1">
+<li>keep the default significance settings, or switch the metric to <strong>p-value</strong> if no module passes the FDR cutoff</li>
+<li>fill in <strong>Study Context</strong> with the species, biospecimen and phenotype of your study</li>
+<li>start in <strong>Fast</strong> mode, with <strong>Use PubMed literature</strong> off, so the first run is quick and cheap</li>
+<li>provide the LLM provider, model ID and API key</li>
+<li>click <strong>Run</strong> and review the generated title, summary, confidence and rationale</li>
+<li>once the setup works, re-run the modules you care about in <strong>Advanced</strong> mode, with PubMed enabled</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If this step returns no results, first check whether any module passed the cutoff in <strong>Module Identification</strong>. If the run fails immediately, check the model ID and the API key – an unknown model name for the selected provider is the most common cause.</p>
+</div>
+</div>
+</section>
+<section id="next-step" class="level2" data-number="12.8">
+<h2 data-number="12.8" class="anchored" data-anchor-id="next-step"><span class="header-section-number">12.8</span> Next Step</h2>
+<p>Once function interpretation is complete, click <strong>Results</strong> to download the generated tables, networks and reports.</p>
 
 
 </section>
@@ -960,8 +1132,8 @@ Tip
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./16_results_export_shiny.html" class="pagination-link" aria-label="Results Export">
-        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Export</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./16_results_export_shiny.html" class="pagination-link" aria-label="Results Download">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Results Download</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

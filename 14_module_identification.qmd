@@ -8,54 +8,65 @@ This chapter focuses on how to use **Step 4: Module Identification** in **Featur
 
 ## Enter the Module Identification Page
 
-After finishing **Subnetwork Extraction**, click **Next Step** or select **Module Identification** from the top navigation bar. This page is also divided into two areas:
+After finishing **Subnetwork Extraction**, click **Next Step**, or open **Analysis → 4 Module Identification** in the navigation bar.
 
--   **Parameter area** on the left: set the module identification options and click **Run**
--   **Result area** on the right: inspect the detected modules from different views
-
-![](images/shinyapp_step3_page.png){fig-align="center" width="750"}
+![](images/shinyapp_s4_modules_page.png){fig-align="center" width="750"}
 
 The purpose of this step is to identify functional modules from the extracted PCSF subnetwork.
 
 ## Parameter Area
 
-The left panel is where you set the module identification parameters before clicking **Run**. Since the detailed meanings of these parameters have already been introduced in [R package-Module Identification](05_module_identification.qmd), we do not repeat them here.
+| Section | Field | Default |
+|------------------------|------------------------|------------------------|
+| **Algorithm** | Community detection method (Louvain / Walktrap / Fast greedy / Leading eigen) | `Louvain` |
+|  | Resolution, shown for *Louvain* | `1` |
+|  | Number of steps, shown for *Walktrap* | `4` |
+| **Filtering** | Node frequency threshold | `0.05` |
+|  | Minimum module size | `3` |
+| **Computation** | Permutations | `100` |
+|  | Random seed | `123` |
+|  | Threads | `4` |
+
+The four algorithms and the effect of each threshold are described in [R package-Module Identification](05_module_identification.qmd).
 
 ::: callout-note
-If you are running the demo data for the first time, it is usually best to keep the default settings and run the step once before tuning the algorithm or filtering thresholds.
+If you are running the demo data for the first time, it is usually best to keep the default settings and run the step once before tuning the algorithm or the filtering thresholds.
 :::
 
 ## Run Module Identification
 
 Once the parameters are ready, click **Run**.
 
-The app will start module identification and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the **Next Step** button will become available.
+Module detection is followed by the permutation test, so this step takes a while with the default 100 permutations. When it finishes, the result panel is updated automatically and the **Next Step** button becomes available.
 
 ## Result Area
 
 ### Visualization
 
-The **Visualization** tab is used to inspect the detected modules as subnetworks.
+The **Visualization** tab shows one detected module at a time as a network.
 
-![](images/shinyapp_step3_moduleplot.png){fig-align="center" width="750"}
+![](images/shinyapp_s4_modules_visualization.png){fig-align="center" width="750"}
 
-After the run finishes, you can choose a module and view its network directly in the app. This is usually the most intuitive place to start, because it lets you quickly see how the selected module is organized.
+Two selectors sit above the plot:
+
+-   the **Module** selector chooses which module (`M1`, `M2`, ...) to display
+-   the **Metabolite** selector highlights one metabolite and its directly connected neighbours inside that module
+
+The legend distinguishes **Annotated** metabolites (green), which are linked to observed LC--MS features, from **Hidden** metabolites (red), which are Steiner nodes added during PCSF optimization to keep the module connected.
 
 ### Module Score
 
-The **Module Score** tab shows the quantitative summary for identified modules. This table is useful for checking which modules are stronger or more statistically convincing before moving on to interpretation.
+The **Module Score** tab shows the quantitative summary for every detected module: size, number of annotated nodes, module score, permutation p-value and FDR. This table tells you which modules are worth interpreting in the next step.
 
-![](images/shinyapp_step3_modulescore.png){fig-align="center" width="750"}
-
-For a full explanation of the score-related columns, see [R package-Module Identification](05_module_identification.qmd).
+![](images/shinyapp_s4_modules_score.png){fig-align="center" width="750"}
 
 ### Module Table
 
-The **Module Table** tab shows the detailed module membership results. This table is the main reference when you want to inspect which metabolites were assigned to each module and what information will be passed to the next step.
+The **Module Table** tab shows the detailed module membership: which metabolite belongs to which module, its HMDB and KEGG identifiers, node frequency, type and importance.
 
-![](images/shinyapp_step3_moduletable.png){fig-align="center" width="750"}
+![](images/shinyapp_s4_modules_table.png){fig-align="center" width="750"}
 
-For a full explanation of the result columns, see [R package-Module Identification](05_module_identification.qmd).
+For a full explanation of the columns in both tables, see [R package-Module Identification](05_module_identification.qmd).
 
 ## Recommended: Run the Demo Data First
 
@@ -63,17 +74,17 @@ If you followed the previous chapters and loaded the built-in demo data, the rec
 
 1.  keep the default parameter settings
 2.  click **Run**
-3.  wait for module identification to finish
+3.  wait for module identification and the permutation test to finish
 4.  open **Visualization** first to inspect the detected modules
-5.  then review **Module Score**
+5.  then review **Module Score** to see which modules are significant
 6.  finally check **Module Table** for the detailed module membership results
 
 This is the easiest way to understand what this step produces before tuning parameters on your own dataset.
 
 ::: callout-tip
-If no module appears, first check whether **Subnetwork Extraction** finished successfully in the previous step and whether the extracted subnetwork contains enough structure for module detection.
+If no module appears, first check whether **Subnetwork Extraction** finished successfully and whether the extracted subnetwork contains enough structure for community detection. Lowering **Minimum module size** or the **Node frequency threshold** keeps more of the network in play.
 :::
 
 ## Next Step
 
-Once module identification is complete, click **Next Step** to continue to **AI-Powered Function Annotation**.
+Once module identification is complete, click **Next Step** to continue to **Function Interpretation**.

@@ -8,20 +8,25 @@ This chapter focuses on how to use **Step 2: Feature Annotation** in **FeatureMA
 
 ## Enter the Feature Annotation Page
 
-After finishing **Data Upload**, click **Next Step** or select **Feature Annotation** from the top navigation bar.
+After finishing **Data Upload**, click **Next Step**, or open **Analysis → 2 Feature Annotation** in the navigation bar.
 
-This page is also divided into two areas:
-
--   **Parameter area** on the left: set annotation parameters and click **Run**
--   **Result area** on the right: view the annotation summary and detailed result table
-
-![](images/shinyapp_step1_page.png){fig-align="center" width="750"}
+![](images/shinyapp_s2_annotation_page.png){fig-align="center" width="750"}
 
 The purpose of this step is to map metabolomics features to candidate metabolites and prepare the refined annotation table for downstream network analysis.
 
 ## Parameter Area
 
-The left panel is where you set the feature annotation parameters before clicking **Run**. Since the detailed meanings of these parameters have already been introduced in [R package-Feature Annotation](03_feature_annotation.qmd), we do not repeat them here.
+The left panel groups the annotation parameters into two sections:
+
+| Section | Field | Default |
+|------------------------|------------------------|------------------------|
+| **Matching Tolerance** | MS1 match (ppm) | `15` |
+|  | RT tolerance (second) | `5` |
+| **Advanced Options** | Column type (Reverse Phase / HILIC) | `Reverse Phase` |
+|  | Isotope number | `3` |
+|  | Threads | `4` |
+
+The meaning of each parameter is the same as in [R package-Feature Annotation](03_feature_annotation.qmd), and the ⓘ icon next to each section title repeats the short version inside the app.
 
 ::: callout-note
 If you are running the demo data for the first time, it is usually best to keep the default settings and run the step once before tuning anything.
@@ -31,7 +36,12 @@ If you are running the demo data for the first time, it is usually best to keep 
 
 Once the parameters are ready, click **Run**.
 
-The app will start the feature annotation procedure and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically, and the **Next Step** button will become available.
+A progress card appears while the step is running. When it finishes, the card reports:
+
+-   **Annotated features** -- how many of the uploaded features received at least one candidate, with the percentage
+-   **Feature-metabolite pairs** -- how many annotation rows were produced
+
+The result panel on the right is updated automatically and the **Next Step** button becomes available.
 
 If you did not provide an MS2 annotation table in the previous step, the app will still run using MS1-based annotation only.
 
@@ -39,25 +49,22 @@ If you did not provide an MS2 annotation table in the previous step, the app wil
 
 ### Summary
 
-The **Summary** tab gives a quick overview of the annotation results. It mainly helps you see how the annotation changed before and after refinement at both the metabolite level and the feature level.
+The **Summary** tab reports how much annotation ambiguity was removed by the refinement stage, comparing the state **before** and **after** filtering along two axes:
 
-![](images/shinyapp_step1_summary.png){fig-align="center" width="750"}
+-   **Candidate metabolites per feature** -- how many metabolites a single feature is still assigned to
+-   **Feature groups per metabolite** -- how many metabolite feature clusters (MFCs) point at the same metabolite
+
+![](images/shinyapp_s2_annotation_summary.png){fig-align="center" width="750"}
 
 This view is useful for checking whether the annotation step completed normally and whether the refinement reduced redundancy.
 
-### Annotation Table 1
+### Annotation Table
 
-The **Annotation Table 1** tab contains the detailed feature-to-metabolite annotation results produced by this step.
+The **Annotation Table** tab contains the detailed feature-to-metabolite annotation results produced by this step; it is the same table as `res$anno_feature_table1` in the R package.
 
-![](images/shinyapp_step1_annotation.png){fig-align="center" width="750"}
+![](images/shinyapp_s2_annotation_table.png){fig-align="center" width="750"}
 
-For a full explanation of the result columns, see [R package-3 Feature Annotation](03_feature_annotation.qmd).
-
-Below the table, the app also shows an **Annotation Status** summary, including:
-
--   how many features were annotated
--   how many feature-metabolite entries were produced
--   the average number of metabolite candidates per annotated feature
+For a full explanation of the result columns, see [R package-Feature Annotation](03_feature_annotation.qmd). The table supports searching, sorting, and column filtering directly in the browser.
 
 ## Recommended: Run the Demo Data First
 
@@ -67,14 +74,14 @@ If you followed the previous chapter and loaded the built-in demo data, the reco
 2.  click **Run**
 3.  wait for the annotation step to finish
 4.  check the **Summary** tab first
-5.  then open **Annotation Table 1** to inspect the detailed annotation results
+5.  then open **Annotation Table** to inspect the detailed annotation results
 
 This is the easiest way to understand what the step produces before applying it to your own dataset.
 
 ::: callout-tip
-If the result table looks empty, first check whether **Data Upload** finished successfully in the previous step, and then confirm that the selected reference database and input files were loaded correctly.
+If the result table looks empty, first check whether **Data Upload** finished successfully in the previous step, and then confirm that the input files were loaded correctly.
 :::
 
 ## Next Step
 
-Once feature annotation is complete, click **Next Step** to continue to **Subnetwork Extraction**.
+Once feature annotation is complete, click **Next Step** to continue to **PCSF Subnetwork**.

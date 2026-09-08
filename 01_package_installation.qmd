@@ -1,6 +1,6 @@
 # Installation
 
-Follow the steps below to install the latest development version of **FeatureMAP** from GitHub. The script first installs `BiocManager` and `remotes` if you don’t have them.
+Follow the steps below to install the latest development version of **FeatureMAP** from GitHub. The script first installs `BiocManager` and `remotes` if you don't have them.
 
 ```{r}
 #| eval=FALSE
@@ -59,6 +59,61 @@ After installation, run a quick check:
 packageVersion("featuremap")
 
 ```
+
+## Reference Resources
+
+FeatureMAP does not ship its large reference resources inside the package. The following resources are downloaded **on demand** from the [featuremap_resources](https://github.com/tidymass/featuremap_resources) repository and then cached locally:
+
+| Resource | Used by | Content |
+|------------------------|------------------------|------------------------|
+| `featuremap_compound` | `annotate_feature()` | Merged HMDB + KEGG MS1 compound database |
+| `mrn` | `extract_subnetwork()` | Metabolic reaction network (MRN) |
+| `functional_reference_hmdb`, `functional_reference_kegg` | `annotate_module()` | Compound class / functional metadata |
+| `pathway_hmdb`, `pathway_kegg` | `annotate_module()` | Pathway membership used for coverage statistics |
+
+The first run of each step therefore needs an internet connection. Downloaded files are reused afterwards, so later runs work offline.
+
+By default the cache lives in `tools::R_user_dir("featuremap", which = "cache")`. You can point it somewhere else, for example to a shared project folder:
+
+```{r}
+#| eval=FALSE
+
+options(featuremap.resources.cache_dir = "~/featuremap_cache")
+
+```
+
+::: callout-note
+If your machine cannot reach GitHub, you can also download the resources manually and pass them directly through the corresponding arguments (`metabolite_database`, `mrn`, `ref_data`).
+:::
+
+## Optional: API Keys for Module Annotation
+
+The last step of the workflow ([Function Annotation](06_function_annotation.qmd)) calls a large language model (LLM) and, optionally, PubMed. These services need API keys, which are **not** required for Steps 1--4.
+
+Store them as environment variables instead of hard-coding them in your scripts. Add the following lines to your `.Renviron` file (open it with `usethis::edit_r_environ()`), then restart R:
+
+```
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
+NCBI_API_KEY=xxxxxxxxxxxxxxxx
+```
+
+And use them like this:
+
+```{r}
+#| eval=FALSE
+
+Sys.getenv("OPENAI_API_KEY")
+Sys.getenv("NCBI_API_KEY")
+
+```
+
+Supported LLM providers and where to apply for a key:
+
+-   OpenAI: <https://platform.openai.com/>
+-   Gemini (Google AI Studio): <https://ai.google.dev/aistudio>
+-   SiliconFlow: <https://siliconflow.cn/>
+-   A local / self-hosted OpenAI-compatible endpoint (`provider = "local"`), which needs no key but requires a `base_url`
+-   PubMed / NCBI Entrez key: <https://account.ncbi.nlm.nih.gov/settings/>
 
 ## Next Step
 
