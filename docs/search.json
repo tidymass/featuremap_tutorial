@@ -61,6 +61,39 @@
     ]
   },
   {
+    "objectID": "01_package_installation.html#reference-resources",
+    "href": "01_package_installation.html#reference-resources",
+    "title": "1  Installation",
+    "section": "",
+    "text": "Resource\nUsed by\nContent\n\n\n\n\nfeaturemap_compound\nannotate_feature()\nMerged HMDB + KEGG MS1 compound database\n\n\nmrn\nextract_subnetwork()\nMetabolic reaction network (MRN)\n\n\nfunctional_reference_hmdb, functional_reference_kegg\nannotate_module()\nCompound class / functional metadata\n\n\npathway_hmdb, pathway_kegg\nannotate_module()\nPathway membership used for coverage statistics\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nIf your machine cannot reach GitHub, you can also download the resources manually and pass them directly through the corresponding arguments (metabolite_database, mrn, ref_data).",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
+    "objectID": "01_package_installation.html#optional-api-keys-for-module-annotation",
+    "href": "01_package_installation.html#optional-api-keys-for-module-annotation",
+    "title": "1  Installation",
+    "section": "1.2 Optional: API Keys for Module Annotation",
+    "text": "1.2 Optional: API Keys for Module Annotation\nThe last step of the workflow (Function Annotation) calls a large language model (LLM) and, optionally, PubMed. These services need API keys, which are not required for Steps 1–4.\nStore them as environment variables instead of hard-coding them in your scripts. Add the following lines to your .Renviron file (open it with usethis::edit_r_environ()), then restart R:\nOPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx\nNCBI_API_KEY=xxxxxxxxxxxxxxxx\nAnd use them like this:\n\nSys.getenv(\"OPENAI_API_KEY\")\nSys.getenv(\"NCBI_API_KEY\")\n\nSupported LLM providers and where to apply for a key:\n\nOpenAI: https://platform.openai.com/\nGemini (Google AI Studio): https://ai.google.dev/aistudio\nSiliconFlow: https://siliconflow.cn/\nA local / self-hosted OpenAI-compatible endpoint (provider = \"local\"), which needs no key but requires a base_url\nPubMed / NCBI Entrez key: https://account.ncbi.nlm.nih.gov/settings/",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
+    "objectID": "01_package_installation.html#next-step",
+    "href": "01_package_installation.html#next-step",
+    "title": "1  Installation",
+    "section": "1.3 Next Step",
+    "text": "1.3 Next Step\nIf all checks pass, continue to Data Preparation to prepare the input tables for the FeatureMAP workflow.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
     "objectID": "02_data_preparation.html",
     "href": "02_data_preparation.html",
     "title": "2  Data Preparation",
@@ -87,7 +120,7 @@
     "href": "02_data_preparation.html#load-demo-data",
     "title": "2  Data Preparation",
     "section": "2.2 Load Demo Data",
-    "text": "2.2 Load Demo Data\nFeatureMAP provides a built-in demo feature table and a matching demo MS2 table:\n\ndata(\"demo_feature_table\", package = \"featuremap\")\ndata(\"demo_ms2\", package = \"featuremap\")\n\ndim(demo_feature_table)\nhead(demo_feature_table, 3)\n# [output placeholder - paste your console output here]\n\ndim(demo_ms2)\nhead(demo_ms2, 3)\n# [output placeholder - paste your console output here]\n\ndemo_ms2 contains the columns variable_id, HMDB.ID, KEGG.ID, Compound.name, SS (MS2 similarity score) and Level (annotation confidence level). Only the first three are used by FeatureMAP; the rest are kept for your own inspection.",
+    "text": "2.2 Load Demo Data\nFeatureMAP provides a built-in demo feature table and a matching demo MS2 table:\n\ndata(\"demo_feature_table\", package = \"featuremap\")\ndata(\"demo_ms2\", package = \"featuremap\")\n\ndim(demo_feature_table)\nhead(demo_feature_table, 3)\n# [1] 1189    7\n#    variable_id       mz      rt polarity mean_intensity  condition       pvalue\n# 1 M105T384_POS 105.0334 383.851 positive      371369.28 -0.5029755 1.998631e-01\n# 2  M110T34_POS 110.0085  33.907 positive       58184.51 -0.4755627 9.740936e-05\n# 3  M116T49_POS 116.0700  49.496 positive      695843.03 -0.4107283 3.401449e-02\n\ndim(demo_ms2)\nhead(demo_ms2, 3)\n# [1] 207   6\n# # A tibble: 3 x 6\n# # Groups:   variable_id [3]\n#   variable_id  HMDB.ID     KEGG.ID Compound.name               SS Level\n#   &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;                    &lt;dbl&gt; &lt;dbl&gt;\n# 1 M116T49_POS  HMDB0003411 C00763  D-Proline                0.829     2\n# 2 M132T103_POS HMDB0000172 C00407  L-Isoleucine             0.757     2\n# 3 M134T420_POS HMDB0032609 C03005  N-Methylanthranilic Acid 0.619     2\n\ndemo_ms2 contains the columns variable_id, HMDB.ID, KEGG.ID, Compound.name, SS (MS2 similarity score) and Level (annotation confidence level). Only the first three are used by FeatureMAP; the rest are kept for your own inspection.",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Data Preparation</span>"
@@ -171,11 +204,11 @@
     ]
   },
   {
-    "objectID": "03_feature_annotation.html#optional-integrate-ms2-annotation",
-    "href": "03_feature_annotation.html#optional-integrate-ms2-annotation",
+    "objectID": "03_feature_annotation.html#optional-integrate-your-own-ms2-annotation",
+    "href": "03_feature_annotation.html#optional-integrate-your-own-ms2-annotation",
     "title": "3  Feature Annotation",
-    "section": "3.4 Optional: Integrate MS2 Annotation",
-    "text": "3.4 Optional: Integrate MS2 Annotation\nIf you already have an MS2 annotation table, pass it to ms2_table:\n\nms2_table &lt;- read.csv(\"your_ms2_annotation.csv\")\n\nres &lt;- annotate_feature(\n  feature_table = feature_table,\n  ms2_table = ms2_table,\n  refdata = \"kegg\"\n)\n\nProviding MS2 annotations is optional but can improve confidence in metabolite candidate assignments.",
+    "section": "3.4 Optional: Integrate Your Own MS2 Annotation",
+    "text": "3.4 Optional: Integrate Your Own MS2 Annotation\nIf you already have an MS2 annotation table, pass it to ms2_table:\n\nms2_table &lt;- read.csv(\"your_ms2_annotation.csv\")\n\nres &lt;- annotate_feature(\n  feature_table = feature_table,\n  ms2_table = ms2_table,\n  column = \"rp\"\n)\n\nProviding MS2 annotations is optional. When provided, matched feature–metabolite pairs are flagged in the ms2_confirmed column and receive a large scoring bonus, which markedly improves candidate ranking.",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
@@ -186,7 +219,7 @@
     "href": "03_feature_annotation.html#sec-enrichment_res_interpretation",
     "title": "3  Feature Annotation",
     "section": "3.5 Result Interpretation",
-    "text": "3.5 Result Interpretation\nAfter running annotate_feature(), the result is stored in a featuremap_result object that contains the feature-to-metabolite annotations. First confirm that the annotation step completed successfully:\n\nres$stage\n# [1] \"feature_annotated\"\n\nres$object_type\n# [1] \"featuremap_result\"\n\nres$refdata\n# [1] \"all\"\n\nnames(res)\n# [output placeholder - paste your console output here]\n\n\n3.5.1 Feature-to-metabolite annotation table\nThe main output of this step is the refined annotation table:\n\ndim(res$anno_feature_table1)\nhead(res$anno_feature_table1)\n# [output placeholder - paste your console output here]\n\nThis table represents the mapping between LC–MS features and metabolite candidates after iterative refinement. Each row corresponds to a feature–metabolite relationship supported by the evidence scoring and filtering procedure described above. Key columns are:\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nvariable_id\nFeature ID from the input feature_table\n\n\nCompound.name, CAS.ID, HMDB.ID, KEGG.ID, Lab.ID, Formula\nMetabolite candidate identity\n\n\nAdduct, isotope, polarity\nIon form supporting the match\n\n\nmz.error, mz.match.score, RT.error, RT.match.score, Total.score, Level\nmetid matching statistics\n\n\nms2_confirmed\nTRUE when the pair is supported by the supplied ms2_table\n\n\nmz, rt, mean_intensity, condition, pvalue\nOriginal feature-level information\n\n\nmetabolite_feature_cluster\nMFC that this feature–metabolite pair belongs to\n\n\nscore\nHeuristic evidence score of the MFC\n\n\nscore_norm\nscore rescaled to the interval [0, 1]\n\n\n\n\n\n3.5.2 Annotation redundancy summary\nTo understand how annotation ambiguity was reduced, inspect:\n\nres$anno_redundancy\n# [output placeholder - paste your console output here]\n\nThis summary reports the level of annotation redundancy before and after refinement, including:\n\nmfc_per_metabolite: the average number of metabolite feature clusters (MFCs) assigned to each metabolite candidate.\nmetabolite_per_feature: the average number of metabolite candidates assigned to each LC–MS feature.\n\n\n\n\n\n\n\nTip\n\n\n\nThe console log of annotate_feature() is labelled Step 1: Feature Annotation, because the package counts only the four analysis functions. In this tutorial we count data preparation as Step 1, so the tutorial step numbers are one ahead of the console labels.",
+    "text": "3.5 Result Interpretation\nAfter running annotate_feature(), the result is stored in a featuremap_result object that contains the feature-to-metabolite annotations. First confirm that the annotation step completed successfully:\n\nres$stage\n# [1] \"feature_annotated\"\n\nres$object_type\n# [1] \"featuremap_result\"\n\nres$refdata\n# [1] \"all\"\n\nnames(res)\n# [1] \"anno_redundancy\"     \"anno_feature_table1\" \"refdata\"\n# [4] \"feature_table\"       \"stage\"               \"object_type\"\n# [7] \".__enclos_env__\"     \"clone\"               \"initialize\"\n\n\n3.5.1 Feature-to-metabolite annotation table\nThe main output of this step is the refined annotation table:\n\ndim(res$anno_feature_table1)\nhead(res$anno_feature_table1[, c(\n  \"variable_id\", \"Compound.name\", \"HMDB.ID\", \"KEGG.ID\",\n  \"Adduct\", \"mz.error\", \"ms2_confirmed\", \"score_norm\"\n)])\n# [1] 49770    29\n#    variable_id           Compound.name     HMDB.ID KEGG.ID Adduct mz.error\n# 1 M105T384_POS     S-Ethyl thioacetate HMDB0031190    &lt;NA&gt; (M+H)+ 8.741527\n# 2 M105T384_POS S-Methyl propanethioate HMDB0031192    &lt;NA&gt; (M+H)+ 8.741527\n# 3 M105T384_POS  3-(Methylthio)propanal HMDB0031857    &lt;NA&gt; (M+H)+ 8.741527\n# 4 M105T384_POS   3-Mercapto-2-butanone HMDB0031982    &lt;NA&gt; (M+H)+ 8.741527\n# 5 M105T384_POS     (Methylthio)acetone HMDB0040170    &lt;NA&gt; (M+H)+ 8.741527\n# 6 M105T384_POS   4-Mercapto-2-butanone HMDB0041015    &lt;NA&gt; (M+H)+ 8.741527\n#   ms2_confirmed score_norm\n# 1         FALSE        0.2\n# 2         FALSE        0.2\n# 3         FALSE        0.2\n# 4         FALSE        0.2\n# 5         FALSE        0.2\n# 6         FALSE        0.2\n\nThis table represents the mapping between LC–MS features and metabolite candidates after iterative refinement. Each row corresponds to a feature–metabolite relationship supported by the evidence scoring and filtering procedure described above. Key columns are:\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nvariable_id\nFeature ID from the input feature_table\n\n\nCompound.name, CAS.ID, HMDB.ID, KEGG.ID, Lab.ID, Formula\nMetabolite candidate identity\n\n\nAdduct, isotope, polarity\nIon form supporting the match\n\n\nmz.error, mz.match.score, RT.error, RT.match.score, Total.score, Level\nmetid matching statistics\n\n\nms2_confirmed\nTRUE when the pair is supported by the supplied ms2_table\n\n\nmz, rt, mean_intensity, condition, pvalue\nOriginal feature-level information\n\n\nmetabolite_feature_cluster\nMFC that this feature–metabolite pair belongs to\n\n\nscore\nHeuristic evidence score of the MFC\n\n\nscore_norm\nscore rescaled to the interval [0, 1]\n\n\n\n\n\n3.5.2 Annotation redundancy summary\nTo understand how annotation ambiguity was reduced, inspect:\n\nres$anno_redundancy\n#        mfc_per_metabolite metabolite_per_feature\n# before           1.367885               52.46564\n# after            1.292547               45.00000\n\nThis summary reports the level of annotation redundancy before and after refinement, including:\n\nmfc_per_metabolite: the average number of metabolite feature clusters (MFCs) assigned to each metabolite candidate.\nmetabolite_per_feature: the average number of metabolite candidates assigned to each LC–MS feature.\n\n\n\n\n\n\n\nTip\n\n\n\nThe console log of annotate_feature() is labelled Step 1: Feature Annotation, because the package counts only the four analysis functions. In this tutorial we count data preparation as Step 1, so the tutorial step numbers are one ahead of the console labels.",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
@@ -263,7 +296,7 @@
     "href": "04_pcsf_subnetwork.html#result-interpretation",
     "title": "4  Subnetwork Extraction",
     "section": "4.5 Result Interpretation",
-    "text": "4.5 Result Interpretation\nAfter successful extraction, first confirm that the subnetwork step completed successfully:\n\nres$stage\n# [1] \"subnetwork_extracted\"\n\nnames(res)\n# [output placeholder - paste your console output here]\n\n\n4.5.1 Extracted PCSF subnetwork\nThe extracted metabolic subnetwork is stored as an igraph object, where metabolite nodes are named by their InChI string and feature nodes by their variable_id:\n\nres$pcsf_subnet\n# [output placeholder - paste your console output here]\n\nNode attribute type is \"Terminal\" for LC–MS feature nodes and \"Steiner\" for metabolite nodes; prize stores the node appearance frequency, and edge attributes freq / weight store how often each edge was recovered across the repeated runs. In res$node_frequency, the type column instead distinguishes \"feature\" from \"metabolite\" nodes.\n\n\n4.5.2 Network-refined annotation table\nAfter PCSF extraction, FeatureMAP updates the feature–metabolite annotation table by incorporating network evidence:\n\ndim(res$anno_feature_table2)\nhead(res$anno_feature_table2)\n# [output placeholder - paste your console output here]\n\nanno_feature_table2 keeps all columns of anno_feature_table1 for the surviving rows, and adds:\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nINCHI_ID\nInChI of the metabolite node in the MRN\n\n\nedge_freq\nHow often the feature–metabolite edge appeared across the repeated PCSF runs\n\n\nweighted_anno_score\nCombination of score_norm and edge_freq, using an adaptive edge weight bounded between 0.1 and 0.3\n\n\nconfidence_rank\nRank of the candidate within each feature, 1 being the most confident\n\n\nimportance\nFeature-level statistical importance carried over from res$feature_table\n\n\n\nCompared with anno_feature_table1, this table incorporates network support from the extracted subnetwork. Metabolite candidates that are more consistently supported by the extracted metabolic network receive higher weighted_anno_score and better confidence_rank.\nA quick way to see how much the network narrowed the candidate space:\n\nlength(unique(res$anno_feature_table1$variable_id))\nlength(unique(res$anno_feature_table2$variable_id))\n# [output placeholder - paste your console output here]\n\n\n\n4.5.3 Other Result Components\n\nres$feature_table: now contains score_fc, score_p and importance\nres$mrn: the metabolic reaction network actually used\nres$node_frequency: node appearance frequency across repeated runs\nres$edge_frequency: edge appearance frequency across repeated runs\nres$tuning_grid, res$tuning_best: available when grid tuning is used",
+    "text": "4.5 Result Interpretation\nAfter successful extraction, first confirm that the subnetwork step completed successfully:\n\nres$stage\n# [1] \"subnetwork_extracted\"\n\nnames(res)\n#  [1] \"anno_feature_table2\" \"edge_frequency\"      \"node_frequency\"\n#  [4] \"pcsf_subnet\"         \"mrn\"                 \"anno_redundancy\"\n#  [7] \"anno_feature_table1\" \"refdata\"             \"feature_table\"\n# [10] \"stage\"               \"object_type\"         \".__enclos_env__\"\n# [13] \"clone\"               \"initialize\"\n\n\n4.5.1 Extracted PCSF subnetwork\nThe extracted metabolic subnetwork is stored as an igraph object, where metabolite nodes are named by their InChI string and feature nodes by their variable_id:\n\nres$pcsf_subnet\n# IGRAPH ... UNWB 2217 4949 --\n# + attr: name (v/c), prize (v/n), type (v/c), freq (e/n), weight (e/n)\n# + edges from ... (vertex names):\n# + ... omitted several edges\n\nNode attribute type is \"Terminal\" for LC–MS feature nodes and \"Steiner\" for metabolite nodes; prize stores the node appearance frequency, and edge attributes freq / weight store how often each edge was recovered across the repeated runs. In res$node_frequency, the type column instead distinguishes \"feature\" from \"metabolite\" nodes.\n\n\n4.5.2 Network-refined annotation table\nAfter PCSF extraction, FeatureMAP updates the feature–metabolite annotation table by incorporating network evidence:\n\ndim(res$anno_feature_table2)\nhead(res$anno_feature_table2[, c(\n  \"variable_id\", \"Compound.name\", \"HMDB.ID\", \"KEGG.ID\",\n  \"edge_freq\", \"weighted_anno_score\", \"confidence_rank\", \"importance\"\n)])\n# [1] 2909   34\n#    variable_id           Compound.name     HMDB.ID KEGG.ID edge_freq weighted_anno_score\n# 1 M105T384_POS           Peroxynitrite HMDB0002179  C16845      0.72               0.272\n# 2 M105T384_POS 4-Hydroxymethylcatechol        &lt;NA&gt;  C14110      0.19               0.113\n# 3 M105T384_POS 2,4,6-Trihydroxytoluene        &lt;NA&gt;  C16401      0.16               0.104\n# 4 M105T384_POS   2-Hydroxybenzaldehyde HMDB0034170  C06202      0.15               0.101\n# 5 M105T384_POS 2,4,5-Trihydroxytoluene        &lt;NA&gt;  C18317      0.14               0.098\n# 6 M105T384_POS            Benzoic acid HMDB0001870  C00539      0.12               0.092\n#   confidence_rank importance\n# 1               1 0.06651944\n# 2               2 0.06651944\n# 3               3 0.06651944\n# 4               4 0.06651944\n# 5               5 0.06651944\n# 6               6 0.06651944\n\nanno_feature_table2 keeps all columns of anno_feature_table1 for the surviving rows, and adds:\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nINCHI_ID\nInChI of the metabolite node in the MRN\n\n\nedge_freq\nHow often the feature–metabolite edge appeared across the repeated PCSF runs\n\n\nweighted_anno_score\nCombination of score_norm and edge_freq, using an adaptive edge weight bounded between 0.1 and 0.3\n\n\nconfidence_rank\nRank of the candidate within each feature, 1 being the most confident\n\n\nimportance\nFeature-level statistical importance carried over from res$feature_table\n\n\n\nCompared with anno_feature_table1, this table incorporates network support from the extracted subnetwork. Metabolite candidates that are more consistently supported by the extracted metabolic network receive higher weighted_anno_score and better confidence_rank.\nA quick way to see how much the network narrowed the candidate space:\n\nlength(unique(res$anno_feature_table1$variable_id))\nlength(unique(res$anno_feature_table2$variable_id))\n# [1] 1106\n# [1] 725\n\n\n\n4.5.3 Other Result Components\n\nres$feature_table: now contains score_fc, score_p and importance\nres$mrn: the metabolic reaction network actually used\nres$node_frequency: node appearance frequency across repeated runs\nres$edge_frequency: edge appearance frequency across repeated runs\nres$tuning_grid, res$tuning_best: available when grid tuning is used",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Subnetwork Extraction</span>"
@@ -340,7 +373,7 @@
     "href": "05_module_identification.html#result-interpretation",
     "title": "5  Module Identification",
     "section": "5.5 Result Interpretation",
-    "text": "5.5 Result Interpretation\nAfter successful module identification:\n\nres$stage\n# [1] \"module_identified\"\n\n\n5.5.1 Module membership table\nmodule_table records the assignment of metabolite nodes to modules, together with node-level metadata:\n\nhead(res$module_table)\n# [output placeholder - paste your console output here]\n\nEach row represents a metabolite node belonging to an identified module:\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nModule\nModule identifier (\"M1\", \"M2\", …)\n\n\nINCHI_ID\nInChI of the metabolite node, used as the primary key of the network\n\n\nHMDB_ID, KEGG_ID, Compound_name\nMetabolite identity carried over from the MRN\n\n\nNode_freq\nFrequency of the node across repeated PCSF runs (robustness)\n\n\nType\n\"annotated\" if linked to an observed feature, \"hidden\" otherwise\n\n\nImportance\nFeature-derived importance, averaged with weighted_anno_score as weights\n\n\nUse_for_annotation\nFALSE for non-annotated terminal nodes pruned from the module boundary; those nodes are excluded from Step 5\n\n\n\nNodes with higher Node_freq and Importance values tend to represent more stable and feature-supported metabolites within the network.\n\n\n\n\n\n\nNote\n\n\n\nHere, annotated metabolites are nodes directly linked to observed LC–MS features through the feature annotation step, whereas hidden metabolites are Steiner nodes introduced during PCSF optimization to connect annotated metabolites within the metabolic reaction network. Hidden metabolites are not directly supported by measured features, but may provide important network context.\n\n\n\n\n5.5.2 Module significance table\nmodule_score summarizes statistics for each detected module:\n\nhead(res$module_score)\n# [output placeholder - paste your console output here]\n\nsum(res$module_score$p &lt; 0.05, na.rm = TRUE)\nsum(res$module_score$fdr &lt; 0.05, na.rm = TRUE)\n# [output placeholder - paste your console output here]\n\nImportant columns include:\n\nModule – module identifier, matching module_table\nModule_size – number of metabolite nodes in the module\nAnnotated_nodes – number of nodes supported by feature annotations\nModule_score – aggregated activity score of the module\np – permutation-based p-value\nfdr – multiple-testing corrected p-value\n\nModules with lower p or fdr values indicate stronger statistical support and are typically prioritized for downstream biological interpretation.\n\n\n\n\n\n\nTip\n\n\n\nIf too many tiny modules appear, increase min_size or tighten node_freq. If modules are too coarse, try alternative methods, or lower louvain_resolution for broader and raise it for finer communities.",
+    "text": "5.5 Result Interpretation\nAfter successful module identification:\n\nres$stage\n# [1] \"module_identified\"\n\n\n5.5.1 Module membership table\nmodule_table records the assignment of metabolite nodes to modules, together with node-level metadata:\n\nhead(res$module_table[, c(\n  \"Module\", \"Compound_name\", \"HMDB_ID\", \"KEGG_ID\",\n  \"Node_freq\", \"Type\", \"Importance\", \"Use_for_annotation\"\n)])\n#   Module                    Compound_name     HMDB_ID KEGG_ID Node_freq      Type Importance\n# 1     M1                    Tungstic acid HMDB0259326  C20679      1.00 annotated  0.2267914\n# 2     M1                        Adenosine HMDB0000050  C00212      0.19 annotated  0.1321317\n# 3     M1                       Salsolinol HMDB0042012  C09642      0.07 annotated  0.1183787\n# 4     M1                              ADP HMDB0001341  C00008      0.94    hidden         NA\n# 5     M1           Adenosine triphosphate HMDB0000538  C00002      1.00    hidden         NA\n# 6     M1 Guanosine 3',5'-bis(diphosphate) HMDB0059638  C01228      0.75 annotated  0.2105361\n#   Use_for_annotation\n# 1               TRUE\n# 2               TRUE\n# 3               TRUE\n# 4               TRUE\n# 5               TRUE\n# 6               TRUE\n\nEach row represents a metabolite node belonging to an identified module:\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nModule\nModule identifier (\"M1\", \"M2\", …)\n\n\nINCHI_ID\nInChI of the metabolite node, used as the primary key of the network\n\n\nHMDB_ID, KEGG_ID, Compound_name\nMetabolite identity carried over from the MRN\n\n\nNode_freq\nFrequency of the node across repeated PCSF runs (robustness)\n\n\nType\n\"annotated\" if linked to an observed feature, \"hidden\" otherwise\n\n\nImportance\nFeature-derived importance, averaged with weighted_anno_score as weights\n\n\nUse_for_annotation\nFALSE for non-annotated terminal nodes pruned from the module boundary; those nodes are excluded from Step 5\n\n\n\nNodes with higher Node_freq and Importance values tend to represent more stable and feature-supported metabolites within the network.\n\n\n\n\n\n\nNote\n\n\n\nHere, annotated metabolites are nodes directly linked to observed LC–MS features through the feature annotation step, whereas hidden metabolites are Steiner nodes introduced during PCSF optimization to connect annotated metabolites within the metabolic reaction network. Hidden metabolites are not directly supported by measured features, but may provide important network context.\n\n\n\n\n5.5.2 Module significance table\nmodule_score summarizes statistics for each detected module:\n\nhead(res$module_score)\n#   Module Module_size Annotated_nodes Module_score          p       fdr\n# 1     M4          73              60    0.3278375 0.01174675 0.4463765\n# 2    M12          51              44    0.2184320 0.08448563 0.6701799\n# 3    M11          17              16    0.2090107 0.09908058 0.6701799\n# 4     M3         123             113    0.1998797 0.11538420 0.6701799\n# 5    M13          25              24    0.1797426 0.16015150 0.6701799\n# 6    M17          32              31    0.1753071 0.17186291 0.6701799\n\nsum(res$module_score$p &lt; 0.05, na.rm = TRUE)\nsum(res$module_score$fdr &lt; 0.05, na.rm = TRUE)\n# [1] 1\n# [1] 0\n\nImportant columns include:\n\nModule – module identifier, matching module_table\nModule_size – number of metabolite nodes in the module\nAnnotated_nodes – number of nodes supported by feature annotations\nModule_score – aggregated activity score of the module\np – permutation-based p-value\nfdr – multiple-testing corrected p-value\n\nModules with lower p or fdr values indicate stronger statistical support and are typically prioritized for downstream biological interpretation.\n\n\n\n\n\n\nTip\n\n\n\nIf too many tiny modules appear, increase min_size or tighten node_freq. If modules are too coarse, try alternative methods, or lower louvain_resolution for broader and raise it for finer communities.",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Module Identification</span>"
@@ -406,18 +439,29 @@
     "href": "06_function_annotation.html#result-interpretation",
     "title": "6  Function Annotation",
     "section": "6.4 Result Interpretation",
-    "text": "6.4 Result Interpretation\nAfter successful annotation:\n\nres_fast$stage\n# [1] \"module_annotated\"\n\nnames(res_fast)\n# [output placeholder - paste your console output here]\n\n\n6.4.1 Module interpretation table\nmodule_function contains the final module-level interpretation. In fast mode it has one row per annotated module; in advanced mode one row per accepted hypothesis (or a single summary row when all hypotheses of a module were rejected).\n\nres_fast$module_function$title\n# [output placeholder - paste your console output here]\n\nres_fast$module_function %&gt;%\n  dplyr::select(module_id, hypothesis_type, title, confidence_label) %&gt;%\n  as.data.frame()\n# [output placeholder - paste your console output here]\n\nres_fast$module_function$functional_summary[1]\n# [output placeholder - paste your console output here]\n\nres_fast$module_function$phenotype_relationship[1]\n# [output placeholder - paste your console output here]\n\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nmodule_id\nModule ID from Step 4 (\"M1\", \"M2\", …)\n\n\nannotation_mode\n\"fast\" or \"advanced\"\n\n\nhypothesis_id, verdict_status\nAdvanced mode only: hypothesis ID (\"H1\", …) and accepted / rejected\n\n\nhypothesis_type\nHost-Endogenous, Microbiome-Derived, Diet-Derived, Xenobiotic / Exogenous or Host–Microbiome\n\n\ntitle\nConcise functional label for the module\n\n\nfunctional_summary\nParagraph-level biochemical interpretation, written without the phenotype\n\n\nanchor_metabolites, anchor_metabolite_ids\nMetabolites the interpretation is anchored on\n\n\ntop_metabolites, top_metabolite_ids\nLeading metabolites of the module\n\n\nclass_names\nDominant compound classes\n\n\nphenotype_relationship\nHow the module relates to the study phenotype\n\n\nconfidence_label\nhigh, medium or low\n\n\nrationale\nWhy the inferred function is plausible in the study context\n\n\nglobal_direction\nOverall direction of change across the module\n\n\norigin_endogenous_frac, origin_exogenous_frac\nEndogenous / exogenous origin profile\n\n\ntop_kegg_pathways, top_hmdb_pathways\nBest-covered pathways\n\n\npubmed_pmids\nPMIDs of the retained articles\n\n\n\nA common reporting pattern is to join the interpretation with the module statistics:\n\nlibrary(dplyr)\n\nres_fast$module_function %&gt;%\n  as.data.frame() %&gt;%\n  left_join(res_fast$module_score, by = c(\"module_id\" = \"Module\")) -&gt; module_report\n\nwrite.csv(module_report, \"module_function_report.csv\", row.names = FALSE)\n\n\n\n6.4.2 Supporting evidence\nAll evidence used for the annotation is kept in res$module_evidence:\n\nnames(res_fast$module_evidence)\n# [1] \"class_coverage\" \"pathway_coverage\" \"pubmed_evidence\" \"top_metabolites\"\n#     \"anchor_metabolites\" \"debate_trace\" \"debate_html_payload\"\n\nhead(res_fast$module_evidence$class_coverage)\nhead(res_fast$module_evidence$pathway_coverage$kegg)\nhead(res_fast$module_evidence$pathway_coverage$hmdb)\nhead(res_fast$module_evidence$top_metabolites)\nhead(res_fast$module_evidence$pubmed_evidence)\n# [output placeholder - paste your console output here]\n\n\nclass_coverage – compound class composition per module\npathway_coverage$hmdb / pathway_coverage$kegg – pathway ID, name, coverage and number of hits per module\ntop_metabolites / anchor_metabolites – the metabolites shown to the model, with their ranks\npubmed_evidence – retained PMIDs, the evidence JSON and the phenotype-literature support per module (and per hypothesis in advanced mode)\ndebate_trace – advanced mode only: raw responses of every agent (raw_response_p0, raw_response_s1, raw_response_arbiter, …), the debate digest, and the counts of proposed, surviving, accepted and rejected hypotheses\ndebate_html_payload – advanced mode only: the data needed to re-export the debate pages\n\n\n\n6.4.3 Advanced-mode verdicts\n\nres_adv$module_function %&gt;%\n  dplyr::count(module_id, verdict_status)\n# [output placeholder - paste your console output here]\n\nres_adv$module_evidence$debate_trace %&gt;%\n  dplyr::select(module_id, n_proposed, n_survived_debate, n_accepted, n_rejected, residual_ambiguity)\n# [output placeholder - paste your console output here]",
+    "text": "6.4 Result Interpretation\nAfter successful annotation:\n\nres_fast$stage\n# [1] \"module_annotated\"\n\nnames(res_fast)\n# Example output; exact components can vary by mode and package version.\n# [1] \"module_function\"     \"module_evidence\"     \"study_context\"\n# [4] \"module_score\"        \"module_table\"        \"pcsf_subnet\"\n# [7] \"anno_feature_table2\" \"anno_feature_table1\" \"feature_table\"\n# [10] \"stage\"              \"object_type\"\n\n\n6.4.1 Module interpretation table\nmodule_function contains the final module-level interpretation. In fast mode it has one row per annotated module; in advanced mode one row per accepted hypothesis (or a single summary row when all hypotheses of a module were rejected).\n\nres_fast$module_function$title\n# Example output; LLM-generated text depends on the model and prompt.\n# [1] \"Purine nucleotide turnover and energy metabolism\"\n\nres_fast$module_function %&gt;%\n  dplyr::select(module_id, hypothesis_type, title, confidence_label) %&gt;%\n  as.data.frame()\n#   module_id hypothesis_type                                   title confidence_label\n# 1        M4 Host-Endogenous Purine nucleotide turnover and energy metabolism           medium\n\nres_fast$module_function$functional_summary[1]\n# [1] \"This module is enriched for purine-related metabolites and connected cofactors, suggesting altered nucleotide turnover and cellular energy metabolism.\"\n\nres_fast$module_function$phenotype_relationship[1]\n# [1] \"In the provided plasma phenotype context, the module may reflect changes in systemic purine metabolism; interpret this together with the module statistics and literature evidence.\"\n\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nmodule_id\nModule ID from Step 4 (\"M1\", \"M2\", …)\n\n\nannotation_mode\n\"fast\" or \"advanced\"\n\n\nhypothesis_id, verdict_status\nAdvanced mode only: hypothesis ID (\"H1\", …) and accepted / rejected\n\n\nhypothesis_type\nHost-Endogenous, Microbiome-Derived, Diet-Derived, Xenobiotic / Exogenous or Host–Microbiome\n\n\ntitle\nConcise functional label for the module\n\n\nfunctional_summary\nParagraph-level biochemical interpretation, written without the phenotype\n\n\nanchor_metabolites, anchor_metabolite_ids\nMetabolites the interpretation is anchored on\n\n\ntop_metabolites, top_metabolite_ids\nLeading metabolites of the module\n\n\nclass_names\nDominant compound classes\n\n\nphenotype_relationship\nHow the module relates to the study phenotype\n\n\nconfidence_label\nhigh, medium or low\n\n\nrationale\nWhy the inferred function is plausible in the study context\n\n\nglobal_direction\nOverall direction of change across the module\n\n\norigin_endogenous_frac, origin_exogenous_frac\nEndogenous / exogenous origin profile\n\n\ntop_kegg_pathways, top_hmdb_pathways\nBest-covered pathways\n\n\npubmed_pmids\nPMIDs of the retained articles\n\n\n\nA common reporting pattern is to join the interpretation with the module statistics:\n\nlibrary(dplyr)\n\nres_fast$module_function %&gt;%\n  as.data.frame() %&gt;%\n  left_join(res_fast$module_score, by = c(\"module_id\" = \"Module\")) -&gt; module_report\n\nwrite.csv(module_report, \"module_function_report.csv\", row.names = FALSE)\n\n\n\n6.4.2 Supporting evidence\nAll evidence used for the annotation is kept in res$module_evidence:\n\nnames(res_fast$module_evidence)\n# [1] \"class_coverage\" \"pathway_coverage\" \"pubmed_evidence\" \"top_metabolites\"\n#     \"anchor_metabolites\" \"debate_trace\" \"debate_html_payload\"\n\nhead(res_fast$module_evidence$class_coverage)\nhead(res_fast$module_evidence$pathway_coverage$kegg)\nhead(res_fast$module_evidence$pathway_coverage$hmdb)\nhead(res_fast$module_evidence$top_metabolites)\nhead(res_fast$module_evidence$pubmed_evidence)\n# Example output is a set of evidence tables, one per evidence type.\n# Inspect the objects separately because the tables have different columns.\n# PubMed evidence is empty when pubmed = FALSE.\n\n\nclass_coverage – compound class composition per module\npathway_coverage$hmdb / pathway_coverage$kegg – pathway ID, name, coverage and number of hits per module\ntop_metabolites / anchor_metabolites – the metabolites shown to the model, with their ranks\npubmed_evidence – retained PMIDs, the evidence JSON and the phenotype-literature support per module (and per hypothesis in advanced mode)\ndebate_trace – advanced mode only: raw responses of every agent (raw_response_p0, raw_response_s1, raw_response_arbiter, …), the debate digest, and the counts of proposed, surviving, accepted and rejected hypotheses\ndebate_html_payload – advanced mode only: the data needed to re-export the debate pages\n\n\n\n6.4.3 Advanced-mode verdicts\n\nres_adv$module_function %&gt;%\n  dplyr::count(module_id, verdict_status)\n# Example output; advanced-mode verdicts are model-dependent.\n# # A tibble: 2 x 3\n#   module_id verdict_status     n\n#   &lt;chr&gt;     &lt;chr&gt;          &lt;int&gt;\n# 1 M4        accepted           1\n# 2 M4        rejected           1\n\nres_adv$module_evidence$debate_trace %&gt;%\n  dplyr::select(module_id, n_proposed, n_survived_debate, n_accepted, n_rejected, residual_ambiguity)\n# # A tibble: 1 x 6\n#   module_id n_proposed n_survived_debate n_accepted n_rejected residual_ambiguity\n#   &lt;chr&gt;          &lt;int&gt;             &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;chr&gt;\n# 1 M4                 2                 2          1          1 \"One alternative interpretation remains plausible.\"",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
     ]
   },
   {
-    "objectID": "06_function_annotation.html#common-issues",
-    "href": "06_function_annotation.html#common-issues",
+    "objectID": "06_function_annotation.html#interactive-html-reports",
+    "href": "06_function_annotation.html#interactive-html-reports",
     "title": "6  Function Annotation",
-    "section": "6.8 Common Issues",
-    "text": "6.8 Common Issues\n\nNo module annotated. Nothing passed p/pcutoff. Switch to p = \"p\", raise pcutoff, or revisit the module identification settings.\nPubMed retrieval is slow. Start with a shorter years window, fewer significant modules, or pubmed = FALSE while you validate the workflow.\nAdvanced mode is expensive. Each module costs several LLM calls. Validate the pipeline in fast mode first, then re-run the modules you care about in advanced mode.\nsynthesize = TRUE was ignored. Synthesis only runs in advanced mode; in fast mode a warning is emitted and the step is skipped.\nProvider/model mismatch. Make sure llm_model exists for the selected provider, and remember that provider = \"local\" requires a non-empty base_url.",
+    "section": "6.5 Interactive HTML Reports",
+    "text": "6.5 Interactive HTML Reports\n\n6.5.1 Debate traces\nWith debate_html = TRUE, advanced mode writes one chat-style page per module to html_dir, named debate_&lt;module_id&gt;.html. You can also re-export them later from a saved result, without calling the LLM again:\n\n# all modules\nexport_debate_html(res = res_adv, html_dir = \"featuremap_html\")\n\n# a single module\nexport_debate_html(res = res_adv, module_id = \"M1\", html_dir = \"featuremap_html\")\n\nEach page shows the Proposer, Skeptic and Arbiter turns in order, so you can follow exactly why a hypothesis was kept, revised or rejected.\n\n\n6.5.2 Synthesis network\nWhen synthesize = TRUE, an interactive network page synthesis_network.html is written to html_dir automatically. To re-export it from a saved result:\n\nexport_synthesis_network_html(\n  res         = res_adv,\n  html_dir    = \"featuremap_html\",\n  output_file = \"synthesis_network.html\"\n)\n\ngenerate_synthesis_network_html() does the same from a bare res$module_synthesis list, which is useful when you keep only the synthesis object:\n\ngenerate_synthesis_network_html(\n  synthesis     = res_adv$module_synthesis,\n  study_context = res_adv$study_context,\n  output_dir    = \"featuremap_html\",\n  output_file   = \"synthesis_network.html\"\n)",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#sec-cross_module_synthesis",
+    "href": "06_function_annotation.html#sec-cross_module_synthesis",
+    "title": "6  Function Annotation",
+    "section": "6.6 Cross-Module Synthesis",
+    "text": "6.6 Cross-Module Synthesis\nsynthesize_modules() takes the accepted hypotheses of all annotated modules and integrates them into one picture of the study. It is run automatically by annotate_module(mode = \"advanced\", synthesize = TRUE), and can also be called on its own, for example to re-run the synthesis with a stronger model:\n\nres_adv &lt;- synthesize_modules(\n  res           = res_adv,\n  study_context = list(\n    species     = \"human\",\n    biospecimen = \"plasma\",\n    phenotype   = \"your disease phenotype\"\n  ),\n  provider    = \"openai\",\n  llm_model   = \"gpt-4.1\",\n  llm_api_key = Sys.getenv(\"OPENAI_API_KEY\"),\n  max_tokens  = 4000,\n  temperature = 0\n)\n\n\n\n\n\n\n\nImportant\n\n\n\nsynthesize_modules() requires advanced mode output. Fast mode produces one flat annotation per module and no hypothesis-level verdicts, so it cannot be synthesized this way. If study_context is NULL, it is taken from res$study_context.\nIf only one module has accepted hypotheses, the LLM call is skipped and res$module_synthesis is returned with the deterministic parts only.\n\n\nThe synthesis combines two very different kinds of links:\n\nBiology links are proposed by the LLM from hypothesis titles and summaries only, and are deliberately sparse.\nBiochemical links are computed in R from direct MRN edges between top metabolites and from pathway ID overlap, so they are fully deterministic.\n\nResults are stored in res$module_synthesis:\n\nnames(res_adv$module_synthesis)\n# [1] \"nodes\" \"clusters\" \"biology_links\" \"biochemical_links\"\n#     \"relationships_sparse\" \"relationships\" \"module_relationships\"\n#     \"summary\" \"raw_response\"\n\nres_adv$module_synthesis$clusters\n# Example output; synthesis is generated from accepted advanced-mode hypotheses.\n# # A tibble: 1 x 3\n#   cluster_id cluster_theme                     node_ids\n#   &lt;chr&gt;      &lt;chr&gt;                             &lt;list&gt;\n# 1 C1         Purine and energy metabolism      &lt;chr [1]&gt;\n\nres_adv$module_synthesis$module_relationships\n# # A tibble: 1 x 5\n#   module_a module_b relation_type n_biochemical_links n_biology_links\n#   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                       &lt;int&gt;           &lt;int&gt;\n# 1 M4       M12      biochemical                     2               0\n\ncat(res_adv$module_synthesis$summary)\n# The accepted module hypotheses form a study-level pattern centered on purine\n# metabolism and related energy-transfer chemistry. The biochemical links should\n# be interpreted together with the original module scores and phenotype context.\n\n\nnodes – one row per accepted hypothesis, with node_id (\"&lt;module_id&gt;::&lt;hypothesis_id&gt;\") and its assigned cluster\nclusters – thematic clusters (cluster_id, cluster_theme, member node_ids)\nbiology_links / relationships_sparse – LLM-proposed cross-module relationships with rationales\nbiochemical_links – MRN-edge and pathway-overlap evidence between hypotheses\nrelationships – the merged relationship table used to draw the network\nmodule_relationships – module-pair summary, with relation_type being biochemical, biology, both or none\nsummary – the narrative integrating clusters, cross-module links and the phenotype\nraw_response – the original LLM response, kept for transparency",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
@@ -429,6 +473,17 @@
     "title": "6  Function Annotation",
     "section": "6.7 Practical Checks Before Running",
     "text": "6.7 Practical Checks Before Running\n\nhead(res$module_score)\nsum(res$module_score$fdr &lt; 0.05, na.rm = TRUE)\nsum(res$module_score$p &lt; 0.05, na.rm = TRUE)\n\nIf no module passes your threshold, annotate_module() returns an empty module_function and warns you. Either relax the filter (p = \"p\" instead of \"fdr\") or revisit Step 4 before trying module annotation.",
+    "crumbs": [
+      "R Package",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
+    ]
+  },
+  {
+    "objectID": "06_function_annotation.html#common-issues",
+    "href": "06_function_annotation.html#common-issues",
+    "title": "6  Function Annotation",
+    "section": "6.8 Common Issues",
+    "text": "6.8 Common Issues\n\nNo module annotated. Nothing passed p/pcutoff. Switch to p = \"p\", raise pcutoff, or revisit the module identification settings.\nPubMed retrieval is slow. Start with a shorter years window, fewer significant modules, or pubmed = FALSE while you validate the workflow.\nAdvanced mode is expensive. Each module costs several LLM calls. Validate the pipeline in fast mode first, then re-run the modules you care about in advanced mode.\nsynthesize = TRUE was ignored. Synthesis only runs in advanced mode; in fast mode a warning is emitted and the step is skipped.\nProvider/model mismatch. Make sure llm_model exists for the selected provider, and remember that provider = \"local\" requires a non-empty base_url.",
     "crumbs": [
       "R Package",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
@@ -479,6 +534,39 @@
     ]
   },
   {
+    "objectID": "10_shinyapp_installation.html#accounts-and-sign-in",
+    "href": "10_shinyapp_installation.html#accounts-and-sign-in",
+    "title": "7  Installation",
+    "section": "7.3 Accounts and Sign In",
+    "text": "7.3 Accounts and Sign In\nThe app has an optional account layer:\n\nLocal installation (default): authentication is switched off. You can go straight from Home to the analysis pages, and the Sign In entry in the navigation bar is hidden.\nHosted deployment: authentication is switched on, so the six analysis pages are protected. You need to create an account, verify your email address, and sign in before Step 1 becomes available.\n\nServer administrators enable it by setting the environment variables FEATUREMAP_AUTH_ENABLED=true and FEATUREMAP_AUTH_DB (a persistent SQLite path) before starting the app.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
+    "objectID": "10_shinyapp_installation.html#upload-limit",
+    "href": "10_shinyapp_installation.html#upload-limit",
+    "title": "7  Installation",
+    "section": "7.4 Upload Limit",
+    "text": "7.4 Upload Limit\nUploads are capped at 500 MB per file by default, which is enough for most feature tables and for a custom reference database. If you need a larger limit for a local run, set it before launching the app:\n\noptions(featuremap.max_upload_mb = 1000)\nfeaturemapshiny::run_featuremap()\n\nThe environment variable FEATUREMAP_MAX_UPLOAD_MB does the same thing for a deployed instance.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
+    "objectID": "10_shinyapp_installation.html#getting-around-the-app",
+    "href": "10_shinyapp_installation.html#getting-around-the-app",
+    "title": "7  Installation",
+    "section": "7.5 Getting Around the App",
+    "text": "7.5 Getting Around the App\nThe top navigation bar contains:\n\nHome – the landing page, with the Get Started and Documentation buttons\nAbout – scrolls to the workflow overview on the Home page\nAnalysis – a dropdown with the six workflow steps: 1 Data Upload, 2 Feature Annotation, 3 PCSF Subnetwork, 4 Module Identification, 5 Function Interpretation, 6 Results Download\nAuthors and Contacts\nSign In / your account menu, when authentication is enabled\n\nEvery analysis page shares the same layout: a step rail at the top showing where you are in the six steps, a parameter sidebar on the left ending with the Run and Next Step buttons, and a result area on the right. Small ⓘ icons next to the field labels explain each parameter in place.\nOnce you install the FeatureMAP Shiny successfully, continue to next step.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
+    ]
+  },
+  {
     "objectID": "11_data_preparation_shiny.html",
     "href": "11_data_preparation_shiny.html",
     "title": "8  Data Upload",
@@ -495,6 +583,17 @@
     "title": "8  Data Upload",
     "section": "",
     "text": "Get Started: jump directly to Data Upload, which is Step 1 of the workflow\nDocumentation: open this tutorial in your browser\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nOn the hosted deployment the analysis pages are protected. If authentication is enabled, clicking Get Started takes you to the Sign In page first; after signing in, the app returns to the page you were heading for.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Upload</span>"
+    ]
+  },
+  {
+    "objectID": "11_data_preparation_shiny.html#quick-guide",
+    "href": "11_data_preparation_shiny.html#quick-guide",
+    "title": "8  Data Upload",
+    "section": "8.2 Quick Guide",
+    "text": "8.2 Quick Guide\nThe first time you reach Data Upload, the app offers a short guided tour:\n\n\n\n\n\n\nStart Quick Guide highlights three spots on every step page in turn – the parameter sidebar, the Run button, and the result panel – and follows you from Step 1 to Step 6.\nNot now dismisses it; you can still read every parameter’s explanation from the ⓘ icons next to the field labels.\nWhile the guide is running, use Next to move to the next hint and Exit Guide to leave it at any time.",
     "crumbs": [
       "Shiny App",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Upload</span>"
@@ -550,17 +649,6 @@
     "title": "9  Feature Annotation",
     "section": "",
     "text": "9.1 Enter the Feature Annotation Page\nThis chapter focuses on how to use Step 2: Feature Annotation in FeatureMAP Shiny. The detailed method, parameter definitions, and output structure have already been introduced in R package-Feature Annotation, so here we focus on the app workflow itself.\nAfter finishing Data Upload, click Next Step, or open Analysis → 2 Feature Annotation in the navigation bar.\nThe purpose of this step is to map metabolomics features to candidate metabolites and prepare the refined annotation table for downstream network analysis.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
-    ]
-  },
-  {
-    "objectID": "12_feature_annotation_shiny.html#enter-the-feature-annotation-page",
-    "href": "12_feature_annotation_shiny.html#enter-the-feature-annotation-page",
-    "title": "9  Feature Annotation",
-    "section": "",
-    "text": "Parameter area on the left: set annotation parameters and click Run\nResult area on the right: view the annotation summary and detailed result table",
     "crumbs": [
       "Shiny App",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Feature Annotation</span>"
@@ -633,17 +721,6 @@
     ]
   },
   {
-    "objectID": "13_pcsf_subnetwork.html#enter-the-pcsf-subnetwork-page",
-    "href": "13_pcsf_subnetwork.html#enter-the-pcsf-subnetwork-page",
-    "title": "10  Subnetwork Extraction",
-    "section": "",
-    "text": "Parameter area on the left: set the subnetwork extraction options and click Run PCSF\nResult area on the right: inspect the extracted subnetwork and the refined annotation results",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Subnetwork Extraction</span>"
-    ]
-  },
-  {
     "objectID": "13_pcsf_subnetwork.html#parameter-area",
     "href": "13_pcsf_subnetwork.html#parameter-area",
     "title": "10  Subnetwork Extraction",
@@ -704,17 +781,6 @@
     "title": "11  Module Identification",
     "section": "",
     "text": "11.1 Enter the Module Identification Page\nThis chapter focuses on how to use Step 4: Module Identification in FeatureMAP Shiny. The detailed method, parameter definitions, and result structure have already been introduced in R package-Module Identification, so here we focus on the Shiny workflow itself.\nAfter finishing Subnetwork Extraction, click Next Step, or open Analysis → 4 Module Identification in the navigation bar.\nThe purpose of this step is to identify functional modules from the extracted PCSF subnetwork.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
-    ]
-  },
-  {
-    "objectID": "14_module_identification.html#enter-the-module-identification-page",
-    "href": "14_module_identification.html#enter-the-module-identification-page",
-    "title": "11  Module Identification",
-    "section": "",
-    "text": "Parameter area on the left: set the module identification options and click Run\nResult area on the right: inspect the detected modules from different views",
     "crumbs": [
       "Shiny App",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Module Identification</span>"
@@ -787,17 +853,6 @@
     ]
   },
   {
-    "objectID": "15_function_annotation.html#enter-the-function-annotation-page",
-    "href": "15_function_annotation.html#enter-the-function-annotation-page",
-    "title": "12  Function Annotation",
-    "section": "",
-    "text": "Parameter area on the left: set the module filtering and annotation options, then click Run\nResult area on the right: inspect the module-level biological interpretation results",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
-    ]
-  },
-  {
     "objectID": "15_function_annotation.html#parameter-area",
     "href": "15_function_annotation.html#parameter-area",
     "title": "12  Function Interpretation",
@@ -809,25 +864,47 @@
     ]
   },
   {
-    "objectID": "15_function_annotation.html#run-function-annotation",
-    "href": "15_function_annotation.html#run-function-annotation",
-    "title": "12  Function Annotation",
-    "section": "12.3 Run Function Annotation",
-    "text": "12.3 Run Function Annotation\nOnce the parameters are ready, click Run.\nThe app will start module function annotation and show a running-status modal. When the step finishes successfully, the result panel on the right will be updated automatically.\nIf no significant modules pass the selected cutoff, the app will finish normally but return an empty result for this step.",
+    "objectID": "15_function_annotation.html#fast-mode-and-advanced-mode",
+    "href": "15_function_annotation.html#fast-mode-and-advanced-mode",
+    "title": "12  Function Interpretation",
+    "section": "12.3 Fast Mode and Advanced Mode",
+    "text": "12.3 Fast Mode and Advanced Mode\nThe Annotation Mode switch chooses between the two pipelines described in R package-Function Annotation:\n\nFast – a two-call pipeline producing one interpretation per module. This is the cheaper and faster option, and the right one for a first pass.\nAdvanced – a multi-agent debate: a Proposer drafts 1–3 candidate hypotheses, a Skeptic challenges them over up to two rounds, and an Arbiter accepts or rejects each one.\n\n\n\n\n\n\n\nTip\n\n\n\nIn the app, Advanced mode is not a set of separate options: the per-module debate transcript and the cross-module synthesis are always produced as part of an Advanced run, and appear as their own result tabs.",
     "crumbs": [
       "Shiny App",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
     ]
   },
   {
-    "objectID": "15_function_annotation.html#result-area",
-    "href": "15_function_annotation.html#result-area",
-    "title": "12  Function Annotation",
-    "section": "12.4 Result Area",
-    "text": "12.4 Result Area\nAfter the run finishes, the right panel shows the annotation result for one selected module at a time.\n\n\n\n\n\nIf literature-based annotation was enabled, the page also shows a Literature Evidence (PMID) section for the selected module. This section helps you inspect which literature evidence was retained and gives you a quick way to open the corresponding PubMed records.",
+    "objectID": "15_function_annotation.html#run-function-interpretation",
+    "href": "15_function_annotation.html#run-function-interpretation",
+    "title": "12  Function Interpretation",
+    "section": "12.4 Run Function Interpretation",
+    "text": "12.4 Run Function Interpretation\nOnce the parameters are ready, click Run.\nThe app calls the model module by module, so this step is the slowest one and its runtime grows with the number of significant modules, with Advanced mode, and with PubMed enabled. If no module passes the selected cutoff, the run finishes normally and the result panel reports that nothing passed.\n\n\n\n\n\n\nNote\n\n\n\nAPI keys are entered per session and are used only for the current run; they are not stored in your results.",
     "crumbs": [
       "Shiny App",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Annotation</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#result-area-fast-mode",
+    "href": "15_function_annotation.html#result-area-fast-mode",
+    "title": "12  Function Interpretation",
+    "section": "12.5 Result Area (Fast Mode)",
+    "text": "12.5 Result Area (Fast Mode)\nIn Fast mode the right panel shows one module at a time, chosen with the module selector in the toolbar.\n\n\n\n\n\nEach report opens with the module title and a row of pills – module ID, hypothesis type, and confidence – followed by five sections:\n\n\n\n\n\n\n\nSection\nContent\n\n\n\n\nFunction Interpretation\nThe functional summary, plus the core driver (anchor) metabolites behind it\n\n\nBiochemical Context\nChemical-class profile, KEGG and HMDB pathway coverage, and the endogenous/exogenous origin profile\n\n\nModule Statistics\nThe supporting metabolites of the module and the global direction of change\n\n\nPhenotype & Literature\nThe phenotype relationship, plus clickable PMID links when PubMed was enabled\n\n\nEvidence Strength\nThe confidence label and the rationale behind it",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
+    ]
+  },
+  {
+    "objectID": "15_function_annotation.html#result-area-advanced-mode",
+    "href": "15_function_annotation.html#result-area-advanced-mode",
+    "title": "12  Function Interpretation",
+    "section": "12.6 Result Area (Advanced Mode)",
+    "text": "12.6 Result Area (Advanced Mode)\nIn Advanced mode the right panel has three tabs.\n\n12.6.1 Accepted Interpretations\n\n\n\n\n\nThe same report layout as Fast mode, but with two selectors: one for the module and one for the accepted hypothesis within that module. A module can therefore carry more than one accepted interpretation.\n\n\n12.6.2 Debate History\n\n\n\n\n\nAn embedded chat-style transcript of the debate for the selected module, showing the Proposer, Skeptic and Arbiter turns in order. This is where you see why a hypothesis survived or was rejected. It is the same page that export_debate_html() writes in the R package.\n\n\n12.6.3 Cross-Module Synthesis\n\n\n\n\n\nAn interactive network integrating the accepted hypotheses from all modules into thematic clusters, with links that are either proposed by the model from the hypothesis summaries or computed deterministically from metabolic-network edges and pathway overlap. It corresponds to res$module_synthesis and to export_synthesis_network_html() in the R package.\nBoth HTML reports can be exported on the Results Download page.",
+    "crumbs": [
+      "Shiny App",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
     ]
   },
   {
@@ -886,17 +963,6 @@
     ]
   },
   {
-    "objectID": "16_results_export_shiny.html#selected-content-preview",
-    "href": "16_results_export_shiny.html#selected-content-preview",
-    "title": "13  Results Export",
-    "section": "13.4 Selected Content Preview",
-    "text": "13.4 Selected Content Preview\nInside the Export Options panel, the app also shows a Selected Content preview.\n\n\n\n\n\nThis preview helps you confirm:\n\nwhat you selected\nwhether each item is ready\nwhether anything is still unavailable because an earlier step has not finished yet\n\nOnly items that are ready can be successfully downloaded.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Results Export</span>"
-    ]
-  },
-  {
     "objectID": "16_results_export_shiny.html#analysis-parameters",
     "href": "16_results_export_shiny.html#analysis-parameters",
     "title": "13  Results Download",
@@ -927,160 +993,6 @@
     "crumbs": [
       "Shiny App",
       "<span class='chapter-number'>13</span>  <span class='chapter-title'>Results Download</span>"
-    ]
-  },
-  {
-    "objectID": "01_package_installation.html#reference-resources",
-    "href": "01_package_installation.html#reference-resources",
-    "title": "1  Installation",
-    "section": "",
-    "text": "Resource\nUsed by\nContent\n\n\n\n\nfeaturemap_compound\nannotate_feature()\nMerged HMDB + KEGG MS1 compound database\n\n\nmrn\nextract_subnetwork()\nMetabolic reaction network (MRN)\n\n\nfunctional_reference_hmdb, functional_reference_kegg\nannotate_module()\nCompound class / functional metadata\n\n\npathway_hmdb, pathway_kegg\nannotate_module()\nPathway membership used for coverage statistics\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nIf your machine cannot reach GitHub, you can also download the resources manually and pass them directly through the corresponding arguments (metabolite_database, mrn, ref_data).",
-    "crumbs": [
-      "R Package",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installation</span>"
-    ]
-  },
-  {
-    "objectID": "01_package_installation.html#optional-api-keys-for-module-annotation",
-    "href": "01_package_installation.html#optional-api-keys-for-module-annotation",
-    "title": "1  Installation",
-    "section": "1.2 Optional: API Keys for Module Annotation",
-    "text": "1.2 Optional: API Keys for Module Annotation\nThe last step of the workflow (Function Annotation) calls a large language model (LLM) and, optionally, PubMed. These services need API keys, which are not required for Steps 1–4.\nStore them as environment variables instead of hard-coding them in your scripts. Add the following lines to your .Renviron file (open it with usethis::edit_r_environ()), then restart R:\nOPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx\nNCBI_API_KEY=xxxxxxxxxxxxxxxx\nAnd use them like this:\n\nSys.getenv(\"OPENAI_API_KEY\")\nSys.getenv(\"NCBI_API_KEY\")\n\nSupported LLM providers and where to apply for a key:\n\nOpenAI: https://platform.openai.com/\nGemini (Google AI Studio): https://ai.google.dev/aistudio\nSiliconFlow: https://siliconflow.cn/\nA local / self-hosted OpenAI-compatible endpoint (provider = \"local\"), which needs no key but requires a base_url\nPubMed / NCBI Entrez key: https://account.ncbi.nlm.nih.gov/settings/",
-    "crumbs": [
-      "R Package",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installation</span>"
-    ]
-  },
-  {
-    "objectID": "01_package_installation.html#next-step",
-    "href": "01_package_installation.html#next-step",
-    "title": "1  Installation",
-    "section": "1.3 Next Step",
-    "text": "1.3 Next Step\nIf all checks pass, continue to Data Preparation to prepare the input tables for the FeatureMAP workflow.",
-    "crumbs": [
-      "R Package",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Installation</span>"
-    ]
-  },
-  {
-    "objectID": "03_feature_annotation.html#optional-integrate-your-own-ms2-annotation",
-    "href": "03_feature_annotation.html#optional-integrate-your-own-ms2-annotation",
-    "title": "3  Feature Annotation",
-    "section": "3.4 Optional: Integrate Your Own MS2 Annotation",
-    "text": "3.4 Optional: Integrate Your Own MS2 Annotation\nIf you already have an MS2 annotation table, pass it to ms2_table:\n\nms2_table &lt;- read.csv(\"your_ms2_annotation.csv\")\n\nres &lt;- annotate_feature(\n  feature_table = feature_table,\n  ms2_table = ms2_table,\n  column = \"rp\"\n)\n\nProviding MS2 annotations is optional. When provided, matched feature–metabolite pairs are flagged in the ms2_confirmed column and receive a large scoring bonus, which markedly improves candidate ranking.",
-    "crumbs": [
-      "R Package",
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Feature Annotation</span>"
-    ]
-  },
-  {
-    "objectID": "06_function_annotation.html#interactive-html-reports",
-    "href": "06_function_annotation.html#interactive-html-reports",
-    "title": "6  Function Annotation",
-    "section": "6.5 Interactive HTML Reports",
-    "text": "6.5 Interactive HTML Reports\n\n6.5.1 Debate traces\nWith debate_html = TRUE, advanced mode writes one chat-style page per module to html_dir, named debate_&lt;module_id&gt;.html. You can also re-export them later from a saved result, without calling the LLM again:\n\n# all modules\nexport_debate_html(res = res_adv, html_dir = \"featuremap_html\")\n\n# a single module\nexport_debate_html(res = res_adv, module_id = \"M1\", html_dir = \"featuremap_html\")\n\nEach page shows the Proposer, Skeptic and Arbiter turns in order, so you can follow exactly why a hypothesis was kept, revised or rejected.\n\n\n6.5.2 Synthesis network\nWhen synthesize = TRUE, an interactive network page synthesis_network.html is written to html_dir automatically. To re-export it from a saved result:\n\nexport_synthesis_network_html(\n  res         = res_adv,\n  html_dir    = \"featuremap_html\",\n  output_file = \"synthesis_network.html\"\n)\n\ngenerate_synthesis_network_html() does the same from a bare res$module_synthesis list, which is useful when you keep only the synthesis object:\n\ngenerate_synthesis_network_html(\n  synthesis     = res_adv$module_synthesis,\n  study_context = res_adv$study_context,\n  output_dir    = \"featuremap_html\",\n  output_file   = \"synthesis_network.html\"\n)",
-    "crumbs": [
-      "R Package",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
-    ]
-  },
-  {
-    "objectID": "06_function_annotation.html#sec-cross_module_synthesis",
-    "href": "06_function_annotation.html#sec-cross_module_synthesis",
-    "title": "6  Function Annotation",
-    "section": "6.6 Cross-Module Synthesis",
-    "text": "6.6 Cross-Module Synthesis\nsynthesize_modules() takes the accepted hypotheses of all annotated modules and integrates them into one picture of the study. It is run automatically by annotate_module(mode = \"advanced\", synthesize = TRUE), and can also be called on its own, for example to re-run the synthesis with a stronger model:\n\nres_adv &lt;- synthesize_modules(\n  res           = res_adv,\n  study_context = list(\n    species     = \"human\",\n    biospecimen = \"plasma\",\n    phenotype   = \"your disease phenotype\"\n  ),\n  provider    = \"openai\",\n  llm_model   = \"gpt-4.1\",\n  llm_api_key = Sys.getenv(\"OPENAI_API_KEY\"),\n  max_tokens  = 4000,\n  temperature = 0\n)\n\n\n\n\n\n\n\nImportant\n\n\n\nsynthesize_modules() requires advanced mode output. Fast mode produces one flat annotation per module and no hypothesis-level verdicts, so it cannot be synthesized this way. If study_context is NULL, it is taken from res$study_context.\nIf only one module has accepted hypotheses, the LLM call is skipped and res$module_synthesis is returned with the deterministic parts only.\n\n\nThe synthesis combines two very different kinds of links:\n\nBiology links are proposed by the LLM from hypothesis titles and summaries only, and are deliberately sparse.\nBiochemical links are computed in R from direct MRN edges between top metabolites and from pathway ID overlap, so they are fully deterministic.\n\nResults are stored in res$module_synthesis:\n\nnames(res_adv$module_synthesis)\n# [1] \"nodes\" \"clusters\" \"biology_links\" \"biochemical_links\"\n#     \"relationships_sparse\" \"relationships\" \"module_relationships\"\n#     \"summary\" \"raw_response\"\n\nres_adv$module_synthesis$clusters\n# [output placeholder - paste your console output here]\n\nres_adv$module_synthesis$module_relationships\n# [output placeholder - paste your console output here]\n\ncat(res_adv$module_synthesis$summary)\n# [output placeholder - paste your console output here]\n\n\nnodes – one row per accepted hypothesis, with node_id (\"&lt;module_id&gt;::&lt;hypothesis_id&gt;\") and its assigned cluster\nclusters – thematic clusters (cluster_id, cluster_theme, member node_ids)\nbiology_links / relationships_sparse – LLM-proposed cross-module relationships with rationales\nbiochemical_links – MRN-edge and pathway-overlap evidence between hypotheses\nrelationships – the merged relationship table used to draw the network\nmodule_relationships – module-pair summary, with relation_type being biochemical, biology, both or none\nsummary – the narrative integrating clusters, cross-module links and the phenotype\nraw_response – the original LLM response, kept for transparency",
-    "crumbs": [
-      "R Package",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Function Annotation</span>"
-    ]
-  },
-  {
-    "objectID": "10_shinyapp_installation.html#accounts-and-sign-in",
-    "href": "10_shinyapp_installation.html#accounts-and-sign-in",
-    "title": "7  Installation",
-    "section": "7.3 Accounts and Sign In",
-    "text": "7.3 Accounts and Sign In\nThe app has an optional account layer:\n\nLocal installation (default): authentication is switched off. You can go straight from Home to the analysis pages, and the Sign In entry in the navigation bar is hidden.\nHosted deployment: authentication is switched on, so the six analysis pages are protected. You need to create an account, verify your email address, and sign in before Step 1 becomes available.\n\nServer administrators enable it by setting the environment variables FEATUREMAP_AUTH_ENABLED=true and FEATUREMAP_AUTH_DB (a persistent SQLite path) before starting the app.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
-    ]
-  },
-  {
-    "objectID": "10_shinyapp_installation.html#upload-limit",
-    "href": "10_shinyapp_installation.html#upload-limit",
-    "title": "7  Installation",
-    "section": "7.4 Upload Limit",
-    "text": "7.4 Upload Limit\nUploads are capped at 500 MB per file by default, which is enough for most feature tables and for a custom reference database. If you need a larger limit for a local run, set it before launching the app:\n\noptions(featuremap.max_upload_mb = 1000)\nfeaturemapshiny::run_featuremap()\n\nThe environment variable FEATUREMAP_MAX_UPLOAD_MB does the same thing for a deployed instance.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
-    ]
-  },
-  {
-    "objectID": "10_shinyapp_installation.html#getting-around-the-app",
-    "href": "10_shinyapp_installation.html#getting-around-the-app",
-    "title": "7  Installation",
-    "section": "7.5 Getting Around the App",
-    "text": "7.5 Getting Around the App\nThe top navigation bar contains:\n\nHome – the landing page, with the Get Started and Documentation buttons\nAbout – scrolls to the workflow overview on the Home page\nAnalysis – a dropdown with the six workflow steps: 1 Data Upload, 2 Feature Annotation, 3 PCSF Subnetwork, 4 Module Identification, 5 Function Interpretation, 6 Results Download\nAuthors and Contacts\nSign In / your account menu, when authentication is enabled\n\nEvery analysis page shares the same layout: a step rail at the top showing where you are in the six steps, a parameter sidebar on the left ending with the Run and Next Step buttons, and a result area on the right. Small ⓘ icons next to the field labels explain each parameter in place.\nOnce you install the FeatureMAP Shiny successfully, continue to next step.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installation</span>"
-    ]
-  },
-  {
-    "objectID": "11_data_preparation_shiny.html#quick-guide",
-    "href": "11_data_preparation_shiny.html#quick-guide",
-    "title": "8  Data Upload",
-    "section": "8.2 Quick Guide",
-    "text": "8.2 Quick Guide\nThe first time you reach Data Upload, the app offers a short guided tour:\n\n\n\n\n\n\nStart Quick Guide highlights three spots on every step page in turn – the parameter sidebar, the Run button, and the result panel – and follows you from Step 1 to Step 6.\nNot now dismisses it; you can still read every parameter’s explanation from the ⓘ icons next to the field labels.\nWhile the guide is running, use Next to move to the next hint and Exit Guide to leave it at any time.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Data Upload</span>"
-    ]
-  },
-  {
-    "objectID": "15_function_annotation.html#fast-mode-and-advanced-mode",
-    "href": "15_function_annotation.html#fast-mode-and-advanced-mode",
-    "title": "12  Function Interpretation",
-    "section": "12.3 Fast Mode and Advanced Mode",
-    "text": "12.3 Fast Mode and Advanced Mode\nThe Annotation Mode switch chooses between the two pipelines described in R package-Function Annotation:\n\nFast – a two-call pipeline producing one interpretation per module. This is the cheaper and faster option, and the right one for a first pass.\nAdvanced – a multi-agent debate: a Proposer drafts 1–3 candidate hypotheses, a Skeptic challenges them over up to two rounds, and an Arbiter accepts or rejects each one.\n\n\n\n\n\n\n\nTip\n\n\n\nIn the app, Advanced mode is not a set of separate options: the per-module debate transcript and the cross-module synthesis are always produced as part of an Advanced run, and appear as their own result tabs.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
-    ]
-  },
-  {
-    "objectID": "15_function_annotation.html#run-function-interpretation",
-    "href": "15_function_annotation.html#run-function-interpretation",
-    "title": "12  Function Interpretation",
-    "section": "12.4 Run Function Interpretation",
-    "text": "12.4 Run Function Interpretation\nOnce the parameters are ready, click Run.\nThe app calls the model module by module, so this step is the slowest one and its runtime grows with the number of significant modules, with Advanced mode, and with PubMed enabled. If no module passes the selected cutoff, the run finishes normally and the result panel reports that nothing passed.\n\n\n\n\n\n\nNote\n\n\n\nAPI keys are entered per session and are used only for the current run; they are not stored in your results.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
-    ]
-  },
-  {
-    "objectID": "15_function_annotation.html#result-area-fast-mode",
-    "href": "15_function_annotation.html#result-area-fast-mode",
-    "title": "12  Function Interpretation",
-    "section": "12.5 Result Area (Fast Mode)",
-    "text": "12.5 Result Area (Fast Mode)\nIn Fast mode the right panel shows one module at a time, chosen with the module selector in the toolbar.\n\n\n\n\n\nEach report opens with the module title and a row of pills – module ID, hypothesis type, and confidence – followed by five sections:\n\n\n\n\n\n\n\nSection\nContent\n\n\n\n\nFunction Interpretation\nThe functional summary, plus the core driver (anchor) metabolites behind it\n\n\nBiochemical Context\nChemical-class profile, KEGG and HMDB pathway coverage, and the endogenous/exogenous origin profile\n\n\nModule Statistics\nThe supporting metabolites of the module and the global direction of change\n\n\nPhenotype & Literature\nThe phenotype relationship, plus clickable PMID links when PubMed was enabled\n\n\nEvidence Strength\nThe confidence label and the rationale behind it",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
-    ]
-  },
-  {
-    "objectID": "15_function_annotation.html#result-area-advanced-mode",
-    "href": "15_function_annotation.html#result-area-advanced-mode",
-    "title": "12  Function Interpretation",
-    "section": "12.6 Result Area (Advanced Mode)",
-    "text": "12.6 Result Area (Advanced Mode)\nIn Advanced mode the right panel has three tabs.\n\n12.6.1 Accepted Interpretations\n\n\n\n\n\nThe same report layout as Fast mode, but with two selectors: one for the module and one for the accepted hypothesis within that module. A module can therefore carry more than one accepted interpretation.\n\n\n12.6.2 Debate History\n\n\n\n\n\nAn embedded chat-style transcript of the debate for the selected module, showing the Proposer, Skeptic and Arbiter turns in order. This is where you see why a hypothesis survived or was rejected. It is the same page that export_debate_html() writes in the R package.\n\n\n12.6.3 Cross-Module Synthesis\n\n\n\n\n\nAn interactive network integrating the accepted hypotheses from all modules into thematic clusters, with links that are either proposed by the model from the hypothesis summaries or computed deterministically from metabolic-network edges and pathway overlap. It corresponds to res$module_synthesis and to export_synthesis_network_html() in the R package.\nBoth HTML reports can be exported on the Results Download page.",
-    "crumbs": [
-      "Shiny App",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Function Interpretation</span>"
     ]
   }
 ]

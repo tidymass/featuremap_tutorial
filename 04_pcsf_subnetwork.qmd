@@ -107,7 +107,11 @@ res$stage
 # [1] "subnetwork_extracted"
 
 names(res)
-# [output placeholder - paste your console output here]
+#  [1] "anno_feature_table2" "edge_frequency"      "node_frequency"
+#  [4] "pcsf_subnet"         "mrn"                 "anno_redundancy"
+#  [7] "anno_feature_table1" "refdata"             "feature_table"
+# [10] "stage"               "object_type"         ".__enclos_env__"
+# [13] "clone"               "initialize"
 ```
 
 ### Extracted PCSF subnetwork
@@ -118,7 +122,10 @@ The extracted metabolic subnetwork is stored as an `igraph` object, where metabo
 #| eval: false
 
 res$pcsf_subnet
-# [output placeholder - paste your console output here]
+# IGRAPH ... UNWB 2217 4949 --
+# + attr: name (v/c), prize (v/n), type (v/c), freq (e/n), weight (e/n)
+# + edges from ... (vertex names):
+# + ... omitted several edges
 ```
 
 Node attribute `type` is `"Terminal"` for LC--MS feature nodes and `"Steiner"` for metabolite nodes; `prize` stores the node appearance frequency, and edge attributes `freq` / `weight` store how often each edge was recovered across the repeated runs. In `res$node_frequency`, the `type` column instead distinguishes `"feature"` from `"metabolite"` nodes.
@@ -131,8 +138,25 @@ After PCSF extraction, FeatureMAP updates the feature--metabolite annotation tab
 #| eval: false
 
 dim(res$anno_feature_table2)
-head(res$anno_feature_table2)
-# [output placeholder - paste your console output here]
+head(res$anno_feature_table2[, c(
+  "variable_id", "Compound.name", "HMDB.ID", "KEGG.ID",
+  "edge_freq", "weighted_anno_score", "confidence_rank", "importance"
+)])
+# [1] 2909   34
+#    variable_id           Compound.name     HMDB.ID KEGG.ID edge_freq weighted_anno_score
+# 1 M105T384_POS           Peroxynitrite HMDB0002179  C16845      0.72               0.272
+# 2 M105T384_POS 4-Hydroxymethylcatechol        <NA>  C14110      0.19               0.113
+# 3 M105T384_POS 2,4,6-Trihydroxytoluene        <NA>  C16401      0.16               0.104
+# 4 M105T384_POS   2-Hydroxybenzaldehyde HMDB0034170  C06202      0.15               0.101
+# 5 M105T384_POS 2,4,5-Trihydroxytoluene        <NA>  C18317      0.14               0.098
+# 6 M105T384_POS            Benzoic acid HMDB0001870  C00539      0.12               0.092
+#   confidence_rank importance
+# 1               1 0.06651944
+# 2               2 0.06651944
+# 3               3 0.06651944
+# 4               4 0.06651944
+# 5               5 0.06651944
+# 6               6 0.06651944
 ```
 
 `anno_feature_table2` keeps all columns of `anno_feature_table1` for the surviving rows, and adds:
@@ -154,7 +178,8 @@ A quick way to see how much the network narrowed the candidate space:
 
 length(unique(res$anno_feature_table1$variable_id))
 length(unique(res$anno_feature_table2$variable_id))
-# [output placeholder - paste your console output here]
+# [1] 1106
+# [1] 725
 ```
 
 ### Other Result Components

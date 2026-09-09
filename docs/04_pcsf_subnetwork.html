@@ -667,14 +667,21 @@ Tip
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "subnetwork_extracted"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  [1] "anno_feature_table2" "edge_frequency"      "node_frequency"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  [4] "pcsf_subnet"         "mrn"                 "anno_redundancy"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  [7] "anno_feature_table1" "refdata"             "feature_table"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [10] "stage"               "object_type"         ".__enclos_env__"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># [13] "clone"               "initialize"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="extracted-pcsf-subnetwork" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="extracted-pcsf-subnetwork"><span class="header-section-number">4.5.1</span> Extracted PCSF subnetwork</h3>
 <p>The extracted metabolic subnetwork is stored as an <code>igraph</code> object, where metabolite nodes are named by their InChI string and feature nodes by their <code>variable_id</code>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>pcsf_subnet</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># IGRAPH ... UNWB 2217 4949 --</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># + attr: name (v/c), prize (v/n), type (v/c), freq (e/n), weight (e/n)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># + edges from ... (vertex names):</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># + ... omitted several edges</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Node attribute <code>type</code> is <code>"Terminal"</code> for LC–MS feature nodes and <code>"Steiner"</code> for metabolite nodes; <code>prize</code> stores the node appearance frequency, and edge attributes <code>freq</code> / <code>weight</code> store how often each edge was recovered across the repeated runs. In <code>res$node_frequency</code>, the <code>type</code> column instead distinguishes <code>"feature"</code> from <code>"metabolite"</code> nodes.</p>
 </section>
@@ -683,8 +690,25 @@ Tip
 <p>After PCSF extraction, FeatureMAP updates the feature–metabolite annotation table by incorporating network evidence:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(res<span class="sc">$</span>anno_feature_table2)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>anno_feature_table2)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>anno_feature_table2[, <span class="fu">c</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"variable_id"</span>, <span class="st">"Compound.name"</span>, <span class="st">"HMDB.ID"</span>, <span class="st">"KEGG.ID"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"edge_freq"</span>, <span class="st">"weighted_anno_score"</span>, <span class="st">"confidence_rank"</span>, <span class="st">"importance"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)])</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 2909   34</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    variable_id           Compound.name     HMDB.ID KEGG.ID edge_freq weighted_anno_score</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M105T384_POS           Peroxynitrite HMDB0002179  C16845      0.72               0.272</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 M105T384_POS 4-Hydroxymethylcatechol        &lt;NA&gt;  C14110      0.19               0.113</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 M105T384_POS 2,4,6-Trihydroxytoluene        &lt;NA&gt;  C16401      0.16               0.104</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 M105T384_POS   2-Hydroxybenzaldehyde HMDB0034170  C06202      0.15               0.101</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 M105T384_POS 2,4,5-Trihydroxytoluene        &lt;NA&gt;  C18317      0.14               0.098</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 M105T384_POS            Benzoic acid HMDB0001870  C00539      0.12               0.092</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   confidence_rank importance</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 1               1 0.06651944</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 2               2 0.06651944</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 3               3 0.06651944</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 4               4 0.06651944</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 5               5 0.06651944</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 6               6 0.06651944</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>anno_feature_table2</code> keeps all columns of <code>anno_feature_table1</code> for the surviving rows, and adds:</p>
 <table class="caption-top table">
@@ -726,7 +750,8 @@ Tip
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(res<span class="sc">$</span>anno_feature_table1<span class="sc">$</span>variable_id))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(res<span class="sc">$</span>anno_feature_table2<span class="sc">$</span>variable_id))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 1106</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 725</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="other-result-components" class="level3" data-number="4.5.3">

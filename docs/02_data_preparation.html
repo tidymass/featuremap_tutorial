@@ -581,11 +581,22 @@ Tip
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(demo_feature_table)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(demo_feature_table, <span class="dv">3</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(demo_ms2)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(demo_ms2, <span class="dv">3</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 1189    7</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    variable_id       mz      rt polarity mean_intensity  condition       pvalue</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M105T384_POS 105.0334 383.851 positive      371369.28 -0.5029755 1.998631e-01</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2  M110T34_POS 110.0085  33.907 positive       58184.51 -0.4755627 9.740936e-05</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3  M116T49_POS 116.0700  49.496 positive      695843.03 -0.4107283 3.401449e-02</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(demo_ms2)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(demo_ms2, <span class="dv">3</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 207   6</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># # A tibble: 3 x 6</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># # Groups:   variable_id [3]</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   variable_id  HMDB.ID     KEGG.ID Compound.name               SS Level</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;                    &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M116T49_POS  HMDB0003411 C00763  D-Proline                0.829     2</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 M132T103_POS HMDB0000172 C00407  L-Isoleucine             0.757     2</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 M134T420_POS HMDB0032609 C03005  N-Methylanthranilic Acid 0.619     2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>demo_ms2</code> contains the columns <code>variable_id</code>, <code>HMDB.ID</code>, <code>KEGG.ID</code>, <code>Compound.name</code>, <code>SS</code> (MS2 similarity score) and <code>Level</code> (annotation confidence level). Only the first three are used by FeatureMAP; the rest are kept for your own inspection.</p>
 </section>

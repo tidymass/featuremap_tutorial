@@ -51,11 +51,22 @@ data("demo_ms2", package = "featuremap")
 
 dim(demo_feature_table)
 head(demo_feature_table, 3)
-# [output placeholder - paste your console output here]
+# [1] 1189    7
+#    variable_id       mz      rt polarity mean_intensity  condition       pvalue
+# 1 M105T384_POS 105.0334 383.851 positive      371369.28 -0.5029755 1.998631e-01
+# 2  M110T34_POS 110.0085  33.907 positive       58184.51 -0.4755627 9.740936e-05
+# 3  M116T49_POS 116.0700  49.496 positive      695843.03 -0.4107283 3.401449e-02
 
 dim(demo_ms2)
 head(demo_ms2, 3)
-# [output placeholder - paste your console output here]
+# [1] 207   6
+# # A tibble: 3 x 6
+# # Groups:   variable_id [3]
+#   variable_id  HMDB.ID     KEGG.ID Compound.name               SS Level
+#   <chr>        <chr>       <chr>   <chr>                    <dbl> <dbl>
+# 1 M116T49_POS  HMDB0003411 C00763  D-Proline                0.829     2
+# 2 M132T103_POS HMDB0000172 C00407  L-Isoleucine             0.757     2
+# 3 M134T420_POS HMDB0032609 C03005  N-Methylanthranilic Acid 0.619     2
 ```
 
 `demo_ms2` contains the columns `variable_id`, `HMDB.ID`, `KEGG.ID`, `Compound.name`, `SS` (MS2 similarity score) and `Level` (annotation confidence level). Only the first three are used by FeatureMAP; the rest are kept for your own inspection.

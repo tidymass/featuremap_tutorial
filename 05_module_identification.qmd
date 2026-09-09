@@ -154,8 +154,24 @@ res$stage
 ```{r}
 #| eval: false
 
-head(res$module_table)
-# [output placeholder - paste your console output here]
+head(res$module_table[, c(
+  "Module", "Compound_name", "HMDB_ID", "KEGG_ID",
+  "Node_freq", "Type", "Importance", "Use_for_annotation"
+)])
+#   Module                    Compound_name     HMDB_ID KEGG_ID Node_freq      Type Importance
+# 1     M1                    Tungstic acid HMDB0259326  C20679      1.00 annotated  0.2267914
+# 2     M1                        Adenosine HMDB0000050  C00212      0.19 annotated  0.1321317
+# 3     M1                       Salsolinol HMDB0042012  C09642      0.07 annotated  0.1183787
+# 4     M1                              ADP HMDB0001341  C00008      0.94    hidden         NA
+# 5     M1           Adenosine triphosphate HMDB0000538  C00002      1.00    hidden         NA
+# 6     M1 Guanosine 3',5'-bis(diphosphate) HMDB0059638  C01228      0.75 annotated  0.2105361
+#   Use_for_annotation
+# 1               TRUE
+# 2               TRUE
+# 3               TRUE
+# 4               TRUE
+# 5               TRUE
+# 6               TRUE
 ```
 
 Each row represents a **metabolite node belonging to an identified module**:
@@ -184,11 +200,18 @@ Here, **annotated** metabolites are nodes directly linked to observed LC--MS fea
 #| eval: false
 
 head(res$module_score)
-# [output placeholder - paste your console output here]
+#   Module Module_size Annotated_nodes Module_score          p       fdr
+# 1     M4          73              60    0.3278375 0.01174675 0.4463765
+# 2    M12          51              44    0.2184320 0.08448563 0.6701799
+# 3    M11          17              16    0.2090107 0.09908058 0.6701799
+# 4     M3         123             113    0.1998797 0.11538420 0.6701799
+# 5    M13          25              24    0.1797426 0.16015150 0.6701799
+# 6    M17          32              31    0.1753071 0.17186291 0.6701799
 
 sum(res$module_score$p < 0.05, na.rm = TRUE)
 sum(res$module_score$fdr < 0.05, na.rm = TRUE)
-# [output placeholder - paste your console output here]
+# [1] 1
+# [1] 0
 ```
 
 Important columns include:

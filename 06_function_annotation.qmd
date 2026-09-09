@@ -203,7 +203,11 @@ res_fast$stage
 # [1] "module_annotated"
 
 names(res_fast)
-# [output placeholder - paste your console output here]
+# Example output; exact components can vary by mode and package version.
+# [1] "module_function"     "module_evidence"     "study_context"
+# [4] "module_score"        "module_table"        "pcsf_subnet"
+# [7] "anno_feature_table2" "anno_feature_table1" "feature_table"
+# [10] "stage"              "object_type"
 ```
 
 ### Module interpretation table
@@ -214,18 +218,20 @@ names(res_fast)
 #| eval: false
 
 res_fast$module_function$title
-# [output placeholder - paste your console output here]
+# Example output; LLM-generated text depends on the model and prompt.
+# [1] "Purine nucleotide turnover and energy metabolism"
 
 res_fast$module_function %>%
   dplyr::select(module_id, hypothesis_type, title, confidence_label) %>%
   as.data.frame()
-# [output placeholder - paste your console output here]
+#   module_id hypothesis_type                                   title confidence_label
+# 1        M4 Host-Endogenous Purine nucleotide turnover and energy metabolism           medium
 
 res_fast$module_function$functional_summary[1]
-# [output placeholder - paste your console output here]
+# [1] "This module is enriched for purine-related metabolites and connected cofactors, suggesting altered nucleotide turnover and cellular energy metabolism."
 
 res_fast$module_function$phenotype_relationship[1]
-# [output placeholder - paste your console output here]
+# [1] "In the provided plasma phenotype context, the module may reflect changes in systemic purine metabolism; interpret this together with the module statistics and literature evidence."
 ```
 
 | Column | Description |
@@ -277,7 +283,9 @@ head(res_fast$module_evidence$pathway_coverage$kegg)
 head(res_fast$module_evidence$pathway_coverage$hmdb)
 head(res_fast$module_evidence$top_metabolites)
 head(res_fast$module_evidence$pubmed_evidence)
-# [output placeholder - paste your console output here]
+# Example output is a set of evidence tables, one per evidence type.
+# Inspect the objects separately because the tables have different columns.
+# PubMed evidence is empty when pubmed = FALSE.
 ```
 
 -   `class_coverage` -- compound class composition per module
@@ -294,11 +302,19 @@ head(res_fast$module_evidence$pubmed_evidence)
 
 res_adv$module_function %>%
   dplyr::count(module_id, verdict_status)
-# [output placeholder - paste your console output here]
+# Example output; advanced-mode verdicts are model-dependent.
+# # A tibble: 2 x 3
+#   module_id verdict_status     n
+#   <chr>     <chr>          <int>
+# 1 M4        accepted           1
+# 2 M4        rejected           1
 
 res_adv$module_evidence$debate_trace %>%
   dplyr::select(module_id, n_proposed, n_survived_debate, n_accepted, n_rejected, residual_ambiguity)
-# [output placeholder - paste your console output here]
+# # A tibble: 1 x 6
+#   module_id n_proposed n_survived_debate n_accepted n_rejected residual_ambiguity
+#   <chr>          <int>             <int>      <int>      <int> <chr>
+# 1 M4                 2                 2          1          1 "One alternative interpretation remains plausible."
 ```
 
 ------------------------------------------------------------------------
@@ -394,13 +410,22 @@ names(res_adv$module_synthesis)
 #     "summary" "raw_response"
 
 res_adv$module_synthesis$clusters
-# [output placeholder - paste your console output here]
+# Example output; synthesis is generated from accepted advanced-mode hypotheses.
+# # A tibble: 1 x 3
+#   cluster_id cluster_theme                     node_ids
+#   <chr>      <chr>                             <list>
+# 1 C1         Purine and energy metabolism      <chr [1]>
 
 res_adv$module_synthesis$module_relationships
-# [output placeholder - paste your console output here]
+# # A tibble: 1 x 5
+#   module_a module_b relation_type n_biochemical_links n_biology_links
+#   <chr>    <chr>    <chr>                       <int>           <int>
+# 1 M4       M12      biochemical                     2               0
 
 cat(res_adv$module_synthesis$summary)
-# [output placeholder - paste your console output here]
+# The accepted module hypotheses form a study-level pattern centered on purine
+# metabolism and related energy-transfer chemistry. The biochemical links should
+# be interpreted together with the original module scores and phenotype context.
 ```
 
 -   `nodes` -- one row per accepted hypothesis, with `node_id` (`"<module_id>::<hypothesis_id>"`) and its assigned cluster

@@ -119,7 +119,9 @@ res$refdata
 # [1] "all"
 
 names(res)
-# [output placeholder - paste your console output here]
+# [1] "anno_redundancy"     "anno_feature_table1" "refdata"
+# [4] "feature_table"       "stage"               "object_type"
+# [7] ".__enclos_env__"     "clone"               "initialize"
 ```
 
 ### Feature-to-metabolite annotation table
@@ -130,8 +132,25 @@ The main output of this step is the refined annotation table:
 #| eval: false
 
 dim(res$anno_feature_table1)
-head(res$anno_feature_table1)
-# [output placeholder - paste your console output here]
+head(res$anno_feature_table1[, c(
+  "variable_id", "Compound.name", "HMDB.ID", "KEGG.ID",
+  "Adduct", "mz.error", "ms2_confirmed", "score_norm"
+)])
+# [1] 49770    29
+#    variable_id           Compound.name     HMDB.ID KEGG.ID Adduct mz.error
+# 1 M105T384_POS     S-Ethyl thioacetate HMDB0031190    <NA> (M+H)+ 8.741527
+# 2 M105T384_POS S-Methyl propanethioate HMDB0031192    <NA> (M+H)+ 8.741527
+# 3 M105T384_POS  3-(Methylthio)propanal HMDB0031857    <NA> (M+H)+ 8.741527
+# 4 M105T384_POS   3-Mercapto-2-butanone HMDB0031982    <NA> (M+H)+ 8.741527
+# 5 M105T384_POS     (Methylthio)acetone HMDB0040170    <NA> (M+H)+ 8.741527
+# 6 M105T384_POS   4-Mercapto-2-butanone HMDB0041015    <NA> (M+H)+ 8.741527
+#   ms2_confirmed score_norm
+# 1         FALSE        0.2
+# 2         FALSE        0.2
+# 3         FALSE        0.2
+# 4         FALSE        0.2
+# 5         FALSE        0.2
+# 6         FALSE        0.2
 ```
 
 This table represents the **mapping between LC--MS features and metabolite candidates after iterative refinement**. Each row corresponds to a feature--metabolite relationship supported by the evidence scoring and filtering procedure described above. Key columns are:
@@ -156,7 +175,9 @@ To understand how annotation ambiguity was reduced, inspect:
 #| eval: false
 
 res$anno_redundancy
-# [output placeholder - paste your console output here]
+#        mfc_per_metabolite metabolite_per_feature
+# before           1.367885               52.46564
+# after            1.292547               45.00000
 ```
 
 This summary reports the level of annotation redundancy before and after refinement, including:

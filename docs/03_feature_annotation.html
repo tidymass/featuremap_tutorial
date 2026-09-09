@@ -656,15 +656,34 @@ Note
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "all"</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(res)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "anno_redundancy"     "anno_feature_table1" "refdata"</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># [4] "feature_table"       "stage"               "object_type"</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># [7] ".__enclos_env__"     "clone"               "initialize"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="feature-to-metabolite-annotation-table" class="level3" data-number="3.5.1">
 <h3 data-number="3.5.1" class="anchored" data-anchor-id="feature-to-metabolite-annotation-table"><span class="header-section-number">3.5.1</span> Feature-to-metabolite annotation table</h3>
 <p>The main output of this step is the refined annotation table:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(res<span class="sc">$</span>anno_feature_table1)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>anno_feature_table1)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res<span class="sc">$</span>anno_feature_table1[, <span class="fu">c</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"variable_id"</span>, <span class="st">"Compound.name"</span>, <span class="st">"HMDB.ID"</span>, <span class="st">"KEGG.ID"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Adduct"</span>, <span class="st">"mz.error"</span>, <span class="st">"ms2_confirmed"</span>, <span class="st">"score_norm"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)])</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 49770    29</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    variable_id           Compound.name     HMDB.ID KEGG.ID Adduct mz.error</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M105T384_POS     S-Ethyl thioacetate HMDB0031190    &lt;NA&gt; (M+H)+ 8.741527</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 M105T384_POS S-Methyl propanethioate HMDB0031192    &lt;NA&gt; (M+H)+ 8.741527</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 M105T384_POS  3-(Methylthio)propanal HMDB0031857    &lt;NA&gt; (M+H)+ 8.741527</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 M105T384_POS   3-Mercapto-2-butanone HMDB0031982    &lt;NA&gt; (M+H)+ 8.741527</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 M105T384_POS     (Methylthio)acetone HMDB0040170    &lt;NA&gt; (M+H)+ 8.741527</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 M105T384_POS   4-Mercapto-2-butanone HMDB0041015    &lt;NA&gt; (M+H)+ 8.741527</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   ms2_confirmed score_norm</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 1         FALSE        0.2</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 2         FALSE        0.2</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 3         FALSE        0.2</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 4         FALSE        0.2</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 5         FALSE        0.2</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 6         FALSE        0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This table represents the <strong>mapping between LC–MS features and metabolite candidates after iterative refinement</strong>. Each row corresponds to a feature–metabolite relationship supported by the evidence scoring and filtering procedure described above. Key columns are:</p>
 <table class="caption-top table">
@@ -723,7 +742,9 @@ Note
 <p>To understand how annotation ambiguity was reduced, inspect:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>anno_redundancy</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [output placeholder - paste your console output here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#        mfc_per_metabolite metabolite_per_feature</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># before           1.367885               52.46564</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># after            1.292547               45.00000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This summary reports the level of annotation redundancy before and after refinement, including:</p>
 <ul>
