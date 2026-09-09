@@ -28,7 +28,7 @@ Here we click the button `Get Started` to start the analysis pipeline.
 ::: callout-note
 On the hosted deployment the analysis pages are protected. If authentication is enabled, clicking **Get Started** takes you to the **Sign In** page first; after signing in, the app returns to the page you were heading for.
 
-![](images/shinyapp_signin.png){fig-align="center" width="600"}
+![](images/shinyapp_signin.png){fig-align="center" width="300"}
 :::
 
 ## Quick Guide
