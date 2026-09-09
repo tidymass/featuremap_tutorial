@@ -225,6 +225,12 @@ Important columns include:
 
 Modules with lower `p` or `fdr` values indicate stronger statistical support and are typically prioritized for downstream biological interpretation.
 
+::: callout-important
+**What this looks like on the demo data.** With the default settings, the demo dataset returns **one module with `p < 0.05` and no module with `fdr < 0.05`**. This is expected for a small demonstration dataset: the permutation p-values are corrected across all detected modules, so the FDR becomes conservative when only one module carries a strong signal.
+
+Because of this, the demo examples in [Function Annotation](06_function_annotation.qmd) filter modules on the raw permutation p-value (`p = "p"`) instead of the default `"fdr"`. For a real study, keep `"fdr"` whenever enough modules pass it, and treat p-value-only modules as exploratory findings that need independent support.
+:::
+
 ::: callout-tip
 If too many tiny modules appear, increase `min_size` or tighten `node_freq`. If modules are too coarse, try alternative methods, or lower `louvain_resolution` for broader and raise it for finer communities.
 :::

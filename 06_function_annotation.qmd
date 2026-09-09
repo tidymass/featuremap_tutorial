@@ -88,6 +88,12 @@ If `ref_data = NULL`, FeatureMAP automatically loads the cached HMDB and KEGG fu
 If you enable PubMed retrieval, apply for an NCBI API key for higher request limits: <https://account.ncbi.nlm.nih.gov/settings/>
 :::
 
+::: callout-important
+**Which significance column should you use?** `p = "fdr"` with `pcutoff = 0.05` is the right default for a real study. On the **demo dataset**, however, no module reaches `fdr < 0.05` and only one module passes the raw permutation p-value (see [Module Identification](05_module_identification.qmd)). The examples below therefore use `p = "p"`, so that the step actually has a module to annotate.
+
+Always inspect `res$module_score` before this step, and state in your write-up which column you filtered on.
+:::
+
 ------------------------------------------------------------------------
 
 ## Basic Usage
@@ -100,7 +106,7 @@ If you enable PubMed retrieval, apply for an NCBI API key for higher request lim
 
 res_fast <- annotate_module(
   res         = res,
-  p           = "fdr",
+  p           = "p",     # demo data: no module passes fdr < 0.05
   pcutoff     = 0.05,
   ref_data    = NULL,
   mode        = "fast",
@@ -123,7 +129,7 @@ res_fast <- annotate_module(
 
 res_fast <- annotate_module(
   res         = res,
-  p           = "fdr",
+  p           = "p",
   pcutoff     = 0.05,
   mode        = "fast",
   species     = "human",
@@ -143,7 +149,7 @@ res_fast <- annotate_module(
 
 res_adv <- annotate_module(
   res         = res,
-  p           = "fdr",
+  p           = "p",
   pcutoff     = 0.05,
   mode        = "advanced",
   species     = "human",
@@ -169,7 +175,7 @@ res_adv <- annotate_module(
 
 res_fast <- annotate_module(
   res         = res,
-  p           = "fdr",
+  p           = "p",
   pcutoff     = 0.05,
   mode        = "fast",
   species     = "human",
@@ -392,6 +398,12 @@ res_adv <- synthesize_modules(
 `synthesize_modules()` requires **advanced mode** output. Fast mode produces one flat annotation per module and no hypothesis-level verdicts, so it cannot be synthesized this way. If `study_context` is `NULL`, it is taken from `res$study_context`.
 
 If only one module has accepted hypotheses, the LLM call is skipped and `res$module_synthesis` is returned with the deterministic parts only.
+:::
+
+::: callout-note
+**The demo dataset cannot illustrate this step.** Cross-module synthesis only becomes meaningful when **several** modules carry accepted hypotheses. The demo data has a single significant module, so `synthesize_modules()` skips the LLM call and returns the deterministic parts only.
+
+The outputs shown below are therefore taken from a larger real dataset with many annotated modules, and are reproduced here only to show the **structure** of `res$module_synthesis`. Do not expect to reproduce these values with the demo data.
 :::
 
 The synthesis combines two very different kinds of links:

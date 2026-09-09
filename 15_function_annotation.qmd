@@ -30,6 +30,10 @@ The purpose of this step is to turn statistically supported modules into interpr
 |  | API key | empty |
 
 ::: callout-important
+**Demo data: switch the metric to p-value.** With the demo dataset, no module reaches `FDR < 0.05` and exactly one module passes `p-value < 0.05`. If you keep the default **FDR**, the run finishes normally but reports that no module passed the cutoff. Set **Significance metric** to **p-value** to interpret that one module. The same caveat and its explanation are given in [R package-Module Identification](05_module_identification.qmd).
+:::
+
+::: callout-important
 **Model ID** must be a chat model name that the selected provider actually offers, for example `gpt-4.1-mini` for OpenAI. The ⓘ icon next to the section title links to each provider's model list. `Local` targets any OpenAI-compatible endpoint (such as a self-hosted server), needs a **Local base URL**, and works without an API key.
 :::
 
@@ -96,13 +100,19 @@ An embedded chat-style transcript of the debate for the selected module, showing
 
 An interactive network integrating the accepted hypotheses from all modules into thematic clusters, with links that are either proposed by the model from the hypothesis summaries or computed deterministically from metabolic-network edges and pathway overlap. It corresponds to `res$module_synthesis` and to `export_synthesis_network_html()` in the R package.
 
+Each node is one accepted hypothesis, named `<module>::<hypothesis>`; node colour marks the thematic cluster and node size the confidence. The checkboxes above the plot switch between **Biochemical links**, **Biology links** and links supported by **Both**, and the panel on the right holds the integrated summary written across all modules. Hypotheses without any cross-module link are collected under **Unlinked hypotheses** at the bottom.
+
+::: callout-note
+**The screenshot above does not come from the demo data.** A cross-module synthesis only becomes meaningful when several modules carry accepted hypotheses, and the demo dataset yields a single significant module, which leaves nothing to link. The screenshot therefore shows an Advanced run on a larger real dataset, so that the clusters, the cross-module links and the integrated summary are visible. With the demo data this tab still opens, but it shows one node and no links.
+:::
+
 Both HTML reports can be exported on the **Results Download** page.
 
 ## Recommended: Run the Demo Data First
 
 If you followed the previous chapters and loaded the built-in demo data, the recommended workflow here is:
 
-1.  keep the default significance settings, or switch the metric to **p-value** if no module passes the FDR cutoff
+1.  set **Significance metric** to **p-value** and keep the cutoff at `0.05` -- with the demo data nothing passes FDR
 2.  fill in **Study Context** with the species, biospecimen and phenotype of your study
 3.  start in **Fast** mode, with **Use PubMed literature** off, so the first run is quick and cheap
 4.  provide the LLM provider, model ID and API key
