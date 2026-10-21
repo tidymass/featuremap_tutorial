@@ -390,12 +390,6 @@ ul.task-list li input[type="checkbox"] {
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -547,6 +541,19 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p><strong>Demo data: switch the metric to p-value.</strong> With the demo dataset, no module reaches <code>FDR &lt; 0.05</code> and exactly one module passes <code>p-value &lt; 0.05</code>. If you keep the default <strong>FDR</strong>, the run finishes normally but reports that no module passed the cutoff. Set <strong>Significance metric</strong> to <strong>p-value</strong> to interpret that one module. The same caveat and its explanation are given in <a href="./05_module_identification.html">R package-Module Identification</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p><strong>Model ID</strong> must be a chat model name that the selected provider actually offers, for example <code>gpt-4.1-mini</code> for OpenAI. The ⓘ icon next to the section title links to each provider’s model list. <code>Local</code> targets any OpenAI-compatible endpoint (such as a self-hosted server), needs a <strong>Local base URL</strong>, and works without an API key.</p>
 </div>
 </div>
@@ -676,6 +683,20 @@ Note
 </figure>
 </div>
 <p>An interactive network integrating the accepted hypotheses from all modules into thematic clusters, with links that are either proposed by the model from the hypothesis summaries or computed deterministically from metabolic-network edges and pathway overlap. It corresponds to <code>res$module_synthesis</code> and to <code>export_synthesis_network_html()</code> in the R package.</p>
+<p>Each node is one accepted hypothesis, named <code>&lt;module&gt;::&lt;hypothesis&gt;</code>; node colour marks the thematic cluster and node size the confidence. The checkboxes above the plot switch between <strong>Biochemical links</strong>, <strong>Biology links</strong> and links supported by <strong>Both</strong>, and the panel on the right holds the integrated summary written across all modules. Hypotheses without any cross-module link are collected under <strong>Unlinked hypotheses</strong> at the bottom.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>The screenshot above does not come from the demo data.</strong> A cross-module synthesis only becomes meaningful when several modules carry accepted hypotheses, and the demo dataset yields a single significant module, which leaves nothing to link. The screenshot therefore shows an Advanced run on a larger real dataset, so that the clusters, the cross-module links and the integrated summary are visible. With the demo data this tab still opens, but it shows one node and no links.</p>
+</div>
+</div>
 <p>Both HTML reports can be exported on the <strong>Results Download</strong> page.</p>
 </section>
 </section>
@@ -683,7 +704,7 @@ Note
 <h2 data-number="12.7" class="anchored" data-anchor-id="recommended-run-the-demo-data-first"><span class="header-section-number">12.7</span> Recommended: Run the Demo Data First</h2>
 <p>If you followed the previous chapters and loaded the built-in demo data, the recommended workflow here is:</p>
 <ol type="1">
-<li>keep the default significance settings, or switch the metric to <strong>p-value</strong> if no module passes the FDR cutoff</li>
+<li>set <strong>Significance metric</strong> to <strong>p-value</strong> and keep the cutoff at <code>0.05</code> – with the demo data nothing passes FDR</li>
 <li>fill in <strong>Study Context</strong> with the species, biospecimen and phenotype of your study</li>
 <li>start in <strong>Fast</strong> mode, with <strong>Use PubMed literature</strong> off, so the first run is quick and cheap</li>
 <li>provide the LLM provider, model ID and API key</li>

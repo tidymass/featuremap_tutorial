@@ -4,7 +4,7 @@
 
 **FeatureMAP** (`featuremap`) is a feature-centric framework for untargeted metabolomics that identifies biologically meaningful metabolic modules directly from metabolomic data, rather than relying only on predefined pathways or fully confirmed metabolite identities. It is developed by the [Shen Lab](https://www.shen-lab.org/) at Nanyang Technological University, Singapore.
 
-The package provides a five-step workflow:
+This tutorial presents a five-step workflow: data preparation followed by the four FeatureMAP analysis functions shown when the package loads:
 
 1.  **Data preparation**: prepare a valid feature table and optional MS2 annotation table for FeatureMAP.
 2.  **Feature annotation**: annotate raw LC-MS features to metabolite candidates using MS1 (and optional MS2) information.
@@ -35,6 +35,6 @@ Whether you favour the command line or a browser, this tutorial gives you everyt
 
 ## 🔗 Links
 
--   📖 Citation: [Shen Lab](https://www.shen-lab.org/)
+-   📖 R package citation: run `citation("featuremap")` in R
 -   ☁️ Online FeatureMAP Shiny: [shen-lab.org](https://www.shen-lab.org/)
 -   🧬 FeatureMAP GitHub: [tidymass/featuremap](https://github.com/tidymass/featuremap)

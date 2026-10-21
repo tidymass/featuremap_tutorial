@@ -37,10 +37,6 @@ book:
         - 15_function_annotation.qmd
         - 16_results_export_shiny.qmd
 
-    - references.qmd
-
-bibliography: references.bib
-
 format:
   html:
     theme:

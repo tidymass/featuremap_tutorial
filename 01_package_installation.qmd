@@ -1,6 +1,6 @@
 # Installation
 
-Follow the steps below to install the latest development version of **FeatureMAP** from GitHub. The script first installs `BiocManager` and `remotes` if you don't have them.
+Follow the steps below to install **featuremap 1.0.0** (or a later version) from GitHub. The script first installs `BiocManager` and `remotes` if you don't have them.
 
 ```{r}
 #| eval=FALSE
@@ -51,12 +51,26 @@ library(featuremap)
 
 ```
 
+On attachment, version 1.0.0 prints the workflow and a link to the package help page (the rule length may vary with terminal width):
+
+``` text
+── featuremap 1.0.0 ─────────────────────────
+Metabolite annotation → Network extraction → Module identification → Function interpretation
+ℹ Run `?featuremap` to get started.
+```
+
+To suppress this startup message in a script, set `options(featuremap.quiet = TRUE)` before calling `library(featuremap)`.
+
 After installation, run a quick check:
 
 ```{r}
 #| eval=FALSE
 
+stopifnot(packageVersion("featuremap") >= "1.0.0")
 packageVersion("featuremap")
+# [1] ‘1.0.0’
+
+citation("featuremap")
 
 ```
 

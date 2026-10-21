@@ -425,12 +425,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -709,6 +703,20 @@ Tip
 <p>If you enable PubMed retrieval, apply for an NCBI API key for higher request limits: <a href="https://account.ncbi.nlm.nih.gov/settings/" class="uri">https://account.ncbi.nlm.nih.gov/settings/</a></p>
 </div>
 </div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Which significance column should you use?</strong> <code>p = "fdr"</code> with <code>pcutoff = 0.05</code> is the right default for a real study. On the <strong>demo dataset</strong>, however, no module reaches <code>fdr &lt; 0.05</code> and only one module passes the raw permutation p-value (see <a href="./05_module_identification.html">Module Identification</a>). The examples below therefore use <code>p = "p"</code>, so that the step actually has a module to annotate.</p>
+<p>Always inspect <code>res$module_score</code> before this step, and state in your write-up which column you filtered on.</p>
+</div>
+</div>
 <hr>
 </section>
 <section id="basic-usage" class="level2" data-number="6.3">
@@ -720,7 +728,7 @@ Tip
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>res_fast <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"p"</span>,     <span class="co"># demo data: no module passes fdr &lt; 0.05</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_data    =</span> <span class="cn">NULL</span>,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"fast"</span>,</span>
@@ -740,7 +748,7 @@ Tip
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>res_fast <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"p"</span>,</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"fast"</span>,</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species     =</span> <span class="st">"human"</span>,</span>
@@ -757,7 +765,7 @@ Tip
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res_adv <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"p"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"advanced"</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species     =</span> <span class="st">"human"</span>,</span>
@@ -780,7 +788,7 @@ Tip
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res_fast <span class="ot">&lt;-</span> <span class="fu">annotate_module</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">res         =</span> res,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p           =</span> <span class="st">"p"</span>,</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pcutoff     =</span> <span class="fl">0.05</span>,</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode        =</span> <span class="st">"fast"</span>,</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species     =</span> <span class="st">"human"</span>,</span>
@@ -998,6 +1006,7 @@ Note
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># a single module</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">export_debate_html</span>(<span class="at">res =</span> res_adv, <span class="at">module_id =</span> <span class="st">"M1"</span>, <span class="at">html_dir =</span> <span class="st">"featuremap_html"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p><code>export_debate_html()</code> is the recommended interface for saved annotation results. <code>generate_debate_html()</code> is a lower-level constructor that requires the complete debate payload for one module and is normally only needed in custom workflows.</p>
 <p>Each page shows the Proposer, Skeptic and Arbiter turns in order, so you can follow exactly why a hypothesis was kept, revised or rejected.</p>
 </section>
 <section id="synthesis-network" class="level3" data-number="6.5.2">
@@ -1054,6 +1063,20 @@ Important
 <p>If only one module has accepted hypotheses, the LLM call is skipped and <code>res$module_synthesis</code> is returned with the deterministic parts only.</p>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>The demo dataset cannot illustrate this step.</strong> Cross-module synthesis only becomes meaningful when <strong>several</strong> modules carry accepted hypotheses. The demo data has a single significant module, so <code>synthesize_modules()</code> skips the LLM call and returns the deterministic parts only.</p>
+<p>The outputs shown below are therefore taken from a larger real dataset with many annotated modules, and are reproduced here only to show the <strong>structure</strong> of <code>res$module_synthesis</code>. Do not expect to reproduce these values with the demo data.</p>
+</div>
+</div>
 <p>The synthesis combines two very different kinds of links:</p>
 <ul>
 <li><strong>Biology links</strong> are proposed by the LLM from hypothesis titles and summaries only, and are deliberately sparse.</li>
@@ -1069,15 +1092,15 @@ Important
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>res_adv<span class="sc">$</span>module_synthesis<span class="sc">$</span>clusters</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Example output; synthesis is generated from accepted advanced-mode hypotheses.</span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># # A tibble: 1 x 3</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   cluster_id cluster_theme                     node_ids</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;chr&gt;      &lt;chr&gt;                             &lt;list&gt;</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 C1         Purine and energy metabolism      &lt;chr [1]&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   cluster_id cluster_theme                node_ids</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;chr&gt;      &lt;chr&gt;                        &lt;chr&gt;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 C1         Purine and energy metabolism "M4::H1; M12::H1"</span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>res_adv<span class="sc">$</span>module_synthesis<span class="sc">$</span>module_relationships</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># # A tibble: 1 x 5</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   module_a module_b relation_type n_biochemical_links n_biology_links</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                       &lt;int&gt;           &lt;int&gt;</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M4       M12      biochemical                     2               0</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># # A tibble: 1 x 11</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   module_id_1 module_id_2 has_biochemical_link has_biology_link relation_type ...</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;chr&gt;       &lt;chr&gt;       &lt;lgl&gt;                 &lt;lgl&gt;            &lt;chr&gt;         ...</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 M4          M12         TRUE                  FALSE            biochemical   ...</span></span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(res_adv<span class="sc">$</span>module_synthesis<span class="sc">$</span>summary)</span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># The accepted module hypotheses form a study-level pattern centered on purine</span></span>
@@ -1086,11 +1109,11 @@ Important
 </div>
 <ul>
 <li><code>nodes</code> – one row per accepted hypothesis, with <code>node_id</code> (<code>"&lt;module_id&gt;::&lt;hypothesis_id&gt;"</code>) and its assigned cluster</li>
-<li><code>clusters</code> – thematic clusters (<code>cluster_id</code>, <code>cluster_theme</code>, member <code>node_ids</code>)</li>
+<li><code>clusters</code> – thematic clusters (<code>cluster_id</code>, <code>cluster_theme</code>, and semicolon-separated member <code>node_ids</code>)</li>
 <li><code>biology_links</code> / <code>relationships_sparse</code> – LLM-proposed cross-module relationships with rationales</li>
 <li><code>biochemical_links</code> – MRN-edge and pathway-overlap evidence between hypotheses</li>
 <li><code>relationships</code> – the merged relationship table used to draw the network</li>
-<li><code>module_relationships</code> – module-pair summary, with <code>relation_type</code> being <code>biochemical</code>, <code>biology</code>, <code>both</code> or <code>none</code></li>
+<li><code>module_relationships</code> – module-pair summary with biochemical/biology flags, relation evidence, and <code>relation_type</code> being <code>biochemical</code>, <code>biology</code>, <code>both</code> or <code>none</code></li>
 <li><code>summary</code> – the narrative integrating clusters, cross-module links and the phenotype</li>
 <li><code>raw_response</code> – the original LLM response, kept for transparency</li>
 </ul>
