@@ -32,9 +32,3 @@ Whether you favour the command line or a browser, this tutorial gives you everyt
 -   📩 Email: [yuting012\@e.ntu.edu.sg](mailto:yuting012@e.ntu.edu.sg)
 -   🏠 Shen Lab website: [shen-lab.org](https://www.shen-lab.org/)
 -   💬 WeChat: [jaspershen1990](https://jaspershen.github.io/image/wechat_QR.jpg)
-
-## 🔗 Links
-
--   📖 R package citation: run `citation("featuremap")` in R
--   ☁️ Online FeatureMAP Shiny: [shen-lab.org](https://www.shen-lab.org/)
--   🧬 FeatureMAP GitHub: [tidymass/featuremap](https://github.com/tidymass/featuremap)
