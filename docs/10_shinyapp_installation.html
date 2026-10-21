@@ -466,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>FeatureMAP Shiny</strong> is the interactive web interface for the FeatureMAP workflow. It lets you complete data upload, feature annotation, subnetwork extraction, module identification, function interpretation, and result export through a point-and-click interface, without writing the R pipeline manually.</p>
+<p><strong>FeatureMAP Shiny 1.0.0</strong> is the interactive web interface for the FeatureMAP workflow. It lets you complete data upload, feature annotation, subnetwork extraction, module identification, function interpretation, and result export through a point-and-click interface, without writing the R pipeline manually.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/shinyapp_home.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="750"></p>
@@ -475,7 +475,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are two ways to use FeatureMAP Shiny:</p>
 <ol type="1">
 <li><strong>R installation</strong>: install the <code>featuremapshiny</code> package locally and launch it from R</li>
-<li><strong>Web access</strong>: open the hosted Shiny app in a browser once the server deployment is available</li>
+<li><strong>Web access</strong>: open the hosted Shiny app directly in a browser</li>
 </ol>
 <section id="r-installation" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="r-installation"><span class="header-section-number">7.1</span> R Installation</h2>
@@ -514,7 +514,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">dependencies =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">repos =</span> BiocManager<span class="sc">::</span><span class="fu">repositories</span>(),</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">upgrade =</span> <span class="st">"ask"</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">packageVersion</span>(<span class="st">"featuremapshiny"</span>) <span class="sc">&gt;=</span> <span class="st">"1.0.0"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"featuremapshiny"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] '1.0.0'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -526,7 +530,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>featuremapshiny</code> is self-contained: it carries its own copy of the analysis pipeline and ships the built-in reference resources (the merged MS1 compound database, the metabolic reaction network, the HMDB/KEGG functional and pathway references, and the demo data) inside the package. You therefore do <strong>not</strong> need to install the <code>featuremap</code> package separately, and the app does not download anything at runtime.</p>
+<p><code>featuremapshiny</code> is self-contained: it carries its own copy of the analysis pipeline and ships the built-in reference resources (the merged MS1 compound database, the metabolic reaction network, the HMDB/KEGG functional and pathway references, and the demo data) inside the package. You therefore do <strong>not</strong> need to install the <code>featuremap</code> package separately, and the app does not download reference databases at runtime. PubMed retrieval and LLM-assisted interpretation still connect to their respective external APIs when enabled.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -550,8 +554,8 @@ Tip
 </section>
 <section id="sec-web" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="sec-web"><span class="header-section-number">7.2</span> Web Access</h2>
-<p>A hosted, browser-based instance of FeatureMAP Shiny is planned for users who prefer not to manage a local R environment. The service will provide the same point-and-click interface as the local Shiny application and will require no installation.</p>
-<p><strong>Planned Access URL:</strong> <a href="https://www.shen-lab.org/featuremap_shiny" class="uri">https://www.shen-lab.org/featuremap_shiny</a></p>
+<p>A hosted, browser-based instance of FeatureMAP Shiny will be available for users who prefer not to manage a local R environment. It provides the same point-and-click interface as the local Shiny application and requires no installation.</p>
+<p><strong>Web application:</strong> <a href="https://featuremap_shiny.jaspershenlab.com" class="uri">https://featuremap_shiny.jaspershenlab.com</a></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -562,7 +566,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The workflow described in the following Shiny chapters applies to both the local <code>featuremapshiny</code> package and the future hosted web deployment.</p>
+<p>The workflow described in the following Shiny chapters applies to both the local <code>featuremapshiny</code> package and the hosted web application.</p>
 </div>
 </div>
 </section>

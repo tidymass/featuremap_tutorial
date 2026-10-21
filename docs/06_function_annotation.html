@@ -512,7 +512,7 @@ Important
 <p>A two-call pipeline, and the recommended default:</p>
 <ol type="1">
 <li><strong>LLM call 1</strong> – from metabolite evidence only (no phenotype), the model returns <code>hypothesis_type</code>, <code>title</code> and <code>functional_summary</code>.</li>
-<li><strong>Optional PubMed retrieval</strong> – the module title and each top metabolite are searched separately; the retained articles are deduplicated by PMID.</li>
+<li><strong>Optional PubMed retrieval</strong> – the module title and each anchor metabolite are searched separately; the retained articles are deduplicated by PMID.</li>
 <li><strong>LLM call 2</strong> – with the study context and the literature, the model returns <code>phenotype_relationship</code>, <code>confidence_label</code> and <code>rationale</code>.</li>
 </ol>
 </section>

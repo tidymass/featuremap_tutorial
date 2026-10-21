@@ -23,7 +23,7 @@ The interpretation itself is then produced by an LLM, in one of **two modes**.
 A two-call pipeline, and the recommended default:
 
 1.  **LLM call 1** -- from metabolite evidence only (no phenotype), the model returns `hypothesis_type`, `title` and `functional_summary`.
-2.  **Optional PubMed retrieval** -- the module title and each top metabolite are searched separately; the retained articles are deduplicated by PMID.
+2.  **Optional PubMed retrieval** -- the module title and each anchor metabolite are searched separately; the retained articles are deduplicated by PMID.
 3.  **LLM call 2** -- with the study context and the literature, the model returns `phenotype_relationship`, `confidence_label` and `rationale`.
 
 ### Advanced mode (`mode = "advanced"`)
